@@ -1,0 +1,41 @@
+{
+  "name": "lokator",
+  "version": "1.0.0",
+  "description": "Lokator project for loading trucks",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nizam88/lokator.git"
+  },
+  "author": "Nizam",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/nizam88/lokator/issues"
+  },
+  "homepage": "https://github.com/nizam88/lokator#readme",
+  "dependencies": {
+    "bcrypt": "^5.0.1",
+    "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
+    "date-and-time": "^2.0.0",
+    "debug": "^4.3.2",
+    "dotenv": "^10.0.0",
+    "express": "^4.17.2",
+    "express-validator": "^6.12.1",
+    "jsonwebtoken": "^8.5.1",
+    "lodash": "^4.17.21",
+    "multer": "^1.4.3",
+    "mysql2": "^2.2.5",
+    "nodemailer": "^6.6.3",
+    "nodemon": "^2.0.11",
+    "path": "^0.12.7",
+    "sequelize": "^6.6.5"
+  },
+  "devDependencies": {
+    "sequelize-cli": "^6.2.0"
+  }
+}
