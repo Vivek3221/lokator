@@ -4,7 +4,7 @@ require('dotenv').config()
 const db = require('./utils/connection')
 const cors = require('cors');
 const app = express();
-app.use(express.static(path.join(__dirname, "/../frontend/lokator/frontend/build")));
+app.use(express.static(path.join(__dirname, "./frontend/build")));
 app.use('/public/files',express.static("public/files"));
 
 app.set('views', path.join(__dirname, 'views'));
