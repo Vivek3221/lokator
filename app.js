@@ -4,7 +4,7 @@ require("dotenv").config();
 const db = require("./utils/connection");
 const cors = require("cors");
 const app = express();
-//app.use(express.static(path.join(__dirname, "./frontend/build")));
+app.use(express.static(path.join(__dirname, "./frontend/build")));
 app.use("/public/files", express.static("public/files"));
 
 app.set("views", path.join(__dirname, "views"));
@@ -35,6 +35,7 @@ app.use(cors());
 app.use(express.urlencoded({ extended: true }));
 //app.use(cookieParser());
 app.use(function (err, req, res, next) {
+  console.log("asdasdasd");
   console.error(err);
   res.status(500).send("Something broke!");
 });
@@ -47,13 +48,9 @@ app.use("/api/user", userRouter);
 app.use("/api/country", countryRouter);
 app.use("/api/machine", machineRouter);
 app.use("/api/product", productRouter);
-app.use(express.static(path.join(__dirname, "../frontend/build")));
-
 app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname + "/frontend/build/index.html"));
-  //file path added
+  res.sendFile(path.join(__dirname + "./frontend/build/index.html"));
 });
-
 app.use((req, res, next) => {
   //res.locals.message = err.message;
   //res.locals.error = req.app.get('env') === 'development' ? err : {};
