@@ -47,12 +47,12 @@ app.use("/api/user", userRouter);
 app.use("/api/country", countryRouter);
 app.use("/api/machine", machineRouter);
 app.use("/api/product", productRouter);
-// app.use(express.static(path.join(__dirname, "../frontend/build")));
+app.use(express.static(path.join(__dirname, "../frontend/build")));
 
-// app.get("*", (req, res) => {
-//   res.sendFile(path.join(__dirname + "/frontend/build/index.html"));
-//   //file path added
-// });
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname + "/frontend/build/index.html"));
+  //file path added
+});
 
 app.use((req, res, next) => {
   //res.locals.message = err.message;
