@@ -50,7 +50,9 @@ app.use("/api/machine", machineRouter);
 app.use("/api/product", productRouter);
 app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname + "./frontend/build/index.html"));
+  //file path added
 });
+
 app.use((req, res, next) => {
   //res.locals.message = err.message;
   //res.locals.error = req.app.get('env') === 'development' ? err : {};
