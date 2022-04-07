@@ -49,7 +49,7 @@ app.use("/api/country", countryRouter);
 app.use("/api/machine", machineRouter);
 app.use("/api/product", productRouter);
 app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname + "./frontend/build/index.html"));
+  res.sendFile(path.join(__dirname + "/frontend/build/index.html"));
 });
 app.use((req, res, next) => {
   //res.locals.message = err.message;
