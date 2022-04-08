@@ -247,6 +247,20 @@ let userController = {
             console.log(error);
             return res.send(ResponseHandler.errorAsBadRequest(res, 'error'));
         }
+	},
+
+	inquiryList : async(req, res)=>{
+		try {
+            // get order req data from req body---------------
+            var reqData     = req.body;
+			const inquiryLists = await productServices.inquiryLists(reqData, res);
+			return res.send(ResponseHandler.successResponse(inquiryLists, message.INQUIRY_LISTS));
+			
+        
+        } catch (error) {
+            console.log(error);
+            return res.send(ResponseHandler.errorAsBadRequest(res, 'error'));
+        }
 	}
 };
 
