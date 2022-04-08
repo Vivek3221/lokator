@@ -18,6 +18,7 @@ const MachineType  = Connection.MachineTypes;
 const MachineCapacities = Connection.MachineCapacities;
 
 const MachineProducts = Connection.MachineProducts;
+const Inquiries = Connection.Inquiries;
 
 const { Op } = require('sequelize');
 let userServices = {
@@ -379,6 +380,14 @@ let userServices = {
 			} catch (error) {
 				res.status(500).send({ message: error.message });
 			}	
+		},
+
+		saveProductInquiry: async (data) => {
+         
+			var productInquiryCreate = await Inquiries.create(data);
+			if (productInquiryCreate) {
+				return productInquiryCreate;
+			}
 		},
 
 };

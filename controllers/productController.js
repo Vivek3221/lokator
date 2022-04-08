@@ -1,10 +1,12 @@
 const message = require('../config/message');
 const productServices = require('../services/productServices');
 const ResponseHandler = require('../utils/responseHandler');
+const commonHelper = require(`../helper/commonHelper`);
 const { check, validationResult } = require('express-validator');
 const Constant = require('../utils/constant');
 const _ = require('lodash');
 const { Op } = require('sequelize');
+const userServices = require('../services/userServices');
 let userController = {
 	/**
 	 * Description : User signUp
@@ -166,6 +168,86 @@ let userController = {
 			res.status(500).send({ message: error.message });
 		}
 	},
+
+	saveProductInquiry: async (req, res) => {
+		try {
+
+            // get order req data from req body---------------
+            var reqData     = req.body;
+            let currentDate = new Date().toISOString().
+                                replace(/T/, ' ').      // replace T with a space
+                                replace(/\..+/, '')     // delete the dot and everything after;
+
+            let inquiryId =  await commonHelper.genrateOrderId(16); 
+			let inquiryData = {};
+			if(reqData.user_id != undefined && reqData.user_id != ''){
+
+				const userDetail = await userServices.userProfileById(reqData.user_id)
+				if(userDetail){
+					inquiryData = {
+						inquiry_id : inquiryId,
+						user_id : userDetail.id,
+						name : `${userDetail.first_name} ${userDetail.last_name}`,
+						email : userDetail.email,
+						company_name : userDetail.company_name,
+						phone_no : userDetail.phone,
+						requirment : reqData.requirment,
+						price_type : reqData.price_type,
+						delivery_date : reqData.delivery_date,
+						location : reqData.location,
+						updated_at : currentDate,
+						created_at : currentDate
+					}
+				}else{
+					return res.send(ResponseHandler.errorAsBadRequest(res, 'error'));
+				}
+				
+			}else{
+				if(reqData.name == undefined || reqData.name == ''){
+					return res.send(ResponseHandler.errorAsBadRequest(res, 'Name is required.'));
+				}
+
+				if(reqData.email == undefined || reqData.email == ''){
+					return res.send(ResponseHandler.errorAsBadRequest(res, 'Email is required.'));
+				}
+
+				if(reqData.company_name == undefined || reqData.company_name == ''){
+					return res.send(ResponseHandler.errorAsBadRequest(res, 'Company Name is required.'));
+				}
+
+				if(reqData.phone_no == undefined || reqData.phone_no == ''){
+					return res.send(ResponseHandler.errorAsBadRequest(res, 'Phone Number is required.'));
+				}
+
+				inquiryData = {
+					inquiry_id : inquiryId,
+					name : reqData.name,
+					email : reqData.email,
+					company_name : reqData.company_name,
+					phone_no : reqData.phone_no,
+					requirment : reqData.requirment,
+					price_type : reqData.price_type,
+					delivery_date : reqData.delivery_date,
+					location : reqData.location,
+					updated_at : currentDate,
+					created_at : currentDate
+				}
+			}
+
+			// save Inquiry detail data-------------------------
+			let saveInquiry =  await productServices.saveProductInquiry(inquiryData);
+
+			if(saveInquiry){
+				return res.send(ResponseHandler.successResponse(saveInquiry, message.DATA_SAVE));
+			}else{
+				return res.send(ResponseHandler.errorAsBadRequest(res, 'error'));
+			}
+    
+        } catch (error) {
+            console.log(error);
+            return res.send(ResponseHandler.errorAsBadRequest(res, 'error'));
+        }
+	}
 };
 
 module.exports = userController;
