@@ -42,7 +42,6 @@ let userServices = {
 				var token = jwt.sign({ id: userCreate.id, email: userCreate.email, phone: userCreate.phone }, config.secret, {
 					expiresIn: 86400, // 24 hours
 				});
-
 				const userData = {
 					id: userCreate.id,
 					email: userCreate.email,
