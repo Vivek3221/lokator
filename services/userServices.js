@@ -472,6 +472,26 @@ let userServices = {
 			}	
 		},
 
+	/**
+	 * Description : User profile data.
+	 * @param {} userRequest
+	 */
+	userProfileById: async (userId) => {
+		try {
+			var users = await Users.findOne({
+				where: {id: userId },
+				attributes: {
+					exclude: ['password'],
+				}
+			});
+			if (users) {
+				return users;
+			}
+		} catch (error) {
+			res.status(500).send({ message: error.message });
+		}
+	},
+
 };
 
 module.exports = userServices;

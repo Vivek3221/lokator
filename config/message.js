@@ -16,6 +16,7 @@ module.exports={
   SAVE_CONTACTUS:'Contact us data save successfully.',
   CONTACTUS_LISTS :'Contact lists.',
   ORDERS_LISTS :'Order lists.',
+  INQUIRY_LISTS :'Inquiry lists.',
   USER_LISTS:'User lists.',
   LOCATION_LIST : 'Location list.',
   COUNTRY_LIST : 'Country list.',
