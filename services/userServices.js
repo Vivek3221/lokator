@@ -34,6 +34,7 @@ let userServices = {
 				company_name: signUpRequest.company_name,
 				phone: signUpRequest.phone,
 				status: 1,
+				is_login: 1,
 				role_id : signUpRequest.role_id,
 				created_at: createdAt,
 			});
