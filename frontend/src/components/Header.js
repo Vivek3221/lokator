@@ -1,48 +1,85 @@
-import React,{useState} from "react";
+import React, { useState } from "react";
 import Logo from "../assests/images/logo.jpeg";
 import { NavLink, Link } from "react-router-dom";
+import { connect } from "react-redux";
+import { logoutUser, getUser } from "../store/actions/users";
+import { withRouter } from "react-router-dom";
+function Header({ user, logoutUser, history }) {
+  const [toggleMenu, setToggleMenu] = useState(false);
 
-export default function Header() {
-  const [toggleMenu,setToggleMenu] = useState(false)
- 
   const Menu = (
     <>
-                  <li className="active">
-                    <NavLink to="/">Home</NavLink>
-                  </li>
-                  <li>
-                    <NavLink to="/about">About Us</NavLink>
-                  </li>
-                  <li className="has-children">
-                    
-                    <NavLink to="/services">Services</NavLink>
-                    <ul className="dropdown">
-                      <li>
-                        <a href="#">Logistics</a>
-                      </li>
-                      <li>
-                        <a href="#">Marketplace</a>
-                      </li>
+      <li className="active">
+        <NavLink to="/">Home</NavLink>
+      </li>
+      <li>
+        <NavLink to="/about">About Us</NavLink>
+      </li>
+      <li className="has-children">
+        <NavLink to="/services">Services</NavLink>
+        <ul className="dropdown">
+          <li>
+            <a href="#">Logistics</a>
+          </li>
+          <li>
+            <a href="#">Marketplace</a>
+          </li>
+        </ul>
+      </li>
 
-                    </ul>
-                  </li>
-                 
-
-                  <li>
-                    <NavLink to="/contact">Contact</NavLink>
-                  </li>
-                  <li>
-                    <Link to="/login?role_id=1" target="_blank" className="btn btn-primary text-white"><i className="fa fa-user" aria-hidden="true"></i>
- Login</Link>
-                  </li>
-                  <li>
-                    <Link to="/register?role_id=1" className="btn btn-primary text-white"><i className="fa fa-sign-in" aria-hidden="true"></i>
-
- Register</Link>
-                  </li>
-
-                </>
-  )
+      <li>
+        <NavLink to="/contact">Contact</NavLink>
+      </li>
+      {!user ? (
+        <>
+          <li>
+            <Link
+              to="/login?role_id=1"
+              target="_blank"
+              className="btn btn-primary text-white"
+            >
+              <i className="fa fa-user" aria-hidden="true"></i>
+              Login
+            </Link>
+          </li>
+          <li>
+            <Link
+              to="/register?role_id=1"
+              className="btn btn-primary text-white"
+            >
+              <i className="fa fa-sign-in" aria-hidden="true"></i>
+              Register
+            </Link>
+          </li>
+        </>
+      ) : (
+        <>
+          <li className="nav-item">
+            <a
+              className="nav-link"
+              onClick={() => {
+                history.push("/profile");
+              }}
+            >
+              <i className="fa fa-fw fa-user" />
+              My Profile
+            </a>
+          </li>
+          <li className="nav-item">
+            <a
+              className="nav-link"
+              onClick={() => {
+                logoutUser(history);
+              }}
+            >
+              <i className="fa fa-fw fa-sign-out" />
+              Logout
+            </a>
+          </li>
+        </>
+      )}
+    </>
+  );
   return (
     <div className="site-wrap">
       <div className="site-mobile-menu">
@@ -69,7 +106,7 @@ export default function Header() {
                 role="navigation"
               >
                 <ul className="site-menu js-clone-nav mx-auto d-none d-lg-block">
-                {Menu}
+                  {Menu}
                 </ul>
               </nav>
             </div>
@@ -79,26 +116,32 @@ export default function Header() {
             >
               <a
                 href="#"
-                onClick={()=> setToggleMenu(!toggleMenu)}
+                onClick={() => setToggleMenu(!toggleMenu)}
                 className="site-menu-toggle js-menu-toggle"
               >
                 <span className="icon-menu h3" />
               </a>
-              
             </div>
           </div>
         </div>
       </header>
       {toggleMenu && (
-      <div className="mobile-menu container">
-        
-        <ul >
-              {Menu}
-              </ul>
-              </div>
-    )}          
-
+        <div className="mobile-menu container">
+          <ul>{Menu}</ul>
+        </div>
+      )}
     </div>
-
   );
 }
+
+const mapStateToProps = (state) => ({
+  user: state.user,
+  allapi: state.allapi,
+});
+
+const mapActionsToProps = {
+  getUser,
+  logoutUser,
+};
+
+export default withRouter(connect(mapStateToProps, mapActionsToProps)(Header));

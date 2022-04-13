@@ -1,19 +1,19 @@
 {
   "files": {
-    "main.css": "/static/css/main.1a56cdcd.chunk.css",
-    "main.js": "/static/js/main.d78a21f8.chunk.js",
-    "main.js.map": "/static/js/main.d78a21f8.chunk.js.map",
-    "runtime-main.js": "/static/js/runtime-main.9e4bcfa8.js",
-    "runtime-main.js.map": "/static/js/runtime-main.9e4bcfa8.js.map",
+    "main.css": "/static/css/main.6d720249.chunk.css",
+    "main.js": "/static/js/main.32a0b6f1.chunk.js",
+    "main.js.map": "/static/js/main.32a0b6f1.chunk.js.map",
+    "runtime-main.js": "/static/js/runtime-main.8c9dfcba.js",
+    "runtime-main.js.map": "/static/js/runtime-main.8c9dfcba.js.map",
     "static/css/2.e178a209.chunk.css": "/static/css/2.e178a209.chunk.css",
-    "static/js/2.7fcc5708.chunk.js": "/static/js/2.7fcc5708.chunk.js",
-    "static/js/2.7fcc5708.chunk.js.map": "/static/js/2.7fcc5708.chunk.js.map",
-    "static/js/3.0c6cb5ba.chunk.js": "/static/js/3.0c6cb5ba.chunk.js",
-    "static/js/3.0c6cb5ba.chunk.js.map": "/static/js/3.0c6cb5ba.chunk.js.map",
+    "static/js/2.93cda3e2.chunk.js": "/static/js/2.93cda3e2.chunk.js",
+    "static/js/2.93cda3e2.chunk.js.map": "/static/js/2.93cda3e2.chunk.js.map",
+    "static/js/3.f0daadea.chunk.js": "/static/js/3.f0daadea.chunk.js",
+    "static/js/3.f0daadea.chunk.js.map": "/static/js/3.f0daadea.chunk.js.map",
     "index.html": "/index.html",
     "static/css/2.e178a209.chunk.css.map": "/static/css/2.e178a209.chunk.css.map",
-    "static/css/main.1a56cdcd.chunk.css.map": "/static/css/main.1a56cdcd.chunk.css.map",
-    "static/js/2.7fcc5708.chunk.js.LICENSE.txt": "/static/js/2.7fcc5708.chunk.js.LICENSE.txt",
+    "static/css/main.6d720249.chunk.css.map": "/static/css/main.6d720249.chunk.css.map",
+    "static/js/2.93cda3e2.chunk.js.LICENSE.txt": "/static/js/2.93cda3e2.chunk.js.LICENSE.txt",
     "static/media/Red-truck.6d6ee908.png": "/static/media/Red-truck.6d6ee908.png",
     "static/media/client1.6f1e107d.png": "/static/media/client1.6f1e107d.png",
     "static/media/client2.270c7b91.png": "/static/media/client2.270c7b91.png",
@@ -29,10 +29,10 @@
     "static/media/truck_image.47ca8427.png": "/static/media/truck_image.47ca8427.png"
   },
   "entrypoints": [
-    "static/js/runtime-main.9e4bcfa8.js",
+    "static/js/runtime-main.8c9dfcba.js",
     "static/css/2.e178a209.chunk.css",
-    "static/js/2.7fcc5708.chunk.js",
-    "static/css/main.1a56cdcd.chunk.css",
-    "static/js/main.d78a21f8.chunk.js"
+    "static/js/2.93cda3e2.chunk.js",
+    "static/css/main.6d720249.chunk.css",
+    "static/js/main.32a0b6f1.chunk.js"
   ]
 }

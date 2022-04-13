@@ -25,7 +25,7 @@ export const addSubAdminValidator = (values) => {
   if (!values.name) {
     errors.name = REQUIRED;
   }
-  console.log(errors)
+  console.log(errors);
 
   return errors;
 };
@@ -58,7 +58,7 @@ export const loginValidator = (values) => {
   if (!values.password) {
     errors.password = REQUIRED;
   }
-  
+
   return errors;
 };
 
@@ -68,9 +68,6 @@ export const capacityValidator = (values) => {
     errors.capacity = REQUIRED;
   }
 
-
-  
-  
   return errors;
 };
 export const typesValidator = (values) => {
@@ -79,13 +76,10 @@ export const typesValidator = (values) => {
     errors.type = REQUIRED;
   }
 
-
-  
-  
   return errors;
 };
 
-export const categoryValidator = (values,image) => {
+export const categoryValidator = (values, image) => {
   let errors = {};
   if (!values.category_name) {
     errors.category_name = REQUIRED;
@@ -94,13 +88,10 @@ export const categoryValidator = (values,image) => {
     errors.category_image = REQUIRED;
   }
 
-
-  
-  
   return errors;
 };
 
-export const machineValidator = (values,image) => {
+export const machineValidator = (values, image) => {
   let errors = {};
   if (!values.machine_name) {
     errors.machine_name = REQUIRED;
@@ -120,17 +111,13 @@ export const machineValidator = (values,image) => {
   if (!values.description) {
     errors.description = REQUIRED;
   }
-  
+
   if (!image) {
     errors.category_image = REQUIRED;
   }
 
-
-  
-  
   return errors;
 };
-
 
 export const signUPValidator = (values) => {
   let errors = {};
@@ -140,7 +127,7 @@ export const signUPValidator = (values) => {
   if (!values.last_name) {
     errors.last_name = REQUIRED;
   }
-  
+
   if (!values.phone) {
     errors.phone = REQUIRED;
   }
@@ -151,14 +138,15 @@ export const signUPValidator = (values) => {
   if (!values.company_name) {
     errors.company_name = REQUIRED;
   }
-  if(values.email){
-  if (!/^([a-zA-Z0-9_.-])+@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/.test(
-      values.email
-    )
-  ) {
-    errors.email = "Enter a valid email address";
+  if (values.email) {
+    if (
+      !/^([a-zA-Z0-9_.-])+@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/.test(
+        values.email
+      )
+    ) {
+      errors.email = "Enter a valid email address";
+    }
   }
-}
 
   if (!values.password) {
     errors.password = REQUIRED;
@@ -168,10 +156,9 @@ export const signUPValidator = (values) => {
   } else if (values.password !== values.confirm_password) {
     errors.confirm_password = "Password does not match";
   }
-  console.log(errors)
+  console.log(errors);
   return errors;
 };
-
 
 export const changePasswordValidator = (values) => {
   let errors = {};
@@ -186,10 +173,9 @@ export const changePasswordValidator = (values) => {
   } else if (values.password !== values.confirm_password) {
     errors.confirm_password = "Password does not match";
   }
-  console.log(errors)
+  console.log(errors);
   return errors;
 };
-
 
 export const contactvalidator = (values) => {
   let errors = {};
@@ -212,16 +198,13 @@ export const contactvalidator = (values) => {
   if (!values.business_name) {
     errors.business_name = REQUIRED;
   }
-  
+
   if (!values.message) {
     errors.message = REQUIRED;
   }
-  
+
   return errors;
 };
-
-
-
 
 export const profileValidator = (values) => {
   let errors = {};
@@ -234,7 +217,7 @@ export const profileValidator = (values) => {
   if (!values.country_id) {
     errors.country_id = REQUIRED;
   }
-  
+
   if (!values.company_name) {
     errors.company_name = REQUIRED;
   }
@@ -244,14 +227,9 @@ export const profileValidator = (values) => {
   if (!values.company_name) {
     errors.company_name = REQUIRED;
   }
-  
 
-  
-  
   return errors;
 };
-
-
 
 export const countryValidator = (values) => {
   let errors = {};
@@ -261,8 +239,27 @@ export const countryValidator = (values) => {
   if (!values.country_code) {
     errors.country_code = REQUIRED;
   }
-  
+
   return errors;
 };
 
+export const orderValidator = (values) => {
+  let errors = {};
+  if (!values.order_scope) {
+    errors.order_scope = REQUIRED;
+  }
+  if (!values.delivery_location) {
+    errors.delivery_location = REQUIRED;
+  }
+  if (!values.comments_remarks) {
+    errors.comments_remarks = REQUIRED;
+  }
+  if (!values.order_scope) {
+    errors.order_scope = REQUIRED;
+  }
+  if (!values.work_start_date) {
+    errors.work_start_date = REQUIRED;
+  }
 
+  return errors;
+};

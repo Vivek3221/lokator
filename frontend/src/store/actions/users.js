@@ -4,40 +4,40 @@ import {
   SET_ERRORS,
   CLEAR_ERRORS,
   LOADING_UI,
-  SET_UNAUTHENTICATED,
-  LOADING_USER,
-  GET_MATCHES,
-  SET_SINGLE_USERS,
-  DELETE_USER,
-  UPDATE_BLOCK,
 } from "../types";
 
 import axios from "axios";
 import { toast } from "react-toastify";
 
-export const loginUser = (userData, history) => (dispatch) => {
-  dispatch({ type: LOADING_UI });
+export const loginUser =
+  (userData, history, isPopup, handleClick) => (dispatch) => {
+    dispatch({ type: LOADING_UI });
 
-  axios
-    .post("/user/signIn", userData)
-    .then((res) => {
-      setAuthorizationHeader(res.data);
-      history.push("/dashboard");
-      dispatch({ type: CLEAR_ERRORS });
-    })
+    axios
+      .post("/user/signIn", userData)
+      .then((res) => {
+        setAuthorizationHeader({ ...res.data, role_id: userData.role_id });
 
-    .catch((err) => {
-      var errors = JSON.parse(err.response.data.error).errors
-      dispatch({
-        type: SET_ERRORS,
-        payload: err.response ? err.response.data : err.response,
+        if (!isPopup) {
+          history.push("/dashboard");
+        } else {
+          handleClick();
+        }
+        dispatch({ type: CLEAR_ERRORS });
+      })
+
+      .catch((err) => {
+        var errors = JSON.parse(err.response.data.error).errors;
+        dispatch({
+          type: SET_ERRORS,
+          payload: err.response ? err.response.data : err.response,
+        });
+        console.log(err);
+        toast.error(`${errors[0].msg}`, {
+          position: toast.POSITION.TOP_RIGHT,
+        });
       });
-      console.log(err)
-      toast.error(`${errors[0].msg}`, {
-        position: toast.POSITION.TOP_RIGHT,
-      });
-    });
-};
+  };
 
 export const updateProfile = (userData, history) => (dispatch) => {
   dispatch({ type: LOADING_UI });
@@ -51,46 +51,50 @@ export const updateProfile = (userData, history) => (dispatch) => {
       });
       toast.success(`${res.data.message}`, {
         position: toast.POSITION.TOP_RIGHT,
-      }); 
+      });
       dispatch({ type: CLEAR_ERRORS });
     })
 
     .catch((err) => {
-      var errors = JSON.parse(err.response.data.error).errors
+      var errors = JSON.parse(err.response.data.error).errors;
       dispatch({
         type: SET_ERRORS,
         payload: err.response ? err.response.data : err.response,
       });
-      console.log(err)
-      toast.error(`${errors[0].msg}`, {
-        position: toast.POSITION.TOP_RIGHT,
-      });
-      
-    });
-};
-export const signinUser = (userData, history) => (dispatch) => {
-  dispatch({ type: LOADING_UI });
-
-  axios
-    .post("/user/signup", userData)
-    .then((res) => {
-      //setAuthorizationHeader(res.data);
-      history.push("/login?signin=1");
-      dispatch({ type: CLEAR_ERRORS });
-    })
-
-    .catch((err) => {
-      var errors = JSON.parse(err.response.data.error).errors
-      dispatch({
-        type: SET_ERRORS,
-        payload: err.response ? err.response.data : err.response,
-      });
-      console.log(err)
+      console.log(err);
       toast.error(`${errors[0].msg}`, {
         position: toast.POSITION.TOP_RIGHT,
       });
     });
 };
+export const signinUser =
+  (userData, history, isPopup, handleClick) => (dispatch) => {
+    dispatch({ type: LOADING_UI });
+
+    axios
+      .post("/user/signup", userData)
+      .then((res) => {
+        setAuthorizationHeader({ ...res.data, role_id: userData.role_id });
+        if (!isPopup) {
+          history.push("/login?signin=1");
+        } else {
+          handleClick();
+        }
+        dispatch({ type: CLEAR_ERRORS });
+      })
+
+      .catch((err) => {
+        var errors = JSON.parse(err.response.data.error).errors;
+        dispatch({
+          type: SET_ERRORS,
+          payload: err.response ? err.response.data : err.response,
+        });
+        console.log(err);
+        toast.error(`${errors[0].msg}`, {
+          position: toast.POSITION.TOP_RIGHT,
+        });
+      });
+  };
 
 export const logoutUser = (history) => (dispatch) => {
   dispatch({ type: LOADING_UI });
@@ -105,46 +109,49 @@ export const logoutUser = (history) => (dispatch) => {
     })
 
     .catch((err) => {
-      var errors = JSON.parse(err.response.data.error).errors
-      dispatch({
-        type: SET_ERRORS,
-        payload: err.response ? err.response.data : err.response,
-      });
-      console.log(err)
-      toast.error(`${errors[0].msg}`, {
-        position: toast.POSITION.TOP_RIGHT,
-      });
-      
-    });
-  
-};
-
-export const getUser = (name = "1", gender, paid) => (dispatch) => {
-  dispatch({ type: LOADING_UI });
-  
-  axios
-    .get('/user/getProfile')
-    .then((res) => {
-      dispatch({
-        type: SET_USERS,
-        payload: res.data.data,
-      });
-      dispatch({ type: CLEAR_ERRORS });
-    })
-
-    .catch((err) => {
-      var errors = JSON.parse(err.response.data.error).errors
-      dispatch({
-        type: SET_ERRORS,
-        payload: err.response ? err.response.data : err.response,
-      });
-      console.log(err)
-      toast.error(`${errors[0].msg}`, {
-        position: toast.POSITION.TOP_RIGHT,
-      });
+      localStorage.removeItem("access_token");
+      localStorage.removeItem("role_id");
+      history.push("/login");
+      //var errors = JSON.parse(err.response.data.error).errors;
+      // dispatch({
+      //   type: SET_ERRORS,
+      //   payload: err.response ? err.response.data : err.response,
+      // });
+      // console.log(err);
+      // toast.error(`${errors[0].msg}`, {
+      //   position: toast.POSITION.TOP_RIGHT,
+      // });
     });
 };
 
+export const getUser =
+  (name = "1", gender, paid) =>
+  (dispatch) => {
+    dispatch({ type: LOADING_UI });
+    if (localStorage.getItem("access_token")) {
+      axios
+        .get("/user/getProfile")
+        .then((res) => {
+          dispatch({
+            type: SET_USERS,
+            payload: res.data.data,
+          });
+          dispatch({ type: CLEAR_ERRORS });
+        })
+
+        .catch((err) => {
+          // var errors = JSON.parse(err.response.data.error).errors;
+          // dispatch({
+          //   type: SET_ERRORS,
+          //   payload: err.response ? err.response.data : err.response,
+          // });
+          // console.log(err);
+          // toast.error(`${errors[0].msg}`, {
+          //   position: toast.POSITION.TOP_RIGHT,
+          // });
+        });
+    }
+  };
 
 export const handleChangePassword = (userData) => (dispatch) => {
   dispatch({ type: LOADING_UI });
@@ -156,7 +163,6 @@ export const handleChangePassword = (userData) => (dispatch) => {
       toast.success(`${res.data.message}`, {
         position: toast.POSITION.TOP_RIGHT,
       });
-      
     })
 
     .catch((err) => {
@@ -177,7 +183,6 @@ export const forgetPassword = (userData) => (dispatch) => {
       toast.success(`${res.data.message}`, {
         position: toast.POSITION.TOP_RIGHT,
       });
-      
     })
 
     .catch((err) => {
@@ -188,17 +193,7 @@ export const forgetPassword = (userData) => (dispatch) => {
     });
 };
 
-
-
-
-
-
-
-
 const setAuthorizationHeader = (data) => {
   localStorage.setItem("access_token", data.data.accessToken);
-  localStorage.setItem("role_id", JSON.stringify(data.data.role_id));
-  
-  //console.log(data.data.access_token);
-  //localStorage.setItem("user", JSON.stringify(data.data));
+  localStorage.setItem("role_id", JSON.stringify(data.data.role_id || 1));
 };
