@@ -19,6 +19,7 @@ router.post('/save-order', authJwt.verifyToken, machineValidatioin.saveMachineOr
 router.post('/orders', authJwt.verifyToken, machineValidatioin.listMachineOrder , machineOrderController.orderList);
 router.post('/update-category',machineValidatioin.editMachineCategory , machineCategoryController.updateCategory);
 router.get('/get-category',machineCategoryController.getCategory);
+router.put('/change-order-status', authJwt.verifyToken,machineValidatioin.changeOrderStatus, machineOrderController.changeOrderStatus);
 
 
 

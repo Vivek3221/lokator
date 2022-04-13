@@ -18,6 +18,7 @@ const MachineType  = Connection.MachineTypes;
 const MachineCapacities = Connection.MachineCapacities;
 
 const MachineProducts = Connection.MachineProducts;
+const Inquiries = Connection.Inquiries;
 
 const { Op } = require('sequelize');
 let userServices = {
@@ -380,6 +381,74 @@ let userServices = {
 				res.status(500).send({ message: error.message });
 			}	
 		},
+
+		saveProductInquiry: async (data) => {
+         
+			var productInquiryCreate = await Inquiries.create(data);
+			if (productInquiryCreate) {
+				return productInquiryCreate;
+			}
+		},
+
+		inquiryLists: async (req,res) => {
+			try {
+				var page = req.page;
+				if(!page){
+					page = 0;
+				}
+				
+				var inquiryData =[];
+				var extraWhereCondition ={};
+	
+				var offset = parseInt(page) * Constant.PAGINATION_LIMIT;
+	
+				if(req.search){
+					const search = req.search.toString().replace(/"/g, '');
+					if(search){
+						extraWhereCondition = {
+							[Op.or]: [
+								{
+								'$inquiries.name$': { [Op.like]:  `%${search}%` },
+								},
+								{
+								'$inquiries.email$': { [Op.like]: `%${search}%` },
+								},
+								{
+								'$inquiries.phone_no$': { [Op.like]: `%${search}%` },
+								}	
+							]
+						}
+					}
+				}
+
+				inquiryData = await Inquiries.findAll({
+					where:extraWhereCondition,
+					offset: offset,
+					limit: Constant.PAGINATION_LIMIT,
+					order : [['id', 'DESC']],
+				});	
+					
+				//console.log(inquiryData); return false;
+				if(!_.isEmpty(inquiryData)){
+					
+					let totalPage = Math.ceil(inquiryData.length / Constant.PAGINATION_LIMIT);
+						return {
+						totalCount: inquiryData.length,
+						totalPage: totalPage,
+						inquiryData: inquiryData,
+					};
+				}else{
+					let totalPage = Math.ceil(inquiryData.length / Constant.PAGINATION_LIMIT);
+						return {
+						totalCount: inquiryData.length,
+						totalPage: totalPage,
+						inquiryData: [],
+					};
+				}	
+			} catch (error) {
+				res.status(500).send({ message: error.message });
+			}	
+		}
 
 };
 

@@ -16,6 +16,7 @@ module.exports={
   SAVE_CONTACTUS:'Contact us data save successfully.',
   CONTACTUS_LISTS :'Contact lists.',
   ORDERS_LISTS :'Order lists.',
+  INQUIRY_LISTS :'Inquiry lists.',
   USER_LISTS:'User lists.',
   LOCATION_LIST : 'Location list.',
   COUNTRY_LIST : 'Country list.',
@@ -26,5 +27,7 @@ module.exports={
   ADD_PRODUCT : 'Add products successfully.',
   EDIT_PRODUCT :'Edit product successfully.',
   UPDATE_PRODUCT:'Update product successfully.',
-  PRODUCT_DETAILS:'Products details.'
+  PRODUCT_DETAILS:'Products details.',
+  CHANGE_ORDER_STATUS:'Order status changed successfully.',
+  ORDER_PLASED: 'Order placed successfully'
 };

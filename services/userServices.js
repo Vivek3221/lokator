@@ -34,6 +34,7 @@ let userServices = {
 				company_name: signUpRequest.company_name,
 				phone: signUpRequest.phone,
 				status: 1,
+				is_login: 1,
 				role_id : signUpRequest.role_id,
 				created_at: createdAt,
 			});
@@ -41,7 +42,6 @@ let userServices = {
 				var token = jwt.sign({ id: userCreate.id, email: userCreate.email, phone: userCreate.phone }, config.secret, {
 					expiresIn: 86400, // 24 hours
 				});
-
 				const userData = {
 					id: userCreate.id,
 					email: userCreate.email,
@@ -470,6 +470,26 @@ let userServices = {
 				res.status(500).send({ message: error.message });
 			}	
 		},
+
+	/**
+	 * Description : User profile data.
+	 * @param {} userRequest
+	 */
+	userProfileById: async (userId) => {
+		try {
+			var users = await Users.findOne({
+				where: {id: userId },
+				attributes: {
+					exclude: ['password'],
+				}
+			});
+			if (users) {
+				return users;
+			}
+		} catch (error) {
+			res.status(500).send({ message: error.message });
+		}
+	},
 
 };
 

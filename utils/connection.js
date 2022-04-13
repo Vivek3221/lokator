@@ -26,6 +26,7 @@ Connection.MachineTypes = require('../models/machine_types')(sequelize,Sequelize
 Connection.MachineCategory = require('../models/machine_categories')(sequelize,Sequelize);
 Connection.MachineOrder = require('../models/machine_orders')(sequelize,Sequelize);
 Connection.MachineOrderDetails = require('../models/machine_order_details')(sequelize,Sequelize);
+Connection.Inquiries = require('../models/inquiries')(sequelize,Sequelize);
 //Relationship between Country and Users
 Connection.Country.hasMany(Connection.Users,{foreignKey:'country_id',constraints:false});
 Connection.Users.belongsTo(Connection.Country,{foreignKey:'country_id',constraints:false});

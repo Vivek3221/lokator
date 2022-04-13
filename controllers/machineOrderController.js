@@ -54,7 +54,7 @@ let machineOrderController = {
                     let saveOrder =  await machineOrderServices.createData(orderData);
 
                     if(saveOrder){
-                        return res.send(ResponseHandler.successResponse(saveOrder, message.DATA_SAVE));
+                        return res.send(ResponseHandler.successResponse(saveOrder, message.ORDER_PLASED));
                     }else{
                         return res.send(ResponseHandler.errorAsBadRequest(res, 'error'));
                     }
@@ -92,6 +92,19 @@ let machineOrderController = {
                 const constactDataLists = await machineOrderServices.orderLists(reqData, res);
                 return res.send(ResponseHandler.successResponse(constactDataLists, message.ORDERS_LISTS));
             }
+        
+        } catch (error) {
+            console.log(error);
+            return res.send(ResponseHandler.errorAsBadRequest(res, 'error'));
+        }
+    },
+
+    changeOrderStatus : async(req, res) =>{
+        try {
+            // get order req data from req body---------------
+            var reqData     = req.body;
+            await machineOrderServices.changeOrderStatus(reqData, res);
+            return res.send(ResponseHandler.successResponse({}, message.CHANGE_ORDER_STATUS));
         
         } catch (error) {
             console.log(error);
