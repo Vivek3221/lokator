@@ -27,5 +27,7 @@ module.exports={
   ADD_PRODUCT : 'Add products successfully.',
   EDIT_PRODUCT :'Edit product successfully.',
   UPDATE_PRODUCT:'Update product successfully.',
-  PRODUCT_DETAILS:'Products details.'
+  PRODUCT_DETAILS:'Products details.',
+  CHANGE_ORDER_STATUS:'Order status changed successfully.',
+  ORDER_PLASED: 'Order placed successfully'
 };

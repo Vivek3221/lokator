@@ -172,6 +172,22 @@ let machineOrderServices = {
 		} catch (error) {
 			res.status(500).send({ message: error.message });
 		}	
+	},
+	changeOrderStatus: async (req, res)=>{
+		try {
+			if (req) {
+				return await machineOrder.update(req,
+					{
+						where: { 
+							id: req.order_id
+						},
+						status: req.status
+					}
+				);
+			}
+		} catch (error) {
+            console.log(error);
+		}
 	}
 
 

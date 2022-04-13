@@ -92,6 +92,16 @@ module.exports = {
             return res.send(ErrorHandler.errorAsBadRequest(res,JSON.stringify(errors)));
             next();
         },
-    ]
+    ],
+    changeOrderStatus:[
+        check('order_id').trim().notEmpty().withMessage('Order Id required.'),
+        check('status').trim().notEmpty().withMessage('Status is required.'),
+        (req, res, next) => {
+            const errors = validationResult(req);
+            if (!errors.isEmpty()) 
+            return res.send(ErrorHandler.errorAsBadRequest(res,JSON.stringify(errors)));
+            next();
+        },
+    ],
 
 }
