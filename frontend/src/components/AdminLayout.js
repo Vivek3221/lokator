@@ -5,10 +5,17 @@ import { logoutUser, getUser } from "../store/actions/users";
 import { Link, NavLink } from "react-router-dom";
 import { connect } from "react-redux";
 import { get } from "lodash";
-const AdminLayout = ({ children, history, logoutUser, getUser, user }) => {
+const AdminLayout = ({
+  children,
+  history,
+  logoutUser,
+  getUser,
+  user: { user },
+}) => {
   const [showLogins, setLogins] = useState(false);
   const [showSignup, setShowSignup] = useState(false);
   const [toggleChild, setToogleChild] = useState(false);
+  console.log("user", user);
 
   useEffect(() => {
     getUser();
@@ -35,8 +42,13 @@ const AdminLayout = ({ children, history, logoutUser, getUser, user }) => {
                 <i className="fa fa-fw fa-dashboard" />
                 <span className="nav-link-text">Dashboard</span>
               </NavLink>
-              {localStorage.getItem("role_id") == 0 && (
+              {user?.role_id == 0 && (
                 <>
+                  <NavLink className="nav-link" to="/orders">
+                    <i className="fa fa-cart-arrow-down" />
+                    <span className="nav-link-text">Orders</span>
+                  </NavLink>
+
                   <NavLink className="nav-link" to="/contact-leads">
                     <i className="fa fa-fw fa-address-card" />
                     <span className="nav-link-text">Contact Leads</span>
@@ -45,6 +57,7 @@ const AdminLayout = ({ children, history, logoutUser, getUser, user }) => {
                     <i className="fa fa-fw fa-users" />
                     <span className="nav-link-text">User List</span>
                   </NavLink>
+
                   <button
                     className="nav-link"
                     onClick={() => setToogleChild(!toggleChild)}
@@ -76,7 +89,7 @@ const AdminLayout = ({ children, history, logoutUser, getUser, user }) => {
                 </>
               )}
             </li>
-            {localStorage.getItem("role_id") == 1 && (
+            {user?.role_id == 1 && (
               <>
                 <li
                   className="nav-item"
@@ -95,8 +108,7 @@ const AdminLayout = ({ children, history, logoutUser, getUser, user }) => {
           <ul className="navbar-nav ml-auto">
             <li className="nav-item">
               <span className="user_name">
-                {get(user, "user.first_name", "")}{" "}
-                {get(user, "user.last_name", "")}
+                {get(user, "first_name", "")} {get(user, "last_name", "")}
               </span>
             </li>
             <li className="nav-item">

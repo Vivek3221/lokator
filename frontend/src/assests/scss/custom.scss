@@ -191,6 +191,23 @@ a.step-item {
 .order-listing .card-body {
   position: relative;
 }
+.cm-details {
+  padding: 15px 15px 0;
+  border-radius: 10px;
+  color: #fff;
+  max-width: 900px;
+  margin-bottom: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  background-color: #33506d !important;
+}
+
+.cm-details p {
+  margin: 0;
+  font-size: 14px;
+  width: 50%;
+  padding-bottom: 15px;
+}
 
 .fade {
   visibility: hidden;
@@ -807,6 +824,19 @@ p.terms input[type="checkbox"] {
   border: 1px solid #ccc;
   margin-top: 10px;
   border-radius: 4px;
+}
+
+.search_form.with-select .form-group {
+  max-width: calc(100% - 300px);
+}
+
+.search_form.with-select select {
+  width: 280px;
+  padding: 0 10px;
+}
+.status_btn {
+  margin: 0 0 20px;
+  border-radius: 5px;
 }
 
 @media (min-width: 1200px) {

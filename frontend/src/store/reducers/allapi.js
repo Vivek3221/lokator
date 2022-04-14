@@ -10,8 +10,6 @@ import {
   GET_USERS,
   EDIT_COUNTRY,
   EDIT_ADVERTISMENT,
-  GET_DASHBOARD,
-  GET_REPORT,
   GET_CAPACITY,
   ADD_CAPACITY,
   EDIT_CAPACITY,
@@ -25,6 +23,7 @@ import {
   ADD_MACHINE,
   GET_MACHINES,
   GET_ORDERS,
+  UPDATE_ORDERS_STATUS,
   EDIT_MACHINE,
 } from "../types";
 
@@ -253,6 +252,20 @@ export default function (state = initialState, action) {
       return {
         ...state,
         orders: action.payload,
+      };
+    case UPDATE_ORDERS_STATUS:
+      var {
+        orders: { orderData },
+      } = state;
+      var updatedOrder = orderData.map((item) => {
+        if (item.id == action.payload.order_id) {
+          return { ...item, status: action.payload.status };
+        }
+        return item;
+      });
+      return {
+        ...state,
+        orders: { orderData: updatedOrder },
       };
     default:
       return state;

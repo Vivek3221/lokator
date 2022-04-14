@@ -5,20 +5,12 @@ import {
   GET_LOCATIONS,
   ADD_COUNTRY,
   LOADING_UI,
-  DELETE_PASSION,
-  DELETE_SUBSCRIPTION,
   GET_CONTACT,
-  ADD_ADVERTISMENT,
   GET_USERS,
   GET_CAPACITY,
-  DELETE_ADVERTISMENT,
-  SHOW_SUCCESS,
-  EDIT_ADVERTISMENT,
   EDIT_COUNTRY,
-  GET_DASHBOARD,
   ADD_CAPACITY,
   EDIT_CAPACITY,
-  GET_REPORT,
   GET_TYPE,
   ADD_TYPE,
   EDIT_TYPE,
@@ -30,6 +22,7 @@ import {
   ADD_MACHINE,
   EDIT_MACHINE,
   GET_ORDERS,
+  UPDATE_ORDERS_STATUS,
 } from "../types";
 
 import axios from "axios";
@@ -603,17 +596,43 @@ export const saveOrders = (values) => (dispatch) => {
     });
 };
 
-export const getOrders = (values) => (dispatch) => {
+export const getOrders =
+  (values, search = "") =>
+  (dispatch) => {
+    dispatch({ type: LOADING_UI });
+
+    axios
+      .post("/machine/orders?search=" + search, values)
+      .then((res) => {
+        dispatch({
+          type: GET_ORDERS,
+          payload: res.data.data,
+        });
+
+        dispatch({ type: CLEAR_ERRORS });
+      })
+
+      .catch((err) => {
+        dispatch({
+          type: SET_ERRORS,
+          payload: err.response ? err.response.data : err.response,
+        });
+      });
+  };
+
+export const updateStatus = (values) => (dispatch) => {
   dispatch({ type: LOADING_UI });
 
   axios
-    .post("/machine/orders", values)
+    .put("/machine/change-order-status", values)
     .then((res) => {
-      dispatch({
-        type: GET_ORDERS,
-        payload: res.data.data,
+      toast.success(`${res.data.message}`, {
+        position: toast.POSITION.TOP_RIGHT,
       });
-
+      dispatch({
+        type: UPDATE_ORDERS_STATUS,
+        payload: values,
+      });
       dispatch({ type: CLEAR_ERRORS });
     })
 

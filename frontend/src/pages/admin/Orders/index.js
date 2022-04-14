@@ -1,5 +1,5 @@
 import React, { Component, useState, useEffect } from "react";
-import { getOrders } from "../../../store/actions/allapi";
+import { getOrders, updateStatus } from "../../../store/actions/allapi";
 import { connect } from "react-redux";
 import moment from "moment";
 
@@ -7,18 +7,21 @@ import { get } from "lodash";
 const Orders = ({
   getOrders,
   allapi: { countries = [], orders = [] },
+  updateStatus,
   location: { search },
 }) => {
   const query = new URLSearchParams(search);
   const [searchVal, setSearch] = useState(query.get("query"));
+  const [status, setStatus] = useState(0);
   let bodyData = {
     role: localStorage.getItem("role_id"),
     page: 0,
     search: searchVal,
+    status: status,
   };
   useEffect(() => {
     getOrders(bodyData, searchVal);
-  }, [searchVal]);
+  }, [searchVal, status]);
 
   return (
     <div className="container-fluid">
@@ -27,9 +30,9 @@ const Orders = ({
         <li className="breadcrumb-item">
           <a href="#">Dashboard</a>
         </li>
-        <li className="breadcrumb-item active">Customer Orders</li>
+        <li className="breadcrumb-item active">Orders</li>
       </ol>
-      <div className="search_form ">
+      <div className="search_form  with-select">
         <div className="form-group">
           <input
             className="form-control"
@@ -42,7 +45,17 @@ const Orders = ({
             Search
           </button>
         </div>
+        <select
+          value={status}
+          onChange={(e) => {
+            setStatus(e.target.value);
+          }}
+        >
+          <option value="1">Approved</option>
+          <option value="0">Proccesing</option>
+        </select>
       </div>
+
       <div className="order-listing">
         {get(orders, "orderData", []).map((order) => {
           return (
@@ -69,8 +82,24 @@ const Orders = ({
                 </div>
               </div>
               <div className="card-body">
-                <h3>Order Placed</h3>
-                <p>Lokator is currently processing your order</p>
+                <h3>Customer Details</h3>
+
+                <div className="bg-success cm-details">
+                  <p>
+                    <strong>Name:</strong>{" "}
+                    {get(order, "user_detail.first_name", "")}{" "}
+                    {get(order, "user_detail.last_name", "")}
+                  </p>
+                  <p>
+                    <strong>Email:</strong>{" "}
+                    {get(order, "user_detail.email", "")}{" "}
+                  </p>
+                  <p>
+                    <strong>Phone No:</strong>{" "}
+                    {get(order, "user_detail.phone", "")}
+                  </p>
+                </div>
+
                 <span
                   className={`badge text-white ${
                     order.status == 0 ? "bg-warning" : "bg-success"
@@ -78,6 +107,19 @@ const Orders = ({
                 >
                   {order.status == 0 ? "Processing" : "Approved"}
                 </span>
+                <button
+                  onClick={() => {
+                    updateStatus({
+                      status: order.status == 0 ? 1 : 0,
+                      order_id: order.id,
+                    });
+                  }}
+                  className="btn btn-warning btn-sm text-white status_btn"
+                >
+                  {order.status == 1
+                    ? "Update Status to Processing"
+                    : "Update Status to Approved"}
+                </button>
                 <table class="table table-striped">
                   <thead>
                     <tr>
@@ -134,6 +176,7 @@ const mapStateToProps = (state) => ({
 
 const mapActionsToProps = {
   getOrders,
+  updateStatus,
 };
 
 export default connect(mapStateToProps, mapActionsToProps)(Orders);

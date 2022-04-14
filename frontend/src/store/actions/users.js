@@ -103,14 +103,13 @@ export const logoutUser = (history) => (dispatch) => {
     .post("/user/logout")
     .then((res) => {
       localStorage.removeItem("access_token");
-      localStorage.removeItem("role_id");
       history.push("/login");
       dispatch({ type: CLEAR_ERRORS });
     })
 
     .catch((err) => {
       localStorage.removeItem("access_token");
-      localStorage.removeItem("role_id");
+
       history.push("/login");
       //var errors = JSON.parse(err.response.data.error).errors;
       // dispatch({
@@ -195,5 +194,4 @@ export const forgetPassword = (userData) => (dispatch) => {
 
 const setAuthorizationHeader = (data) => {
   localStorage.setItem("access_token", data.data.accessToken);
-  localStorage.setItem("role_id", JSON.stringify(data.data.role_id || 1));
 };

@@ -32,10 +32,11 @@ import CountryManagement from "./pages/admin/CountryManagement";
 import CapacityManagement from "./pages/admin/MachineManagement/CapacityManagement";
 import TypesManagment from "./pages/admin/MachineManagement/TypesManangment";
 import ContactLeads from "./pages/admin/ContactLeads";
+import Orders from "./pages/admin/Orders";
 import Users from "./pages/admin/Users";
 import CategoryManagment from "./pages/admin/MachineManagement/CategoryManagment";
 import MachineManagement from "./pages/admin/MachineManagement/index";
-import Orders from "./pages/Customers/Orders/Orders";
+import CustomerOrders from "./pages/Customers/Orders/Orders";
 import Products from "./pages/Products/index";
 
 axios.interceptors.response.use(
@@ -134,7 +135,7 @@ class App extends Component {
             <PrivateOnlyRoute
               exact
               path="/customer-orders"
-              component={Orders}
+              component={CustomerOrders}
             />
             <PrivateOnlyRoute
               exact
@@ -151,6 +152,7 @@ class App extends Component {
               path="/capacity-management"
               component={CapacityManagement}
             />
+            <PrivateOnlyRoute exact path="/orders" component={Orders} />
             <PrivateOnlyRoute
               exact
               path="/types-management"
