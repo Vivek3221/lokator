@@ -130,26 +130,30 @@ let userServices = {
 		try {
 			var email = userRequest.email;
 			var phone = userRequest.phone;
-			var users = await Users.findOne({
-				where: {
-					[Op.or]: [{ phone: phone }, { email: email }]  
-				},
-				attributes: {
-					exclude: ['password'],
-				},
-				// include: [
-				// 	{
-				// 		model: Location,
-				// 		required: true,
-				// 		attributes: ['location_name'],
-				// 	},
-				// 	{
-				// 		model: Country,
-				// 		required: true,
-				// 		attributes: ['name'],
-				// 	},
-				// ],
-			});
+
+			if(email){
+				var users = await Users.findOne({
+					where : {email: email},
+					attributes: {
+						exclude: ['password'],
+					},
+				});
+			}else {
+				var users = await Users.findOne({
+					where : {phone:phone},
+					attributes: {
+						exclude: ['password'],
+					},
+				});
+			}
+		
+			// return false;
+			// var users = await Users.findOne({
+			// 	where : {phone:phone},
+			// 	attributes: {
+			// 		exclude: ['password'],
+			// 	},
+			// });
 			if (users) {
 				return users;
 			}
