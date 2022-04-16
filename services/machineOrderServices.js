@@ -37,6 +37,9 @@ let machineOrderServices = {
 			var orderData =[];
 			var mainOrderData = [];
 			var extraWhereCondition ={};
+			var partnerMachine = [];
+			var partnerMachineOrderID = [];
+			var orderID = [];
 
 			var offset = parseInt(page) * Constant.PAGINATION_LIMIT;
 
@@ -50,6 +53,9 @@ let machineOrderServices = {
 									},
 									{
 									'$machine_orders.order_id$': { [Op.like]: `%${search}%` },
+									},
+									{
+									'$machine_orders.status$': { [Op.like]: `%${req.status}%` },
 									}
 										
 						]
@@ -58,7 +64,7 @@ let machineOrderServices = {
 			}	
 
 			// role :- 1-Admin, 2-User, 3-Partner------------------------
-			if(req.role == 1){
+			if(req.role == 0){
 				orderData = await machineOrder.findAll({
 					where:extraWhereCondition,
 					offset: offset,
@@ -74,10 +80,9 @@ let machineOrderServices = {
 					attributes: ['id','order_id','delivery_location','work_start_date','comments_remarks','order_scope','order_date', 'status', 'created_at']
 				});
 			}
-			else if(req.role == 2){
+			else if(req.role == 1){
 				extraWhereCondition ={
-					user_id: req.user_id,
-					status:1
+					user_id: req.user_id
 				}
 				orderData = await machineOrder.findAll({
 					where: extraWhereCondition,
@@ -94,13 +99,51 @@ let machineOrderServices = {
 					order : [['id', 'DESC']],
 					attributes: ['id','order_id','delivery_location','work_start_date','comments_remarks','order_scope','order_date','created_at']
 				});	
-			}else if(req.role == 3){
+			}else if(req.role == 2){
 				extraWhereCondition ={
-					user_id: req.user_id,
-					status:1
+					user_id: req.user_id
 				}
+
+				let allMachine = await MachineProducts.findAll({
+					where:{
+						user_id:req.user_id
+					},
+					attributes: ['id'],
+				})
+				if(allMachine.length >0){
+					for(let p = 0; p < allMachine.length; p++){
+						partnerMachine.push(allMachine[p]['id']);
+					}
+					
+				}
+
+				if(!_.isEmpty(partnerMachine)){
+
+					partnerMachineOrderID = await MachineOrderDetails.findAll({
+						where:{
+							machine_product_id:{
+								[Op.in]: partnerMachine
+							}
+						},
+						attributes: ['order_id']
+					})
+				}
+
+				if(partnerMachineOrderID.length >0){
+					for(let orderId = 0; orderId < partnerMachineOrderID.length; orderId++){
+						if (!orderID.includes(partnerMachineOrderID[orderId]['order_id']))
+						orderID.push(partnerMachineOrderID[orderId]['order_id']);
+					}
+					
+				}
+
 				orderData = await machineOrder.findAll({
 					where: extraWhereCondition,
+					where:{
+						order_id:{
+							[Op.in]: orderID
+						}
+					},
 					include: [
 						{
 							model: Users,
@@ -113,46 +156,102 @@ let machineOrderServices = {
 					limit: Constant.PAGINATION_LIMIT,
 					order : [['id', 'DESC']],
 					attributes: ['id', 'order_id', 'delivery_location', 'work_start_date', 'comments_remarks', 'order_scope', 'order_date', 'created_at']
-				});		
+				});
 			}	
 				
 			//console.log(orderData); return false;
 			if(!_.isEmpty(orderData)){
 				for(var i=0; i<orderData.length; i++){
-
-					var orderDetail = await MachineOrderDetails.findAll({
-						where: {
-							order_id: orderData[i]['order_id'],
-							status:1
-						},
-						include: [
-							{
-								model: MachineCategory,
-								required: true,
-								attributes: ['id', 'category_image', 'category_name'],
+					
+					if(req.role == 2){
+						var orderDetail = await MachineOrderDetails.findAll({
+							where: {
+								order_id: orderData[i]['order_id'],
+								status:1
 							},
-							{
-								model: MachineProducts,
-								required: true,
-								attributes: ['id', 'machine_name', 'machine_image'],
-							}
-						],
-						attributes: ['id', 'quantity', 'created_at'],
-					});
+							include: [
+								{
+									model: MachineCategory,
+									required: true,
+									attributes: ['id', 'category_image', 'category_name'],
+								},
+								{
+									model: MachineProducts,
+									required: true,
+									attributes: ['id', 'machine_name', 'machine_image'],
+								}
+							],
+							attributes: ['id', 'quantity', 'created_at', 'machine_product_id','order_id'],
+						});
 
-					mainOrderData.push({
-						id:orderData[i]['id'],
-						user_detail:orderData[i]['users'],
-						order_id:orderData[i]['order_id'],
-						delivery_location:orderData[i]['delivery_location'],
-						work_start_date:orderData[i]['work_start_date'],
-						comments_remarks:orderData[i]['comments_remarks'],
-						order_scope:orderData[i]['order_scope'],
-						order_date:orderData[i]['order_date'],
-						status:orderData[i]['status'],
-						created_at:orderData[i]['created_at'],
-						order_detail:orderDetail
-					});
+						var mainOrderDetailData = [];
+
+						for(let ordetail = 0; ordetail< orderDetail.length; ordetail++){
+							
+							if (partnerMachine.includes(orderDetail[ordetail]['machine_product_id'])){
+								if(orderData[i]['order_id'] == orderDetail[ordetail]['order_id']){
+									mainOrderDetailData.push({
+									id:orderDetail[ordetail]['id'],
+									quantity:orderDetail[ordetail]['quantity'],
+									created_at:orderDetail[ordetail]['created_at'],
+									machine_categories:orderDetail[ordetail]['machine_categories'],
+									machine_products:orderDetail[ordetail]['machine_products']})
+								}
+    							
+							}
+							
+						}
+
+						mainOrderData.push({
+							id:orderData[i]['id'],
+							user_detail:orderData[i]['users'],
+							order_id:orderData[i]['order_id'],
+							delivery_location:orderData[i]['delivery_location'],
+							work_start_date:orderData[i]['work_start_date'],
+							comments_remarks:orderData[i]['comments_remarks'],
+							order_scope:orderData[i]['order_scope'],
+							order_date:orderData[i]['order_date'],
+							status:orderData[i]['status'],
+							created_at:orderData[i]['created_at'],
+							order_detail:mainOrderDetailData
+						});
+
+
+					}else{
+						var orderDetail = await MachineOrderDetails.findAll({
+							where: {
+								order_id: orderData[i]['order_id'],
+								status:1
+							},
+							include: [
+								{
+									model: MachineCategory,
+									required: true,
+									attributes: ['id', 'category_image', 'category_name'],
+								},
+								{
+									model: MachineProducts,
+									required: true,
+									attributes: ['id', 'machine_name', 'machine_image'],
+								}
+							],
+							attributes: ['id', 'quantity', 'created_at'],
+						});
+					
+						mainOrderData.push({
+							id:orderData[i]['id'],
+							user_detail:orderData[i]['users'],
+							order_id:orderData[i]['order_id'],
+							delivery_location:orderData[i]['delivery_location'],
+							work_start_date:orderData[i]['work_start_date'],
+							comments_remarks:orderData[i]['comments_remarks'],
+							order_scope:orderData[i]['order_scope'],
+							order_date:orderData[i]['order_date'],
+							status:orderData[i]['status'],
+							created_at:orderData[i]['created_at'],
+							order_detail:orderDetail
+						});
+					}
 
 				}
 				let totalPage = Math.ceil(orderData.length / Constant.PAGINATION_LIMIT);
