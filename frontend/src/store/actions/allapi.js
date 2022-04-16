@@ -587,7 +587,10 @@ export const saveOrders = (values) => (dispatch) => {
       });
       localStorage.removeItem("cart_items");
       dispatch({ type: CLEAR_ERRORS });
-    })
+    });
+
+  document.location
+    .reload(true)
 
     .catch((err) => {
       dispatch({
@@ -597,29 +600,27 @@ export const saveOrders = (values) => (dispatch) => {
     });
 };
 
-export const getOrders =
-  (values, search = "") =>
-  (dispatch) => {
-    dispatch({ type: LOADING_UI });
+export const getOrders = (values) => (dispatch) => {
+  dispatch({ type: LOADING_UI });
 
-    axios
-      .post("/machine/orders?search=" + search, values)
-      .then((res) => {
-        dispatch({
-          type: GET_ORDERS,
-          payload: res.data.data,
-        });
-
-        dispatch({ type: CLEAR_ERRORS });
-      })
-
-      .catch((err) => {
-        dispatch({
-          type: SET_ERRORS,
-          payload: err.response ? err.response.data : err.response,
-        });
+  axios
+    .post("/machine/orders", values)
+    .then((res) => {
+      dispatch({
+        type: GET_ORDERS,
+        payload: res.data.data,
       });
-  };
+
+      dispatch({ type: CLEAR_ERRORS });
+    })
+
+    .catch((err) => {
+      dispatch({
+        type: SET_ERRORS,
+        payload: err.response ? err.response.data : err.response,
+      });
+    });
+};
 
 export const updateStatus = (values) => (dispatch) => {
   dispatch({ type: LOADING_UI });

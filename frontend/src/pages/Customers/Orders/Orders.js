@@ -8,16 +8,19 @@ const Orders = ({
   getOrders,
   allapi: { countries = [], orders = [] },
   location: { search },
+  user: { user },
 }) => {
   const query = new URLSearchParams(search);
   const [searchVal, setSearch] = useState(query.get("query"));
   let bodyData = {
     role: localStorage.getItem("role_id"),
     page: 0,
+    user_id: JSON.parse(localStorage.getItem("user_data")).id,
     search: searchVal,
   };
+
   useEffect(() => {
-    getOrders(bodyData, searchVal);
+    getOrders(bodyData);
   }, [searchVal]);
 
   return (

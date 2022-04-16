@@ -41,25 +41,28 @@ const AdminLayout = ({
                 <i className="fa fa-fw fa-dashboard" />
                 <span className="nav-link-text">Dashboard</span>
               </NavLink>
-              {user?.role_id == 0 && (
+              {user?.role_id != 1 && (
                 <>
                   <NavLink className="nav-link" to="/orders">
                     <i className="fa fa-cart-arrow-down" />
                     <span className="nav-link-text">Orders</span>
                   </NavLink>
-
-                  <NavLink className="nav-link" to="/contact-leads">
-                    <i className="fa fa-fw fa-address-card" />
-                    <span className="nav-link-text">Contact Leads</span>
-                  </NavLink>
-                  <NavLink className="nav-link" to="/inquiries">
-                    <i className="fa fa-fw fa-info-circle" />
-                    <span className="nav-link-text">Inquiries</span>
-                  </NavLink>
-                  <NavLink className="nav-link" to="/users-list">
-                    <i className="fa fa-fw fa-users" />
-                    <span className="nav-link-text">User List</span>
-                  </NavLink>
+                  {user?.role_id != 2 && (
+                    <>
+                      <NavLink className="nav-link" to="/contact-leads">
+                        <i className="fa fa-fw fa-address-card" />
+                        <span className="nav-link-text">Contact Leads</span>
+                      </NavLink>
+                      <NavLink className="nav-link" to="/inquiries">
+                        <i className="fa fa-fw fa-info-circle" />
+                        <span className="nav-link-text">Inquiries</span>
+                      </NavLink>
+                      <NavLink className="nav-link" to="/users-list">
+                        <i className="fa fa-fw fa-users" />
+                        <span className="nav-link-text">User List</span>
+                      </NavLink>
+                    </>
+                  )}
 
                   <button
                     className="nav-link"
@@ -75,15 +78,23 @@ const AdminLayout = ({
                   </button>
                   {toggleChild && (
                     <ul className="btn-toggle-nav list-unstyled fw-normal pb-1 child-menu">
-                      <li>
-                        <NavLink to="/capacity-management">Capacity</NavLink>
-                      </li>
-                      <li>
-                        <NavLink to="/types-management">Types</NavLink>
-                      </li>
-                      <li>
-                        <NavLink to="/category-management">Category</NavLink>
-                      </li>
+                      {user?.role_id != 2 && (
+                        <>
+                          <li>
+                            <NavLink to="/capacity-management">
+                              Capacity
+                            </NavLink>
+                          </li>
+                          <li>
+                            <NavLink to="/types-management">Types</NavLink>
+                          </li>
+                          <li>
+                            <NavLink to="/category-management">
+                              Category
+                            </NavLink>
+                          </li>
+                        </>
+                      )}
                       <li>
                         <NavLink to="/machines">Machines</NavLink>
                       </li>

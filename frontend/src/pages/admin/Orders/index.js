@@ -8,6 +8,7 @@ const Orders = ({
   getOrders,
   allapi: { countries = [], orders = [] },
   updateStatus,
+  user: { user },
   location: { search },
 }) => {
   const query = new URLSearchParams(search);
@@ -20,7 +21,7 @@ const Orders = ({
     status: status,
   };
   useEffect(() => {
-    getOrders(bodyData, searchVal);
+    getOrders(bodyData);
   }, [searchVal, status]);
 
   return (

@@ -17,7 +17,7 @@ export const loginUser =
     axios
       .post("/user/signIn", userData)
       .then((res) => {
-        setAuthorizationHeader({ ...res.data, role_id: userData.role_id });
+        setAuthorizationHeader({ ...res.data, role_id: res.data.role_id });
 
         if (!isPopup) {
           history.push("/dashboard");
@@ -76,6 +76,10 @@ export const signinUser =
       .post("/user/signup", userData)
       .then((res) => {
         setAuthorizationHeader({ ...res.data, role_id: userData.role_id });
+        dispatch({
+          type: SET_USERS,
+          payload: res.data.data,
+        });
         if (!isPopup) {
           history.push("/login?signin=1");
         } else {
@@ -104,26 +108,26 @@ export const logoutUser = (history) => (dispatch) => {
     .post("/user/logout")
     .then((res) => {
       localStorage.removeItem("access_token");
+      localStorage.removeItem("role_id");
       history.push("/login");
       dispatch({ type: CLEAR_ERRORS });
       dispatch({ type: SET_UNAUTHENTICATED });
+      dispatch({
+        type: SET_USERS,
+        payload: null,
+      });
     })
 
     .catch((err) => {
       localStorage.removeItem("access_token");
-
+      localStorage.removeItem("role_id");
       history.push("/login");
       dispatch({ type: CLEAR_ERRORS });
-
-      //var errors = JSON.parse(err.response.data.error).errors;
-      // dispatch({
-      //   type: SET_ERRORS,
-      //   payload: err.response ? err.response.data : err.response,
-      // });
-      // console.log(err);
-      // toast.error(`${errors[0].msg}`, {
-      //   position: toast.POSITION.TOP_RIGHT,
-      // });
+      dispatch({ type: SET_UNAUTHENTICATED });
+      dispatch({
+        type: SET_USERS,
+        payload: null,
+      });
     });
 };
 
@@ -196,6 +200,8 @@ export const forgetPassword = (userData) => (dispatch) => {
     });
 };
 
-const setAuthorizationHeader = (data) => {
+const setAuthorizationHeader = (data, role_id) => {
   localStorage.setItem("access_token", data.data.accessToken);
+  localStorage.setItem("role_id", data.data.role_id);
+  localStorage.setItem("user_data", JSON.stringify(data.data));
 };

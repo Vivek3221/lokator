@@ -68,9 +68,18 @@ const Login = ({
             <Link to="/">
               <img src={Logo} width="200" />
             </Link>
-            <Link to="/" className="btn btn-primary text-white btn-sm">
-              Home
-            </Link>
+            <div>
+              <Link
+                to="/register?role_id=2"
+                className="btn btn-primary text-white btn-sm"
+              >
+                Registe as Partner
+              </Link>{" "}
+              &nbsp;&nbsp;
+              <Link to="/" className="btn btn-primary text-white btn-sm">
+                Home
+              </Link>
+            </div>
           </div>
         )}
         <div className="login-form">
@@ -377,14 +386,7 @@ const Login = ({
                     get started.
                   </span>
                 )}
-                <h3>
-                  Login as{" "}
-                  {role_id == 1
-                    ? "Customer"
-                    : role_id == 2
-                    ? "Partner"
-                    : "Admin"}
-                </h3>
+                <h3>Login</h3>
                 <Formik
                   enableReinitialize
                   initialValues={{
