@@ -431,7 +431,7 @@ let userServices = {
                         capacity : {
                             [Op.like]: '%' + search + '%'
                         },
-																								role_id:1
+						role_id:1
                   }
               
             }else{
@@ -439,7 +439,7 @@ let userServices = {
                     id : {
                        [Op.ne]: null
                    },
-																			role_id:1
+					role_id:1
                };
       }	
 			if(!page){
@@ -461,6 +461,7 @@ let userServices = {
 				},
 			where:searchloc,
 			offset: offset,
+			order : [['id', 'DESC']],	
 			limit: Constant.PAGINATION_LIMIT,
 			});		
 			if(!_.isEmpty(usersData)){
