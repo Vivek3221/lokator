@@ -44,6 +44,7 @@ let userController = {
 	getUserProfile: (req, res, next) => {
 		try {
 			var request = req.userData;
+			console.log(request);
 			if (request) {
 				return userServices.userProfile(request, res, next).then((data, error) => {
 					//console.log(data);

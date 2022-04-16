@@ -129,26 +129,31 @@ let userServices = {
 	userProfile: async (userRequest) => {
 		try {
 			var email = userRequest.email;
-			var users = await Users.findOne({
-				where: {
-					[Op.or]: [{ phone: email }, { email: email }]  
-				},
-				attributes: {
-					exclude: ['password'],
-				},
-				// include: [
-				// 	{
-				// 		model: Location,
-				// 		required: true,
-				// 		attributes: ['location_name'],
-				// 	},
-				// 	{
-				// 		model: Country,
-				// 		required: true,
-				// 		attributes: ['name'],
-				// 	},
-				// ],
-			});
+			var phone = userRequest.phone;
+
+			if(email){
+				var users = await Users.findOne({
+					where : {email: email},
+					attributes: {
+						exclude: ['password'],
+					},
+				});
+			}else {
+				var users = await Users.findOne({
+					where : {phone:phone},
+					attributes: {
+						exclude: ['password'],
+					},
+				});
+			}
+		
+			// return false;
+			// var users = await Users.findOne({
+			// 	where : {phone:phone},
+			// 	attributes: {
+			// 		exclude: ['password'],
+			// 	},
+			// });
 			if (users) {
 				return users;
 			}

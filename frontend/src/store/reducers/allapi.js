@@ -10,8 +10,6 @@ import {
   GET_USERS,
   EDIT_COUNTRY,
   EDIT_ADVERTISMENT,
-  GET_DASHBOARD,
-  GET_REPORT,
   GET_CAPACITY,
   ADD_CAPACITY,
   EDIT_CAPACITY,
@@ -24,7 +22,10 @@ import {
   SELECT_IMAGE,
   ADD_MACHINE,
   GET_MACHINES,
-  EDIT_MACHINE
+  GET_ORDERS,
+  UPDATE_ORDERS_STATUS,
+  EDIT_MACHINE,
+  GET_INQUIRY,
 } from "../types";
 
 const initialState = {
@@ -32,10 +33,11 @@ const initialState = {
   countries: [],
   locations: [],
   contacts: [],
+  orders: [],
   users: [],
   reports: [],
-  selectedImage:""
-  
+  selectedImage: "",
+  inquiry: [],
 };
 
 // eslint-disable-next-line import/no-anonymous-default-export
@@ -127,21 +129,24 @@ export default function (state = initialState, action) {
         users: action.payload,
       };
     case GET_CAPACITY:
-        return {
-          ...state,
-          capacity: action.payload,
-    };
-    case ADD_CAPACITY:
-      var { capacity:{capacityList} } = state;
-    
       return {
         ...state,
-        capacity:{capacityList:[action.payload,...capacityList]}
-        
+        capacity: action.payload,
+      };
+    case ADD_CAPACITY:
+      var {
+        capacity: { capacityList },
+      } = state;
+
+      return {
+        ...state,
+        capacity: { capacityList: [action.payload, ...capacityList] },
       };
 
     case EDIT_CAPACITY:
-      var { capacity:{capacityList} } = state;
+      var {
+        capacity: { capacityList },
+      } = state;
       var updatedCapacity = capacityList.map((item) => {
         if (item.id == action.payload.id) {
           return action.payload;
@@ -150,25 +155,27 @@ export default function (state = initialState, action) {
       });
       return {
         ...state,
-        types:{capacityList:updatedCapacity}
-        
+        types: { capacityList: updatedCapacity },
       };
-      case GET_MACHINES:
-        return {
-          ...state,
-          machines: action.payload,
-    };
-    case ADD_MACHINE:
-      var { machines:{productsData} } = state;
-    
+    case GET_MACHINES:
       return {
         ...state,
-        machines:{productsData:[action.payload,...productsData]}
-        
+        machines: action.payload,
+      };
+    case ADD_MACHINE:
+      var {
+        machines: { productsData },
+      } = state;
+
+      return {
+        ...state,
+        machines: { productsData: [action.payload, ...productsData] },
       };
 
     case EDIT_MACHINE:
-      var { machines:{productsData} } = state;
+      var {
+        machines: { productsData },
+      } = state;
       var updatedCapacity = productsData.map((item) => {
         if (item.id == action.payload.id) {
           return action.payload;
@@ -177,26 +184,28 @@ export default function (state = initialState, action) {
       });
       return {
         ...state,
-        machines:{productsData:updatedCapacity}
-        
+        machines: { productsData: updatedCapacity },
       };
-      case GET_TYPE:
-        return {
-          ...state,
-          types: action.payload,
-    };
-    
-    case ADD_TYPE:
-      var { types:{typeList} } = state;
-    
+    case GET_TYPE:
       return {
         ...state,
-        capacity:{typeList:[action.payload,...typeList]}
-        
+        types: action.payload,
+      };
+
+    case ADD_TYPE:
+      var {
+        types: { typeList },
+      } = state;
+
+      return {
+        ...state,
+        capacity: { typeList: [action.payload, ...typeList] },
       };
 
     case EDIT_TYPE:
-      var { types:{typeList} } = state;
+      var {
+        types: { typeList },
+      } = state;
       var updatedTypes = typeList.map((item) => {
         if (item.id == action.payload.id) {
           return action.payload;
@@ -205,25 +214,27 @@ export default function (state = initialState, action) {
       });
       return {
         ...state,
-        types:{typeList:updatedTypes}
-        
-      };  
+        types: { typeList: updatedTypes },
+      };
     case GET_CATEGORY:
-        return {
-          ...state,
-          category: action.payload,
-    };
-    case ADD_CATEGORY:
-      var { category:{categoryList} } = state;
-    
       return {
         ...state,
-        category:{categoryList:[action.payload,...categoryList]}
-        
+        category: action.payload,
+      };
+    case ADD_CATEGORY:
+      var {
+        category: { categoryList },
+      } = state;
+
+      return {
+        ...state,
+        category: { categoryList: [action.payload, ...categoryList] },
       };
 
     case EDIT_CATEGORY:
-      var { category:{categoryList} } = state;
+      var {
+        category: { categoryList },
+      } = state;
       var updatedTypes = categoryList.map((item) => {
         if (item.id == action.payload.id) {
           return action.payload;
@@ -232,16 +243,38 @@ export default function (state = initialState, action) {
       });
       return {
         ...state,
-        category:{categoryList:updatedTypes}
-        
-      }; 
-      case SELECT_IMAGE:
+        category: { categoryList: updatedTypes },
+      };
+    case SELECT_IMAGE:
       return {
         ...state,
-        selectedImage:action.payload
-        
-      };  
- default:
+        selectedImage: action.payload,
+      };
+    case GET_ORDERS:
+      return {
+        ...state,
+        orders: action.payload,
+      };
+    case UPDATE_ORDERS_STATUS:
+      var {
+        orders: { orderData },
+      } = state;
+      var updatedOrder = orderData.map((item) => {
+        if (item.id == action.payload.order_id) {
+          return { ...item, status: action.payload.status };
+        }
+        return item;
+      });
+      return {
+        ...state,
+        orders: { orderData: updatedOrder },
+      };
+    case GET_INQUIRY:
+      return {
+        ...state,
+        inquiry: action.payload,
+      };
+    default:
       return state;
   }
 }
