@@ -18,6 +18,10 @@ module.exports = (sequelize, Sequelize) => {
 				type: Sequelize.INTEGER,
     			allowNull: true,
 			},
+			user_id: {
+				type: Sequelize.INTEGER,
+    			allowNull: true,
+			},
    			capacity_id: {
 				type: Sequelize.INTEGER,
     			allowNull: true,
