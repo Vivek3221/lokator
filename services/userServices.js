@@ -129,9 +129,10 @@ let userServices = {
 	userProfile: async (userRequest) => {
 		try {
 			var email = userRequest.email;
+			var phone = userRequest.phone;
 			var users = await Users.findOne({
 				where: {
-					[Op.or]: [{ phone: email }, { email: email }]  
+					[Op.or]: [{ phone: phone }, { email: email }]  
 				},
 				attributes: {
 					exclude: ['password'],
