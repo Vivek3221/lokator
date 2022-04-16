@@ -79,7 +79,7 @@ let machineOrderController = {
         try {
             // get order req data from req body---------------
             var reqData     = req.body;
-            if(reqData.role != 1){
+            if(reqData.role != 0){
                 if(reqData.user_id !=undefined && reqData.user_id != ''){
 
                     const constactDataLists = await machineOrderServices.orderLists(reqData, res);
