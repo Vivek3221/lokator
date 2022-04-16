@@ -263,3 +263,24 @@ export const orderValidator = (values) => {
 
   return errors;
 };
+
+export const inquiryValidator = (values) => {
+  console.log(values);
+  let errors = {};
+  if (values.user !== "") {
+  }
+  if (!values.price_type) {
+    errors.price_type = REQUIRED;
+  }
+  if (!values.delivery_date) {
+    errors.delivery_date = REQUIRED;
+  }
+  if (!values.location) {
+    errors.location = REQUIRED;
+  }
+  if (!values.requirment) {
+    errors.requirment = REQUIRED;
+  }
+
+  return errors;
+};

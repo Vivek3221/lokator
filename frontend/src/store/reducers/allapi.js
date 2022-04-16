@@ -25,6 +25,7 @@ import {
   GET_ORDERS,
   UPDATE_ORDERS_STATUS,
   EDIT_MACHINE,
+  GET_INQUIRY,
 } from "../types";
 
 const initialState = {
@@ -36,6 +37,7 @@ const initialState = {
   users: [],
   reports: [],
   selectedImage: "",
+  inquiry: [],
 };
 
 // eslint-disable-next-line import/no-anonymous-default-export
@@ -266,6 +268,11 @@ export default function (state = initialState, action) {
       return {
         ...state,
         orders: { orderData: updatedOrder },
+      };
+    case GET_INQUIRY:
+      return {
+        ...state,
+        inquiry: action.payload,
       };
     default:
       return state;

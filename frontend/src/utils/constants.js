@@ -17,3 +17,18 @@ export const scopes = [
     value: "Sabkha",
   },
 ];
+
+export const priceType = [
+  {
+    label: "Monthly",
+    value: "Monthly",
+  },
+  {
+    label: "Weekly",
+    value: "Weekly",
+  },
+  {
+    label: "Daily",
+    value: "Daily",
+  },
+];

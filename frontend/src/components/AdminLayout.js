@@ -15,7 +15,6 @@ const AdminLayout = ({
   const [showLogins, setLogins] = useState(false);
   const [showSignup, setShowSignup] = useState(false);
   const [toggleChild, setToogleChild] = useState(false);
-  console.log("user", user);
 
   useEffect(() => {
     getUser();
@@ -52,6 +51,10 @@ const AdminLayout = ({
                   <NavLink className="nav-link" to="/contact-leads">
                     <i className="fa fa-fw fa-address-card" />
                     <span className="nav-link-text">Contact Leads</span>
+                  </NavLink>
+                  <NavLink className="nav-link" to="/inquiries">
+                    <i className="fa fa-fw fa-info-circle" />
+                    <span className="nav-link-text">Inquiries</span>
                   </NavLink>
                   <NavLink className="nav-link" to="/users-list">
                     <i className="fa fa-fw fa-users" />

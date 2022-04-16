@@ -48,3 +48,4 @@ export const ADD_MACHINE = "ADD_MACHINE";
 export const EDIT_MACHINE = "EDIT_MACHINE";
 export const GET_ORDERS = "GET_ORDERS";
 export const UPDATE_ORDERS_STATUS = "UPDATE_ORDERS_STATUS";
+export const GET_INQUIRY = "GET_INQUIRY";

@@ -4,6 +4,7 @@ import {
   SET_ERRORS,
   CLEAR_ERRORS,
   LOADING_UI,
+  SET_UNAUTHENTICATED,
 } from "../types";
 
 import axios from "axios";
@@ -105,12 +106,15 @@ export const logoutUser = (history) => (dispatch) => {
       localStorage.removeItem("access_token");
       history.push("/login");
       dispatch({ type: CLEAR_ERRORS });
+      dispatch({ type: SET_UNAUTHENTICATED });
     })
 
     .catch((err) => {
       localStorage.removeItem("access_token");
 
       history.push("/login");
+      dispatch({ type: CLEAR_ERRORS });
+
       //var errors = JSON.parse(err.response.data.error).errors;
       // dispatch({
       //   type: SET_ERRORS,

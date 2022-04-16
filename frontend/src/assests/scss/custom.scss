@@ -838,6 +838,16 @@ p.terms input[type="checkbox"] {
   margin: 0 0 20px;
   border-radius: 5px;
 }
+.order_form .col-lg-6,
+.order_form .col-lg-12 {
+  margin-bottom: 15px;
+}
+
+.order_form h4 {
+  font-size: 20px;
+  font-weight: bold;
+  margin: 10px 0 20px;
+}
 
 @media (min-width: 1200px) {
   .mobile-menu {

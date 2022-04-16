@@ -23,6 +23,7 @@ import {
   EDIT_MACHINE,
   GET_ORDERS,
   UPDATE_ORDERS_STATUS,
+  GET_INQUIRY,
 } from "../types";
 
 import axios from "axios";
@@ -633,6 +634,55 @@ export const updateStatus = (values) => (dispatch) => {
         type: UPDATE_ORDERS_STATUS,
         payload: values,
       });
+      dispatch({ type: CLEAR_ERRORS });
+    })
+
+    .catch((err) => {
+      dispatch({
+        type: SET_ERRORS,
+        payload: err.response ? err.response.data : err.response,
+      });
+    });
+};
+
+export const makeEnquiry = (values) => (dispatch) => {
+  dispatch({ type: LOADING_UI });
+  const token = localStorage.getItem("access_token");
+  const headers = {
+    "Content-Type": "application/json",
+    "x-access-token": token,
+  };
+  axios
+    .post("/product/inquiry", values, {
+      headers: headers,
+    })
+    .then((res) => {
+      toast.success(`${res.data.message}`, {
+        position: toast.POSITION.TOP_RIGHT,
+      });
+      localStorage.removeItem("cart_items");
+      dispatch({ type: CLEAR_ERRORS });
+    })
+
+    .catch((err) => {
+      dispatch({
+        type: SET_ERRORS,
+        payload: err.response ? err.response.data : err.response,
+      });
+    });
+};
+
+export const getInquiry = (values) => (dispatch) => {
+  dispatch({ type: LOADING_UI });
+
+  axios
+    .post("/product/inquiry/list", values)
+    .then((res) => {
+      dispatch({
+        type: GET_INQUIRY,
+        payload: res.data.data,
+      });
+
       dispatch({ type: CLEAR_ERRORS });
     })
 

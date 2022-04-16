@@ -32,6 +32,7 @@ import CountryManagement from "./pages/admin/CountryManagement";
 import CapacityManagement from "./pages/admin/MachineManagement/CapacityManagement";
 import TypesManagment from "./pages/admin/MachineManagement/TypesManangment";
 import ContactLeads from "./pages/admin/ContactLeads";
+import EnquiryList from "./pages/admin/EnquiryList";
 import Orders from "./pages/admin/Orders";
 import Users from "./pages/admin/Users";
 import CategoryManagment from "./pages/admin/MachineManagement/CategoryManagment";
@@ -123,13 +124,9 @@ class App extends Component {
             <WebisteRouter exact path="/Contact" component={Contact} />
             <WebisteRouter exact path="/services" component={Services} />
             <WebisteRouter exact path="/terms" component={Terms} />
-            <Route exact path="/login" component={Login} />
-            <Route exact path="/forgot-password" component={Login} />
-            <Route exact path="/register" component={Login} />
 
             <Route exact path="/admin/login" component={Login} />
             <CustomerRoute exact path="/products" component={Products} />
-
             <PrivateOnlyRoute exact path="/dashboard" component={Dashboard} />
             <PrivateOnlyRoute exact path="/profile" component={Profile} />
             <PrivateOnlyRoute
@@ -163,6 +160,7 @@ class App extends Component {
               path="/category-management"
               component={CategoryManagment}
             />
+            <PrivateOnlyRoute exact path="/inquiries" component={EnquiryList} />
             <PrivateOnlyRoute
               exact
               path="/machines"
@@ -170,6 +168,9 @@ class App extends Component {
             />
 
             <PrivateOnlyRoute exact path="/users-list" component={Users} />
+            <Route exact path="/login" component={Login} />
+            <Route exact path="/forgot-password" component={Login} />
+            <Route exact path="/register" component={Login} />
 
             <Route exact path="*" component={NotFound} />
           </Switch>

@@ -4,6 +4,7 @@ import { connect } from "react-redux";
 import {
   getCategory,
   getMachines,
+  makeEnquiry,
   saveOrders,
 } from "../../store/actions/allapi";
 import { get } from "lodash";
@@ -16,10 +17,11 @@ import {
   Select,
   Textarea,
 } from "../../components/.";
-import { scopes } from "../../utils/constants";
+import { scopes, priceType } from "../../utils/constants";
 import { Formik, Field, Form } from "formik";
+import PhoneInput from "react-phone-input-2";
 import Login from "../Login";
-import { orderValidator } from "../../utils/validation";
+import { orderValidator, inquiryValidator } from "../../utils/validation";
 
 const scrollToRef = (ref) => window.scrollTo(0, ref.current.offsetTop);
 const Home = (props) => {
@@ -27,8 +29,10 @@ const Home = (props) => {
     getCategory,
     getMachines,
     saveOrders,
+    makeEnquiry,
     location: { search },
     allapi: { category, machines },
+    user: { user },
   } = props;
   const query = new URLSearchParams(search);
   const [searchVal, setSearch] = useState(query.get("query"));
@@ -41,6 +45,7 @@ const Home = (props) => {
   const [showLogin, setShowLogin] = useState(false);
   const [activeStep, setActiveStep] = useState(1);
   const [orderInfo, setOrderInfo] = useState("");
+  const [showEnquiry, setShowEnquiry] = useState(false);
   const myRef = useRef(null);
   const executeScroll = () => scrollToRef(myRef);
 
@@ -98,6 +103,14 @@ const Home = (props) => {
     } else {
       setShowLogin(true);
     }
+  };
+
+  const placeInquiry = async (values) => {
+    setShowEnquiry(false);
+
+    let bodyData = { ...values };
+
+    makeEnquiry(bodyData);
   };
 
   return (
@@ -325,7 +338,7 @@ const Home = (props) => {
                                   onChange={(option) => {
                                     formikBag.setFieldValue(
                                       "order_scope",
-                                      option.value
+                                      option?.value
                                     );
                                   }}
                                   error={
@@ -425,6 +438,247 @@ const Home = (props) => {
           </div>
         }
       />
+
+      {/* //Enquiry Form */}
+      <Modal
+        header={"Send us your Inquiry"}
+        show={showEnquiry}
+        width={600}
+        onClose={() => setShowEnquiry(false)}
+        content={
+          <div className="order_form">
+            <Formik
+              enableReinitialize
+              initialValues={{
+                user_id: user?.id || "",
+                name: "",
+                email: "",
+                company_name: "",
+                phone_no: "",
+                requirment: "",
+                price_type: null,
+                delivery_date: "",
+                location: "",
+              }}
+              validate={(values) => inquiryValidator(values)}
+              validateOnChange
+              onSubmit={placeInquiry}
+            >
+              {(formikBag) => {
+                return (
+                  <Form>
+                    {!user && (
+                      <>
+                        <div className="row">
+                          <div className="col-lg-6">
+                            <Field name="name">
+                              {({ field }) => (
+                                <Input
+                                  {...field}
+                                  type="text"
+                                  error={
+                                    formikBag.touched.name &&
+                                    formikBag.errors.name
+                                      ? formikBag.errors.name
+                                      : null
+                                  }
+                                  className="form-control"
+                                  placeholder={"Your Name *"}
+                                />
+                              )}
+                            </Field>
+                          </div>
+                          <div className="col-lg-6">
+                            <Field name="name">
+                              {({ field }) => (
+                                <Input
+                                  {...field}
+                                  type="text"
+                                  error={
+                                    formikBag.touched.name &&
+                                    formikBag.errors.name
+                                      ? formikBag.errors.name
+                                      : null
+                                  }
+                                  className="form-control"
+                                  placeholder={"Compnay Name *"}
+                                />
+                              )}
+                            </Field>
+                          </div>
+                        </div>
+                        <div className="row">
+                          <div className="col-md-6">
+                            <Field name="phone">
+                              {({ field }) => (
+                                <div>
+                                  <PhoneInput
+                                    {...field}
+                                    country="in"
+                                    type="phone"
+                                    value={formikBag.values.phone_no}
+                                    onChange={(phone, data) => {
+                                      formikBag.setFieldValue(
+                                        "phone_no",
+                                        phone
+                                      );
+                                      formikBag.setFieldValue(
+                                        "country_code",
+                                        data.dialCode
+                                      );
+                                    }}
+                                    error={
+                                      formikBag.touched.phone &&
+                                      formikBag.errors.phone
+                                        ? formikBag.errors.phone
+                                        : null
+                                    }
+                                    className="form-control"
+                                    placeholder="Phone Number"
+                                  />
+                                  {formikBag.errors.phone && (
+                                    <p
+                                      style={{
+                                        paddingTop: 5,
+                                        fontSize: 13,
+                                        color: "red",
+                                      }}
+                                    >
+                                      {formikBag.errors.phone}
+                                    </p>
+                                  )}
+                                </div>
+                              )}
+                            </Field>
+                          </div>
+                          <div className="col-lg-6">
+                            <Field name="email">
+                              {({ field }) => (
+                                <Input
+                                  {...field}
+                                  type="email"
+                                  className="form-control"
+                                  error={
+                                    formikBag.touched.email &&
+                                    formikBag.errors.email
+                                      ? formikBag.errors.email
+                                      : null
+                                  }
+                                  placeholder={"Email Address"}
+                                />
+                              )}
+                            </Field>
+                          </div>
+                        </div>
+                      </>
+                    )}
+                    <h4>Order Details</h4>
+
+                    <div className="row">
+                      <div className="col-lg-12">
+                        <Field name="price_type">
+                          {({ field }) => (
+                            <Select
+                              {...field}
+                              name="order_scope"
+                              options={priceType}
+                              placeholder={"Price Type"}
+                              value={scopes.find(
+                                (option) =>
+                                  option.value === formikBag.values.price_type
+                              )}
+                              onChange={(option) => {
+                                formikBag.setFieldValue(
+                                  "price_type",
+                                  option?.value
+                                );
+                              }}
+                              error={
+                                formikBag.touched.price_type &&
+                                formikBag.errors.price_type
+                                  ? formikBag.errors.price_type
+                                  : null
+                              }
+                            />
+                          )}
+                        </Field>
+                      </div>
+                    </div>
+                    <div className="row">
+                      <div className="col-lg-6">
+                        <Field name="location">
+                          {({ field }) => (
+                            <Input
+                              {...field}
+                              type="text"
+                              className="form-control"
+                              placeholder={"Delivery Location"}
+                              error={
+                                formikBag.touched.location &&
+                                formikBag.errors.location
+                                  ? formikBag.errors.location
+                                  : null
+                              }
+                            />
+                          )}
+                        </Field>
+                      </div>
+                      <div className="col-lg-6">
+                        <Field name="delivery_date">
+                          {({ field }) => (
+                            <Input
+                              {...field}
+                              type="date"
+                              className="form-control"
+                              placeholder={"Work Start Date"}
+                              error={
+                                formikBag.touched.delivery_date &&
+                                formikBag.errors.delivery_date
+                                  ? formikBag.errors.delivery_date
+                                  : null
+                              }
+                            />
+                          )}
+                        </Field>
+                      </div>
+                    </div>
+                    <div className="row">
+                      <div className="col-lg-12">
+                        <Field name="requirment">
+                          {({ field }) => (
+                            <Textarea
+                              {...field}
+                              className="form-control"
+                              placeholder={"Requirement"}
+                              error={
+                                formikBag.touched.requirment &&
+                                formikBag.errors.requirment
+                                  ? formikBag.errors.requirment
+                                  : null
+                              }
+                            />
+                          )}
+                        </Field>
+                      </div>
+                    </div>
+
+                    <div className="footer-content">
+                      <button
+                        className="btn btn-primary text-white"
+                        type="submit"
+                      >
+                        Send Inquiry
+                      </button>
+                    </div>
+
+                    <FocusError />
+                  </Form>
+                );
+              }}
+            </Formik>
+          </div>
+        }
+      />
       <Modal
         show={showLogin}
         content={
@@ -440,7 +694,7 @@ const Home = (props) => {
         }
       />
 
-      {cartProducts.length > 0 && !showModal && !showLogin && (
+      {cartProducts.length > 0 && !showModal && !showLogin ? (
         <div className="cart_box">
           {cartProducts.length} equipment added to inquiry{" "}
           <button
@@ -452,6 +706,19 @@ const Home = (props) => {
           >
             <i class="fa  fa-shopping-cart "></i>
             View and Checkout
+          </button>
+        </div>
+      ) : (
+        <div className="cart_box">
+          Can't find the machine you're looking for?
+          <button
+            className="btn btn-primry"
+            onClick={() => {
+              setShowEnquiry(true);
+            }}
+          >
+            <i class="fa  fa-shopping-cart "></i>
+            Submit Enquiry
           </button>
         </div>
       )}
@@ -468,6 +735,7 @@ const mapActionsToProps = {
   getCategory,
   getMachines,
   saveOrders,
+  makeEnquiry,
 };
 
 export default connect(mapStateToProps, mapActionsToProps)(Home);

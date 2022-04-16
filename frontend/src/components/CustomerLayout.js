@@ -6,7 +6,13 @@ import { Link, NavLink } from "react-router-dom";
 import Logo from "../assests/images/logo.jpeg";
 import { connect } from "react-redux";
 import { get } from "lodash";
-const CustomerLayout = ({ children, history, logoutUser, getUser, user }) => {
+const CustomerLayout = ({
+  children,
+  history,
+  logoutUser,
+  getUser,
+  user: { user },
+}) => {
   const [showLogins, setLogins] = useState(false);
   const [showSignup, setShowSignup] = useState(false);
   const [toggleChild, setToogleChild] = useState(false);
@@ -29,12 +35,12 @@ const CustomerLayout = ({ children, history, logoutUser, getUser, user }) => {
             <li>
               <div className="logo_group"></div>
             </li>
-            <li className="nav-item">
+            {/* <li className="nav-item">
               <NavLink className="nav-link" to="/customer-dashboard">
                 <i className="fa fa-fw fa-dashboard" />
                 <span className="nav-link-text">Dashboard</span>
               </NavLink>
-            </li>
+            </li> */}
             <li className="nav-item">
               <NavLink className="nav-link" to="/products">
                 <i className="fa  fa-truck" />

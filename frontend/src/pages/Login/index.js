@@ -348,20 +348,20 @@ const Login = ({
                         </div>
                         <p>
                           Already have an account?{" "}
-                          <a
-                            href="javascript:void()"
-                            onClick={() => {
-                              if (!isPopup) {
-                                history.push({
-                                  pathname: "/login?role_id=" + role_id,
-                                });
-                              } else {
+                          {!isPopup ? (
+                            <Link to={"/login?role_id=" + role_id}>
+                              SIGN IN
+                            </Link>
+                          ) : (
+                            <a
+                              href="javascript:void()"
+                              onClick={() => {
                                 setShowSignUp(false);
-                              }
-                            }}
-                          >
-                            SIGN IN
-                          </a>
+                              }}
+                            >
+                              SIGN IN
+                            </a>
+                          )}
                         </p>
                         <FocusError />
                       </Form>
@@ -455,20 +455,20 @@ const Login = ({
                         {role_id != 0 && (
                           <p>
                             Don't have an account?{" "}
-                            <a
-                              href="javascript:void()"
-                              onClick={() => {
-                                if (!isPopup) {
-                                  history.push({
-                                    pathname: "/register?role_id=" + role_id,
-                                  });
-                                } else {
+                            {!isPopup ? (
+                              <Link to={"/register?role_id=" + role_id}>
+                                REGISTER
+                              </Link>
+                            ) : (
+                              <a
+                                href="javascript:void()"
+                                onClick={() => {
                                   setShowSignUp(true);
-                                }
-                              }}
-                            >
-                              REGISTER
-                            </a>
+                                }}
+                              >
+                                REGISTER
+                              </a>
+                            )}
                           </p>
                         )}
                         <FocusError />

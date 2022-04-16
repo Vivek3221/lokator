@@ -4,7 +4,7 @@ import { NavLink, Link } from "react-router-dom";
 import { connect } from "react-redux";
 import { logoutUser, getUser } from "../store/actions/users";
 import { withRouter } from "react-router-dom";
-function Header({ user, logoutUser, history }) {
+function Header({ user: { user }, logoutUser, history }) {
   const [toggleMenu, setToggleMenu] = useState(false);
 
   const Menu = (
