@@ -55,9 +55,7 @@ const Orders = ({
                   <div className="col-lg-6">
                     <p>
                       <strong>Order Placed</strong>:{" "}
-                      {moment(order.order_date).format(
-                        "MMMM Do YYYY, h:mm:ss a"
-                      )}
+                      {moment(order.order_date).format("MMMM Do YYYY ")}
                     </p>
                     <p>
                       <strong>Delivery Location</strong>:{" "}

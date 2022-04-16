@@ -64,16 +64,10 @@ const CapacityManagement = ({ getInquiry, allapi: { inquiry } }) => {
                   <td>{item.phone_no}</td>
                   <td>{item.company_name}</td>
                   <td>{item.price_type}</td>
-                  <td>
-                    {moment(item.delivery_date).format(
-                      "MMMM Do YYYY, h:mm:ss a"
-                    )}
-                  </td>
+                  <td>{moment(item.delivery_date).format("MMMM Do YYYY ")}</td>
                   <td>{item.location}</td>
                   <td>{item.requirment}</td>
-                  <td>
-                    {moment(item.created_at).format("MMMM Do YYYY, h:mm:ss a")}
-                  </td>
+                  <td>{moment(item.created_at).format("MMMM Do YYYY ")}</td>
                 </tr>
               );
             })}
