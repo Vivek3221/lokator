@@ -15,8 +15,8 @@ const Orders = ({
   let bodyData = {
     role: localStorage.getItem("role_id"),
     page: 0,
-    user_id: JSON.parse(localStorage.getItem("user_data")).id,
     search: searchVal,
+    user_id: JSON.parse(localStorage.getItem("user_data")).id,
   };
 
   useEffect(() => {
