@@ -46,16 +46,13 @@ let machineOrderServices = {
 			if(req.search){
 				const search = req.search.toString().replace(/"/g, '');
 				if(search){
-					extraWhereCondition = {
+					var extraWhereCondition = {
 						[Op.or]: [
 									{
 									'$machine_orders.delivery_location$': { [Op.like]:  `%${search}%` },
 									},
 									{
 									'$machine_orders.order_id$': { [Op.like]: `%${search}%` },
-									},
-									{
-									'$machine_orders.status$': { [Op.like]: `%${req.status}%` },
 									}
 										
 						]
@@ -63,10 +60,11 @@ let machineOrderServices = {
 				}
 			}	
 
-			// role :- 1-Admin, 2-User, 3-Partner------------------------
+			// role :- 0-Admin, 1-User, 2-Partner------------------------
 			if(req.role == 0){
 				orderData = await machineOrder.findAll({
 					where:extraWhereCondition,
+					where:{status:req.status},
 					offset: offset,
 					include: [
 						{
@@ -79,13 +77,13 @@ let machineOrderServices = {
 					order : [['id', 'DESC']],
 					attributes: ['id','order_id','delivery_location','work_start_date','comments_remarks','order_scope','order_date', 'status', 'created_at']
 				});
-			}
-			else if(req.role == 1){
-				extraWhereCondition ={
-					user_id: req.user_id
-				}
+			} else if(req.role == 1){
 				orderData = await machineOrder.findAll({
 					where: extraWhereCondition,
+					where:{
+						status:req.status, 
+						user_id: req.user_id
+					},
 					include: [
 						{
 							model: Users,
@@ -99,10 +97,7 @@ let machineOrderServices = {
 					order : [['id', 'DESC']],
 					attributes: ['id','order_id','delivery_location','work_start_date','comments_remarks','order_scope','order_date','created_at']
 				});	
-			}else if(req.role == 2){
-				extraWhereCondition ={
-					user_id: req.user_id
-				}
+			} else if(req.role == 2){
 
 				let allMachine = await MachineProducts.findAll({
 					where:{
@@ -142,7 +137,8 @@ let machineOrderServices = {
 					where:{
 						order_id:{
 							[Op.in]: orderID
-						}
+						},
+						status:req.status
 					},
 					include: [
 						{
