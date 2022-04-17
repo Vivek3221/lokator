@@ -43,7 +43,7 @@ const Login = ({
   };
   const handleSignIn = (values) => {
     var formValues = { ...values };
-    formValues.role_id = role_id;
+    formValues.role_id = isPopup ? 1 : role_id;
     if (formValues.email == "") {
       delete formValues.email;
     }
