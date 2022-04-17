@@ -169,47 +169,73 @@ let userServices = {
 	 * Description : User profile data.
 	 * @param {} userRequest
 	 */
-		productListsService:  async (req,res) => {
-			try {
-				var productsData =[];
-				var page     = req.query.page;
-				var offset   = parseInt(page) * Constant.PAGINATION_LIMIT;
-				const status = req.query.status;
-				var extraWhereCondition ={};
-				if(req.query.category_id){
-					const category = req.query.category_id;
-					extraWhereCondition ={
-					'$machine_categories.id$': { [Op.eq]: category }
-					}
+	productListsService:  async (req,res) => {
+		try {
+			var productsData =[];
+			var page     = req.query.page;
+			var offset   = parseInt(page) * Constant.PAGINATION_LIMIT;
+			const status = req.query.status;
+			var extraWhereCondition ={};
+			var extraRole = {};
+			if(req.query.category_id){
+				const category = req.query.category_id;
+				extraWhereCondition ={
+				'$machine_categories.id$': { [Op.eq]: category }
 				}
-				if (status || status == 0) {
-					extraWhereCondition.status = status;
-					}
-				if(req.query.search){
-				const search = req.query.search.toString().replace(/"/g, '');
-				if(search){
-									var extraWhereCondition = {
-										[Op.or]: [
-													{
-													'$machine_products.machine_name$': { [Op.like]: `%${search}%` }
-													},
-													{
-													'$machine_categories.category_name$': { [Op.like]:  `%${search}%` },
-														},
-													{
-													'$machine_types.type$': { [Op.like]: `%${search}%` }
-													}
-														
-										]
-							}
+			}
+			if (status || status == 0) {
+				extraWhereCondition.status = status;
 				}
-			}						
-      	
+			let search = '';	
+			if(req.query.search!=undefined && req.query.search!=''){
+				search = req.query.search;
+			}
+			
+			
 			if(!page){
-							page = 0;
-			}					
+				page = 0;
+			}		
+			
+			if(req.query.role!=undefined && req.query.role!='' && req.query.role==2){
+				if(req.query.user_id !=undefined && req.query.user_id !=''){
+					extraRole = {
+						user_id:req.query.user_id,
+						[Op.or]: [
+							{
+							'$machine_products.machine_name$': { [Op.like]: `%${search}%` }
+							},
+							{
+							'$machine_categories.category_name$': { [Op.like]:  `%${search}%` },
+								},
+							{
+							'$machine_types.type$': { [Op.like]: `%${search}%` }
+							}
+								
+						]
+					}
+				}
+				
+			}else{
+					
+				extraRole = {
+					[Op.or]: [
+							{
+							'$machine_products.machine_name$': { [Op.like]: '%'+search+'%' }
+							},
+							{
+							'$machine_categories.category_name$': { [Op.like]:  '%'+`${search}`+'%' },
+								},
+							{
+							'$machine_types.type$': { [Op.like]: '%'+`${search}`+'%' }
+							}
+								
+					]
+				}
+			}
+
+			console.log(extraRole);
 			productsData = await MachineProducts.findAll({
-			where: extraWhereCondition,
+			where:extraRole,
 			order : [['id', 'DESC']],	
 			include: [
 					{
@@ -277,178 +303,178 @@ let userServices = {
 					productsData: productArray,
 				};
 			}	
-			} catch (error) {
-				console.log(error);
-				//res.status(500).send({ message: error.message });
-			}	
-		},
+		} catch (error) {
+			console.log(error);
+			//res.status(500).send({ message: error.message });
+		}	
+	},
 
 	
-		contactUsLists: async (req,res) => {
-			try {
-				var page = req.query.page;
-				var offset = parseInt(page) * Constant.PAGINATION_LIMIT;
-				const search = req.query.search;
-											if(search){
-                var searchloc = {
-                        capacity : {
-                            [Op.like]: '%' + search + '%'
-                        }
-																								
-                  }
-              
-            }else{
-                var searchloc = {
-                    id : {
-                       [Op.ne]: null
-                   }
-																		
-               };
-      }	
-			if(!page){
-							page = 0;
-			}		
-			const contactUsData = await ContactUs.findAll({
-				where:searchloc,
-				offset: offset,
-			limit: Constant.PAGINATION_LIMIT,
-    order : [['id', 'DESC']],
-			});		
-			if(!_.isEmpty(contactUsData)){
-				let totalPage = Math.ceil(contactUsData.length / Constant.PAGINATION_LIMIT);
-					return {
-					totalCount: contactUsData.length,
-					totalPage: totalPage,
-					contactUsData: contactUsData,
-				};
-			}	
-			} catch (error) {
-				res.status(500).send({ message: error.message });
-			}	
-		},
-
-		usersLists: async (req,res) => {
-			try {
-				var page = req.query.page;
-				var offset = parseInt(page) * Constant.PAGINATION_LIMIT;
-				const search = req.query.search;
-											if(search){
-                var searchloc = {
-                        capacity : {
-                            [Op.like]: '%' + search + '%'
-                        },
-																								role_id:1
-                  }
-              
-            }else{
-                var searchloc = {
-                    id : {
-                       [Op.ne]: null
-                   },
-																			role_id:1
-               };
-      }	
-			if(!page){
-							page = 0;
-			}					
-			// const pageAsNumber 		= Number.parseInt(req.query.page);
-			// const sizeAsNumber   = Number.parseInt(req.query.size);
-			// let page =0;
-			// if(!Number.isNaN(pageAsNumber) && pageAsNumber>0){
-			// 	page =pageAsNumber;
-			// }
-			// let size=10;
-			// if(!Number.isNaN(sizeAsNumber) && sizeAsNumber>0  && sizeAsNumber<10){
-			// 	page =sizeAsNumber;
-			// }	
-			const usersData = await Users.findAll({
-				attributes: {
-					exclude: ['password'],
-				},
+	contactUsLists: async (req,res) => {
+		try {
+			var page = req.query.page;
+			var offset = parseInt(page) * Constant.PAGINATION_LIMIT;
+			const search = req.query.search;
+										if(search){
+			var searchloc = {
+					capacity : {
+						[Op.like]: '%' + search + '%'
+					}
+																							
+				}
+			
+		}else{
+			var searchloc = {
+				id : {
+					[Op.ne]: null
+				}
+																	
+			};
+	}	
+		if(!page){
+						page = 0;
+		}		
+		const contactUsData = await ContactUs.findAll({
 			where:searchloc,
 			offset: offset,
-			limit: Constant.PAGINATION_LIMIT,
-			});		
-			if(!_.isEmpty(usersData)){
-				let totalPage = Math.ceil(usersData.length / Constant.PAGINATION_LIMIT);
-					return {
-					totalCount: usersData.length,
-					totalPage: totalPage,
-					usersData: usersData,
-				};
-			}	
-			} catch (error) {
-				res.status(500).send({ message: error.message });
-			}	
-		},
+		limit: Constant.PAGINATION_LIMIT,
+order : [['id', 'DESC']],
+		});		
+		if(!_.isEmpty(contactUsData)){
+			let totalPage = Math.ceil(contactUsData.length / Constant.PAGINATION_LIMIT);
+				return {
+				totalCount: contactUsData.length,
+				totalPage: totalPage,
+				contactUsData: contactUsData,
+			};
+		}	
+		} catch (error) {
+			res.status(500).send({ message: error.message });
+		}	
+	},
 
-		saveProductInquiry: async (data) => {
-         
-			var productInquiryCreate = await Inquiries.create(data);
-			if (productInquiryCreate) {
-				return productInquiryCreate;
-			}
-		},
-
-		inquiryLists: async (req,res) => {
-			try {
-				var page = req.page;
-				if(!page){
-					page = 0;
+	usersLists: async (req,res) => {
+		try {
+			var page = req.query.page;
+			var offset = parseInt(page) * Constant.PAGINATION_LIMIT;
+			const search = req.query.search;
+										if(search){
+			var searchloc = {
+					capacity : {
+						[Op.like]: '%' + search + '%'
+					},
+																							role_id:1
 				}
-				
-				var inquiryData =[];
-				var extraWhereCondition ={};
-	
-				var offset = parseInt(page) * Constant.PAGINATION_LIMIT;
-	
-				if(req.search){
-					const search = req.search.toString().replace(/"/g, '');
-					if(search){
-						extraWhereCondition = {
-							[Op.or]: [
-								{
-								'$inquiries.name$': { [Op.like]:  `%${search}%` },
-								},
-								{
-								'$inquiries.email$': { [Op.like]: `%${search}%` },
-								},
-								{
-								'$inquiries.phone_no$': { [Op.like]: `%${search}%` },
-								}	
-							]
-						}
+			
+		}else{
+			var searchloc = {
+				id : {
+					[Op.ne]: null
+				},
+																		role_id:1
+			};
+	}	
+		if(!page){
+						page = 0;
+		}					
+		// const pageAsNumber 		= Number.parseInt(req.query.page);
+		// const sizeAsNumber   = Number.parseInt(req.query.size);
+		// let page =0;
+		// if(!Number.isNaN(pageAsNumber) && pageAsNumber>0){
+		// 	page =pageAsNumber;
+		// }
+		// let size=10;
+		// if(!Number.isNaN(sizeAsNumber) && sizeAsNumber>0  && sizeAsNumber<10){
+		// 	page =sizeAsNumber;
+		// }	
+		const usersData = await Users.findAll({
+			attributes: {
+				exclude: ['password'],
+			},
+		where:searchloc,
+		offset: offset,
+		limit: Constant.PAGINATION_LIMIT,
+		});		
+		if(!_.isEmpty(usersData)){
+			let totalPage = Math.ceil(usersData.length / Constant.PAGINATION_LIMIT);
+				return {
+				totalCount: usersData.length,
+				totalPage: totalPage,
+				usersData: usersData,
+			};
+		}	
+		} catch (error) {
+			res.status(500).send({ message: error.message });
+		}	
+	},
+
+	saveProductInquiry: async (data) => {
+		
+		var productInquiryCreate = await Inquiries.create(data);
+		if (productInquiryCreate) {
+			return productInquiryCreate;
+		}
+	},
+
+	inquiryLists: async (req,res) => {
+		try {
+			var page = req.page;
+			if(!page){
+				page = 0;
+			}
+			
+			var inquiryData =[];
+			var extraWhereCondition ={};
+
+			var offset = parseInt(page) * Constant.PAGINATION_LIMIT;
+
+			if(req.search){
+				const search = req.search.toString().replace(/"/g, '');
+				if(search){
+					extraWhereCondition = {
+						[Op.or]: [
+							{
+							'$inquiries.name$': { [Op.like]:  `%${search}%` },
+							},
+							{
+							'$inquiries.email$': { [Op.like]: `%${search}%` },
+							},
+							{
+							'$inquiries.phone_no$': { [Op.like]: `%${search}%` },
+							}	
+						]
 					}
 				}
+			}
 
-				inquiryData = await Inquiries.findAll({
-					where:extraWhereCondition,
-					offset: offset,
-					limit: Constant.PAGINATION_LIMIT,
-					order : [['id', 'DESC']],
-				});	
-					
-				//console.log(inquiryData); return false;
-				if(!_.isEmpty(inquiryData)){
-					
-					let totalPage = Math.ceil(inquiryData.length / Constant.PAGINATION_LIMIT);
-						return {
-						totalCount: inquiryData.length,
-						totalPage: totalPage,
-						inquiryData: inquiryData,
-					};
-				}else{
-					let totalPage = Math.ceil(inquiryData.length / Constant.PAGINATION_LIMIT);
-						return {
-						totalCount: inquiryData.length,
-						totalPage: totalPage,
-						inquiryData: [],
-					};
-				}	
-			} catch (error) {
-				res.status(500).send({ message: error.message });
+			inquiryData = await Inquiries.findAll({
+				where:extraWhereCondition,
+				offset: offset,
+				limit: Constant.PAGINATION_LIMIT,
+				order : [['id', 'DESC']],
+			});	
+				
+			//console.log(inquiryData); return false;
+			if(!_.isEmpty(inquiryData)){
+				
+				let totalPage = Math.ceil(inquiryData.length / Constant.PAGINATION_LIMIT);
+					return {
+					totalCount: inquiryData.length,
+					totalPage: totalPage,
+					inquiryData: inquiryData,
+				};
+			}else{
+				let totalPage = Math.ceil(inquiryData.length / Constant.PAGINATION_LIMIT);
+					return {
+					totalCount: inquiryData.length,
+					totalPage: totalPage,
+					inquiryData: [],
+				};
 			}	
-		}
+		} catch (error) {
+			res.status(500).send({ message: error.message });
+		}	
+	}
 
 };
 

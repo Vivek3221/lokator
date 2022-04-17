@@ -43,14 +43,14 @@ let userController = {
 	 * Description: get Logged In User Profile.
 	 * @returns
 	 */
-		editProduct: async (req, res) => {
-			try {
-				const productDetails = await productServices.editProductDetailService(req, res);
-				if (productDetails) 
-				return res.send(ResponseHandler.successResponse(productDetails, message.PRODUCT_DETAILS));
-			} catch (error) {
-				console.log(error);
-				//res.status(500).send({ message: error.message });
+	editProduct: async (req, res) => {
+		try {
+			const productDetails = await productServices.editProductDetailService(req, res);
+			if (productDetails) 
+			return res.send(ResponseHandler.successResponse(productDetails, message.PRODUCT_DETAILS));
+		} catch (error) {
+			console.log(error);
+			//res.status(500).send({ message: error.message });
 			}
 	},
 	productLists: async (req, res) => {
@@ -62,7 +62,7 @@ let userController = {
 			console.log(error);
 			//res.status(500).send({ message: error.message });
 		}
-},
+	},
 	
 	/**
 	 * Description  : Update profile

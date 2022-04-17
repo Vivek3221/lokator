@@ -33,7 +33,6 @@ let machineOrderServices = {
 			if(!page){
 				page = 0;
 			}
-			
 			var orderData =[];
 			var mainOrderData = [];
 			var partnerMachine = [];
