@@ -36,35 +36,27 @@ let machineOrderServices = {
 			
 			var orderData =[];
 			var mainOrderData = [];
-			var extraWhereCondition ={};
 			var partnerMachine = [];
 			var partnerMachineOrderID = [];
 			var orderID = [];
 
 			var offset = parseInt(page) * Constant.PAGINATION_LIMIT;
-
-			if(req.search){
-				const search = req.search.toString().replace(/"/g, '');
-				if(search){
-					var extraWhereCondition = {
-						[Op.or]: [
-									{
-									'$machine_orders.delivery_location$': { [Op.like]:  `%${search}%` },
-									},
-									{
-									'$machine_orders.order_id$': { [Op.like]: `%${search}%` },
-									}
-										
-						]
-					}
-				}
-			}	
+			const search = req.search.toString().replace(/"/g, '');
 
 			// role :- 0-Admin, 1-User, 2-Partner------------------------
 			if(req.role == 0){
 				orderData = await machineOrder.findAll({
-					where:extraWhereCondition,
-					where:{status:req.status},
+					where:{
+						status:req.status,
+						[Op.or]: [
+							{
+							'$machine_orders.delivery_location$': { [Op.like]:  `%${search}%` },
+							},
+							{
+							'$machine_orders.order_id$': { [Op.like]: `%${search}%` },
+							}
+						]
+					},
 					offset: offset,
 					include: [
 						{
@@ -79,10 +71,17 @@ let machineOrderServices = {
 				});
 			} else if(req.role == 1){
 				orderData = await machineOrder.findAll({
-					where: extraWhereCondition,
 					where:{
 						status:req.status, 
-						user_id: req.user_id
+						user_id: req.user_id,
+						[Op.or]: [
+							{
+							'$machine_orders.delivery_location$': { [Op.like]:  `%${search}%` },
+							},
+							{
+							'$machine_orders.order_id$': { [Op.like]: `%${search}%` },
+							}
+						]
 					},
 					include: [
 						{
@@ -133,12 +132,19 @@ let machineOrderServices = {
 				}
 
 				orderData = await machineOrder.findAll({
-					where: extraWhereCondition,
 					where:{
 						order_id:{
 							[Op.in]: orderID
 						},
-						status:req.status
+						status:req.status,
+						[Op.or]: [
+							{
+							'$machine_orders.delivery_location$': { [Op.like]:  `%${search}%` },
+							},
+							{
+							'$machine_orders.order_id$': { [Op.like]: `%${search}%` },
+							}
+						]
 					},
 					include: [
 						{
