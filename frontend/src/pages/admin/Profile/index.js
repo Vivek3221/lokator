@@ -165,8 +165,6 @@ const Profile = ({
               first_name: get(user, "first_name", ""),
               last_name: get(user, "last_name", ""),
               company_name: get(user, "company_name", ""),
-              country_id: get(user, "country_id", ""),
-              location_id: get(user, "location_id", ""),
               email: get(user, "email", ""),
               phone: get(user, "phone", ""),
             }}
@@ -224,10 +222,8 @@ const Profile = ({
                               {...field}
                               country="in"
                               type="phone"
+                              disabled
                               value={formikBag.values.phone}
-                              onChange={(phone, data) => {
-                                formikBag.setFieldValue("phone", phone);
-                              }}
                               error={
                                 formikBag.touched.phone &&
                                 formikBag.errors.phone
@@ -258,6 +254,7 @@ const Profile = ({
                           <Input
                             {...field}
                             type="email"
+                            disabled
                             className="form-control"
                             error={
                               formikBag.touched.email && formikBag.errors.email

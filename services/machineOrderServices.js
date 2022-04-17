@@ -33,76 +33,37 @@ let machineOrderServices = {
 			if(!page){
 				page = 0;
 			}
-			
 			var orderData =[];
 			var mainOrderData = [];
-			var extraWhereCondition ={};
 			var partnerMachine = [];
 			var partnerMachineOrderID = [];
 			var orderID = [];
-
+			var extraWhereCondition ={};
+			var condition2 ={};
+			var condition  = {};
 			var offset = parseInt(page) * Constant.PAGINATION_LIMIT;
-
+			// var search = ''; 
 			if(req.search){
-				const search = req.search.toString().replace(/"/g, '');
-				if(search){
-					extraWhereCondition = {
-						[Op.or]: [
-									{
-									'$machine_orders.delivery_location$': { [Op.like]:  `%${search}%` },
-									},
-									{
-									'$machine_orders.order_id$': { [Op.like]: `%${search}%` },
-									},
-									{
-									'$machine_orders.status$': { [Op.like]: `%${req.status}%` },
-									}
-										
-						]
-					}
-				}
-			}	
-
-			// role :- 1-Admin, 2-User, 3-Partner------------------------
-			if(req.role == 0){
-				orderData = await machineOrder.findAll({
-					where:extraWhereCondition,
-					offset: offset,
-					include: [
+				 search = req.search.toString().replace(/"/g, '');
+				 condition = {
+					[Op.or]: [
 						{
-							model: Users,
-							required: true,
-							attributes: ['id', 'first_name', 'last_name', 'email', 'phone']
+						'$machine_orders.delivery_location$': { [Op.like]:  `%${search}%` },
+						},
+						{
+						'$machine_orders.order_id$': { [Op.like]: `%${search}%` },
 						}
-					],
-					limit: Constant.PAGINATION_LIMIT,
-					order : [['id', 'DESC']],
-					attributes: ['id','order_id','delivery_location','work_start_date','comments_remarks','order_scope','order_date', 'status', 'created_at']
-				});
+					]
+		            }
 			}
-			else if(req.role == 1){
-				extraWhereCondition ={
-					user_id: req.user_id
-				}
-				orderData = await machineOrder.findAll({
-					where: extraWhereCondition,
-					include: [
-						{
-							model: Users,
-							required: true,
-							attributes: ['id', 'first_name', 'last_name', 'email', 'phone']
-						}
-					],
-					order : [['id', 'DESC']],
-					offset: offset,
-					limit: Constant.PAGINATION_LIMIT,
-					order : [['id', 'DESC']],
-					attributes: ['id','order_id','delivery_location','work_start_date','comments_remarks','order_scope','order_date','created_at']
-				});	
-			}else if(req.role == 2){
-				extraWhereCondition ={
-					user_id: req.user_id
-				}
+
+			if(req.status){
+			  condition.status = req.status
+			}
+			
+			if(req.role == 1){
+				condition.user_id = req.user_id
+            } else if(req.role == 2){
 
 				let allMachine = await MachineProducts.findAll({
 					where:{
@@ -137,28 +98,28 @@ let machineOrderServices = {
 					
 				}
 
-				orderData = await machineOrder.findAll({
-					where: extraWhereCondition,
-					where:{
-						order_id:{
-							[Op.in]: orderID
-						}
-					},
-					include: [
-						{
-							model: Users,
-							required: true,
-							attributes: ['id', 'first_name', 'last_name', 'email', 'phone'],
-						}
-					],
-					order : [['id', 'DESC']],
-					offset: offset,
-					limit: Constant.PAGINATION_LIMIT,
-					order : [['id', 'DESC']],
-					attributes: ['id', 'order_id', 'delivery_location', 'work_start_date', 'comments_remarks', 'order_scope', 'order_date', 'created_at']
-				});
+				condition2 = {
+					order_id: {
+						[Op.in]: orderID
+					}
+				}
 			}	
-				
+
+			extraWhereCondition = {...condition, ...condition2}
+			orderData = await machineOrder.findAll({
+				where: extraWhereCondition,
+				offset: offset,
+				include: [
+					{
+						model: Users,
+						required: true,
+						attributes: ['id', 'first_name', 'last_name', 'email', 'phone']
+					}
+				],
+				limit: Constant.PAGINATION_LIMIT,
+				order : [['id', 'DESC']],
+				attributes: ['id','order_id','delivery_location','work_start_date','comments_remarks','order_scope','order_date', 'status', 'created_at']
+			});
 			//console.log(orderData); return false;
 			if(!_.isEmpty(orderData)){
 				for(var i=0; i<orderData.length; i++){

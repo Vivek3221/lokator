@@ -7,6 +7,7 @@ const Constant = require('../utils/constant');
 const _ = require('lodash');
 const { Op } = require('sequelize');
 const userServices = require('../services/userServices');
+const { isSet } = require('lodash');
 let userController = {
 	/**
 	 * Description : User signUp
@@ -43,18 +44,25 @@ let userController = {
 	 * Description: get Logged In User Profile.
 	 * @returns
 	 */
-		editProduct: async (req, res) => {
-			try {
-				const productDetails = await productServices.editProductDetailService(req, res);
-				if (productDetails) 
-				return res.send(ResponseHandler.successResponse(productDetails, message.PRODUCT_DETAILS));
-			} catch (error) {
-				console.log(error);
-				//res.status(500).send({ message: error.message });
+	editProduct: async (req, res) => {
+		try {
+			const productDetails = await productServices.editProductDetailService(req, res);
+			if (productDetails) 
+			return res.send(ResponseHandler.successResponse(productDetails, message.PRODUCT_DETAILS));
+		} catch (error) {
+			console.log(error);
+			//res.status(500).send({ message: error.message });
 			}
 	},
 	productLists: async (req, res) => {
 		try {
+			if(req.query.role == 2){
+				if(typeof req.query.user_id == 'undefined'){
+					return res.send(ResponseHandler.errorAsBadRequest(res, 'user_id is required'));
+				}
+				
+			}
+			
 			const productDetails = await productServices.productListsService(req, res);
 			if (productDetails) 
 			return res.send(ResponseHandler.successResponse(productDetails, message.PRODUCT_DETAILS));
@@ -62,7 +70,7 @@ let userController = {
 			console.log(error);
 			//res.status(500).send({ message: error.message });
 		}
-},
+	},
 	
 	/**
 	 * Description  : Update profile

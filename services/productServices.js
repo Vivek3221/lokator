@@ -176,37 +176,44 @@ let userServices = {
 				var offset   = parseInt(page) * Constant.PAGINATION_LIMIT;
 				const status = req.query.status;
 				var extraWhereCondition ={};
+				var condition2 ={};
 				if(req.query.category_id){
 					const category = req.query.category_id;
-					extraWhereCondition ={
+					condition2 ={
 					'$machine_categories.id$': { [Op.eq]: category }
 					}
 				}
 				if (status || status == 0) {
-					extraWhereCondition.status = status;
+					condition2.status = status;
 					}
 				if(req.query.search){
 				const search = req.query.search.toString().replace(/"/g, '');
 				if(search){
-									var extraWhereCondition = {
-										[Op.or]: [
-													{
-													'$machine_products.machine_name$': { [Op.like]: `%${search}%` }
-													},
-													{
-													'$machine_categories.category_name$': { [Op.like]:  `%${search}%` },
-														},
-													{
-													'$machine_types.type$': { [Op.like]: `%${search}%` }
-													}
-														
-										]
-							}
+				var	condition = {
+					[Op.or]: [
+								{
+								'$machine_products.machine_name$': { [Op.like]: `%${search}%` }
+								},
+								{
+								'$machine_categories.category_name$': { [Op.like]:  `%${search}%` },
+								},
+								{
+								'$machine_types.type$': { [Op.like]: `%${search}%` }
+								}
+									
+					        ]
+		            }
 				}
-			}						
+			}	
+			if(req.query.role && req.query.role == 2){
+				condition2.user_id = req.query.user_id;
+			}
+			
+			extraWhereCondition = {...condition, ...condition2}
+
       	
 			if(!page){
-							page = 0;
+			page = 0;
 			}					
 			productsData = await MachineProducts.findAll({
 			where: extraWhereCondition,

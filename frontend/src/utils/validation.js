@@ -214,20 +214,11 @@ export const profileValidator = (values) => {
   if (!values.last_name) {
     errors.last_name = REQUIRED;
   }
-  if (!values.country_id) {
-    errors.country_id = REQUIRED;
-  }
-
-  if (!values.company_name) {
-    errors.company_name = REQUIRED;
-  }
-  if (!values.location_id) {
-    errors.location_id = REQUIRED;
-  }
   if (!values.company_name) {
     errors.company_name = REQUIRED;
   }
 
+  console.log(errors);
   return errors;
 };
 
