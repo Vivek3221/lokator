@@ -40,7 +40,11 @@ let machineOrderServices = {
 			var orderID = [];
 
 			var offset = parseInt(page) * Constant.PAGINATION_LIMIT;
-			const search = req.search.toString().replace(/"/g, '');
+			var search = ''; 
+			if(req.search){
+				 search = req.search.toString().replace(/"/g, '');
+			}
+			
 
 			// role :- 0-Admin, 1-User, 2-Partner------------------------
 			if(req.role == 0){
