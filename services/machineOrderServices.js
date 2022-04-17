@@ -38,68 +38,32 @@ let machineOrderServices = {
 			var partnerMachine = [];
 			var partnerMachineOrderID = [];
 			var orderID = [];
-
+			var extraWhereCondition ={};
+			var condition2 ={};
+			var condition  = {};
 			var offset = parseInt(page) * Constant.PAGINATION_LIMIT;
-			var search = ''; 
+			// var search = ''; 
 			if(req.search){
 				 search = req.search.toString().replace(/"/g, '');
+				 condition = {
+					[Op.or]: [
+						{
+						'$machine_orders.delivery_location$': { [Op.like]:  `%${search}%` },
+						},
+						{
+						'$machine_orders.order_id$': { [Op.like]: `%${search}%` },
+						}
+					]
+		            }
+			}
+
+			if(req.status){
+			  condition.status = req.status
 			}
 			
-
-			// role :- 0-Admin, 1-User, 2-Partner------------------------
-			if(req.role == 0){
-				orderData = await machineOrder.findAll({
-					where:{
-						status:req.status,
-						[Op.or]: [
-							{
-							'$machine_orders.delivery_location$': { [Op.like]:  `%${search}%` },
-							},
-							{
-							'$machine_orders.order_id$': { [Op.like]: `%${search}%` },
-							}
-						]
-					},
-					offset: offset,
-					include: [
-						{
-							model: Users,
-							required: true,
-							attributes: ['id', 'first_name', 'last_name', 'email', 'phone']
-						}
-					],
-					limit: Constant.PAGINATION_LIMIT,
-					order : [['id', 'DESC']],
-					attributes: ['id','order_id','delivery_location','work_start_date','comments_remarks','order_scope','order_date', 'status', 'created_at']
-				});
-			} else if(req.role == 1){
-				orderData = await machineOrder.findAll({
-					where:{
-						status:req.status, 
-						user_id: req.user_id,
-						[Op.or]: [
-							{
-							'$machine_orders.delivery_location$': { [Op.like]:  `%${search}%` },
-							},
-							{
-							'$machine_orders.order_id$': { [Op.like]: `%${search}%` },
-							}
-						]
-					},
-					include: [
-						{
-							model: Users,
-							required: true,
-							attributes: ['id', 'first_name', 'last_name', 'email', 'phone']
-						}
-					],
-					order : [['id', 'DESC']],
-					offset: offset,
-					limit: Constant.PAGINATION_LIMIT,
-					order : [['id', 'DESC']],
-					attributes: ['id','order_id','delivery_location','work_start_date','comments_remarks','order_scope','order_date','created_at']
-				});	
-			} else if(req.role == 2){
+			if(req.role == 1){
+				condition.user_id = req.user_id
+            } else if(req.role == 2){
 
 				let allMachine = await MachineProducts.findAll({
 					where:{
@@ -134,36 +98,28 @@ let machineOrderServices = {
 					
 				}
 
-				orderData = await machineOrder.findAll({
-					where:{
-						order_id:{
-							[Op.in]: orderID
-						},
-						status:req.status,
-						[Op.or]: [
-							{
-							'$machine_orders.delivery_location$': { [Op.like]:  `%${search}%` },
-							},
-							{
-							'$machine_orders.order_id$': { [Op.like]: `%${search}%` },
-							}
-						]
-					},
-					include: [
-						{
-							model: Users,
-							required: true,
-							attributes: ['id', 'first_name', 'last_name', 'email', 'phone'],
-						}
-					],
-					order : [['id', 'DESC']],
-					offset: offset,
-					limit: Constant.PAGINATION_LIMIT,
-					order : [['id', 'DESC']],
-					attributes: ['id', 'order_id', 'delivery_location', 'work_start_date', 'comments_remarks', 'order_scope', 'order_date', 'created_at']
-				});
+				condition2 = {
+					order_id: {
+						[Op.in]: orderID
+					}
+				}
 			}	
-				
+
+			extraWhereCondition = {...condition, ...condition2}
+			orderData = await machineOrder.findAll({
+				where: extraWhereCondition,
+				offset: offset,
+				include: [
+					{
+						model: Users,
+						required: true,
+						attributes: ['id', 'first_name', 'last_name', 'email', 'phone']
+					}
+				],
+				limit: Constant.PAGINATION_LIMIT,
+				order : [['id', 'DESC']],
+				attributes: ['id','order_id','delivery_location','work_start_date','comments_remarks','order_scope','order_date', 'status', 'created_at']
+			});
 			//console.log(orderData); return false;
 			if(!_.isEmpty(orderData)){
 				for(var i=0; i<orderData.length; i++){
