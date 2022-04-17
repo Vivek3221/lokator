@@ -464,7 +464,11 @@ export const getMachines =
       "&size=" +
       ItemperPage +
       "&search=" +
-      search;
+      search +
+      "&role=" +
+      localStorage.getItem("role_id") +
+      "&user_id=" +
+      JSON.parse(localStorage.getItem("user_data")).id;
     if (status) {
       url = url + "&status=" + status;
     }
