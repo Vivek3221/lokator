@@ -7,6 +7,7 @@ const Constant = require('../utils/constant');
 const _ = require('lodash');
 const { Op } = require('sequelize');
 const userServices = require('../services/userServices');
+const { isSet } = require('lodash');
 let userController = {
 	/**
 	 * Description : User signUp
@@ -55,6 +56,13 @@ let userController = {
 	},
 	productLists: async (req, res) => {
 		try {
+			if(req.query.role == 2){
+				if(typeof req.query.user_id == 'undefined'){
+					return res.send(ResponseHandler.errorAsBadRequest(res, 'user_id is required'));
+				}
+				
+			}
+			
 			const productDetails = await productServices.productListsService(req, res);
 			if (productDetails) 
 			return res.send(ResponseHandler.successResponse(productDetails, message.PRODUCT_DETAILS));
