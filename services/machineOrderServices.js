@@ -56,8 +56,7 @@ let machineOrderServices = {
 					]
 		            }
 			}
-
-			if(req.status){
+			if(req.status !=undefined){
 			  condition.status = req.status
 			}
 			
@@ -104,7 +103,6 @@ let machineOrderServices = {
 					}
 				}
 			}	
-
 			extraWhereCondition = {...condition, ...condition2}
 			orderData = await machineOrder.findAll({
 				where: extraWhereCondition,
