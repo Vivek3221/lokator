@@ -18,7 +18,7 @@ let machineOrderController = {
                                 replace(/T/, ' ').      // replace T with a space
                                 replace(/\..+/, '')     // delete the dot and everything after;
 
-            let orderId =  await commonHelper.genrateOrderId(16);                   
+            let orderId =  await commonHelper.genrateOrderId(6);                   
 
             if(reqData.order_product !=undefined){
 
