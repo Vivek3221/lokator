@@ -18,6 +18,10 @@ module.exports = (sequelize, Sequelize) => {
 				type: Sequelize.DATEONLY,
 				allowNull: false,
 					},
+			work_end_date: {
+				type: Sequelize.DATEONLY,
+				allowNull: false,
+					},
 			comments_remarks: {
 				type: Sequelize.TEXT,
 				allowNull: false,

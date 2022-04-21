@@ -382,40 +382,33 @@ let userServices = {
 			try {
 				var page = req.query.page;
 				var offset = parseInt(page) * Constant.PAGINATION_LIMIT;
-				const search = req.query.search;
-											if(search){
-                var searchloc = {
-                        capacity : {
-                            [Op.like]: '%' + search + '%'
-                        }
-																								
-                  }
+				if(req.query.search){
+					search = req.query.search.toString().replace(/"/g, '');
+                	var searchloc = {
+						[Op.or]: [
+							{'$contact_us.email$': { [Op.like]:  `%${search}%` }},
+							{'$contact_us.name$': { [Op.like]:  `%${search}%` }}
+						]						
+                	}
               
-            }else{
-                var searchloc = {
-                    id : {
-                       [Op.ne]: null
-                   }
-																		
-               };
-      }	
-			if(!page){
-							page = 0;
-			}		
-			const contactUsData = await ContactUs.findAll({
-				where:searchloc,
-				offset: offset,
-			limit: Constant.PAGINATION_LIMIT,
-    order : [['id', 'DESC']],
-			});		
-			if(!_.isEmpty(contactUsData)){
-				let totalPage = Math.ceil(contactUsData.length / Constant.PAGINATION_LIMIT);
-					return {
-					totalCount: contactUsData.length,
-					totalPage: totalPage,
-					contactUsData: contactUsData,
-				};
-			}	
+				}
+				if(!page){
+					page = 0;
+				}		
+				const contactUsData = await ContactUs.findAll({
+					where:searchloc,
+					offset: offset,
+					limit: Constant.PAGINATION_LIMIT,
+					order : [['id', 'DESC']],
+				});		
+				if(!_.isEmpty(contactUsData)){
+					let totalPage = Math.ceil(contactUsData.length / Constant.PAGINATION_LIMIT);
+						return {
+						totalCount: contactUsData.length,
+						totalPage: totalPage,
+						contactUsData: contactUsData,
+					};
+				}	
 			} catch (error) {
 				res.status(500).send({ message: error.message });
 			}	
@@ -426,35 +419,20 @@ let userServices = {
 				var page = req.query.page;
 				var offset = parseInt(page) * Constant.PAGINATION_LIMIT;
 				const search = req.query.search;
-											if(search){
-                var searchloc = {
-                        capacity : {
-                            [Op.like]: '%' + search + '%'
-                        },
-						role_id:1
-                  }
-              
-            }else{
-                var searchloc = {
-                    id : {
-                       [Op.ne]: null
-                   },
-					role_id:1
-               };
-      }	
+				if(search){
+					var searchloc = {
+						[Op.or]: [
+							{'$users.email$': { [Op.like]:  `%${search}%` }},
+							{'$users.first_name$': { [Op.like]:  `%${search}%` }},
+							{'$users.last_name$': { [Op.like]:  `%${search}%` }},
+							{'$users.phone$': { [Op.like]:  `%${search}%` }}
+						]	
+					}
+				
+				}
 			if(!page){
-							page = 0;
-			}					
-			// const pageAsNumber 		= Number.parseInt(req.query.page);
-			// const sizeAsNumber   = Number.parseInt(req.query.size);
-			// let page =0;
-			// if(!Number.isNaN(pageAsNumber) && pageAsNumber>0){
-			// 	page =pageAsNumber;
-			// }
-			// let size=10;
-			// if(!Number.isNaN(sizeAsNumber) && sizeAsNumber>0  && sizeAsNumber<10){
-			// 	page =sizeAsNumber;
-			// }	
+				page = 0;
+			}	
 			const usersData = await Users.findAll({
 				attributes: {
 					exclude: ['password'],
