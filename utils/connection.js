@@ -48,7 +48,7 @@ Connection.Users.belongsTo(Connection.Location,{foreignKey:'location_id',constra
 
 //Relationship between machine order detail and category
 Connection.Users.hasMany(Connection.MachineOrder,{foreignKey:'user_id',constraints:false});
-Connection.MachineOrder.belongsTo(Connection.Users,{foreignKey:'id',constraints:false});
+Connection.MachineOrder.belongsTo(Connection.Users,{foreignKey:'user_id',constraints:false});
 
 //Relationship between machine order detail and machine product
 Connection.MachineProducts.hasMany(Connection.MachineOrderDetails,{foreignKey:'id',constraints:false});

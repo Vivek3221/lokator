@@ -56,8 +56,7 @@ let machineOrderServices = {
 					]
 		            }
 			}
-
-			if(req.status){
+			if(req.status !=undefined){
 			  condition.status = req.status
 			}
 			
@@ -104,7 +103,6 @@ let machineOrderServices = {
 					}
 				}
 			}	
-
 			extraWhereCondition = {...condition, ...condition2}
 			orderData = await machineOrder.findAll({
 				where: extraWhereCondition,
@@ -118,7 +116,7 @@ let machineOrderServices = {
 				],
 				limit: Constant.PAGINATION_LIMIT,
 				order : [['id', 'DESC']],
-				attributes: ['id','order_id','delivery_location','work_start_date','comments_remarks','order_scope','order_date', 'status', 'created_at']
+				attributes: ['id','order_id','delivery_location','work_start_date', 'work_end_date','comments_remarks','order_scope','order_date', 'status', 'created_at']
 			});
 			//console.log(orderData); return false;
 			if(!_.isEmpty(orderData)){
@@ -169,6 +167,7 @@ let machineOrderServices = {
 							order_id:orderData[i]['order_id'],
 							delivery_location:orderData[i]['delivery_location'],
 							work_start_date:orderData[i]['work_start_date'],
+							work_end_date:orderData[i]['work_end_date'],
 							comments_remarks:orderData[i]['comments_remarks'],
 							order_scope:orderData[i]['order_scope'],
 							order_date:orderData[i]['order_date'],
@@ -205,6 +204,7 @@ let machineOrderServices = {
 							order_id:orderData[i]['order_id'],
 							delivery_location:orderData[i]['delivery_location'],
 							work_start_date:orderData[i]['work_start_date'],
+							work_end_date:orderData[i]['work_end_date'],
 							comments_remarks:orderData[i]['comments_remarks'],
 							order_scope:orderData[i]['order_scope'],
 							order_date:orderData[i]['order_date'],
