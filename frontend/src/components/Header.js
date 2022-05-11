@@ -15,16 +15,8 @@ function Header({ user: { user }, logoutUser, history }) {
       <li>
         <NavLink to="/about">About Us</NavLink>
       </li>
-      <li className="has-children">
-        <NavLink to="/services">Services</NavLink>
-        <ul className="dropdown">
-          <li>
-            <a href="#">Logistics</a>
-          </li>
-          <li>
-            <a href="#">Marketplace</a>
-          </li>
-        </ul>
+      <li>
+        <NavLink to="/products?query=Mobile%20Crane">Marketplace</NavLink>
       </li>
 
       <li>

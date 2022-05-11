@@ -143,12 +143,19 @@ export const editCountry = (values) => (dispatch) => {
 };
 
 export const getContact =
-  (page = 0) =>
+  (page = 0, search) =>
   (dispatch) => {
     dispatch({ type: LOADING_UI });
 
     axios
-      .get("/user/contactUsLists?page=" + page + "&size=" + ItemperPage)
+      .get(
+        "/user/contactUsLists?page=" +
+          page +
+          "&size=" +
+          ItemperPage +
+          "&search=" +
+          search
+      )
       .then((res) => {
         console.log(res);
         dispatch({
@@ -189,12 +196,19 @@ export const getContact =
 // };
 
 export const getUsers =
-  (page = 0) =>
+  (page = 0, search) =>
   (dispatch) => {
     dispatch({ type: LOADING_UI });
 
     axios
-      .get("/user/usersLists?page=" + page + "&size=" + ItemperPage)
+      .get(
+        "/user/usersLists?page=" +
+          page +
+          "&size=" +
+          ItemperPage +
+          "&search=" +
+          search
+      )
       .then((res) => {
         dispatch({
           type: GET_USERS,
@@ -337,6 +351,7 @@ export const addType = (values) => (dispatch) => {
         type: ADD_TYPE,
         payload: res.data.data,
       });
+
       dispatch({ type: CLEAR_ERRORS });
     })
 
@@ -468,7 +483,7 @@ export const getMachines =
       "&role=" +
       localStorage.getItem("role_id") +
       "&user_id=" +
-      JSON.parse(localStorage.getItem("user_data")).id;
+      JSON.parse(localStorage.getItem("user_data"))?.id;
     if (status) {
       url = url + "&status=" + status;
     }
@@ -504,7 +519,7 @@ export const addMachine = (values) => (dispatch) => {
       console.log(res.data.data);
       dispatch({
         type: ADD_MACHINE,
-        payload: res.data,
+        payload: res.data.data,
       });
       dispatch({ type: CLEAR_ERRORS });
     })
@@ -526,9 +541,10 @@ export const editMachine = (values) => (dispatch) => {
       toast.success(`${res.data.message}`, {
         position: toast.POSITION.TOP_RIGHT,
       });
+      console.log(values);
       dispatch({
         type: EDIT_MACHINE,
-        payload: values,
+        payload: { ...res.data.data, machine_image: values.machine_image },
       });
       dispatch({ type: CLEAR_ERRORS });
     })

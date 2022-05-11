@@ -98,7 +98,7 @@ const CustomerLayout = ({
                   <a
                     className="nav-link"
                     onClick={() => {
-                      logoutUser(history);
+                      history.push("/login?role_id=1");
                     }}
                   >
                     <i className="fa fa-user" />
@@ -109,11 +109,11 @@ const CustomerLayout = ({
                   <a
                     className="nav-link"
                     onClick={() => {
-                      logoutUser(history);
+                      history.push("/register?role_id=1");
                     }}
                   >
                     <i className="fa fa-sign-in" />
-                    Sign in
+                    Register
                   </a>
                 </li>
               </>

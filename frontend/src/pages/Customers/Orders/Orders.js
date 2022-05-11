@@ -39,7 +39,7 @@ const Orders = ({
             value={searchVal}
             onChange={(e) => setSearch(e.target.value)}
             type="text"
-            placeholder="Search for machine, brand, model"
+            placeholder="Search for orderId location"
           />
           <button className="btn btn-primary text-white" type="submit">
             Search

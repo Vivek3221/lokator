@@ -186,7 +186,7 @@ const Home = (props) => {
                 </p>
                 <p>
                   <strong>Capacity:</strong>{" "}
-                  {get(item, "machine_capacities.capcity", "N/A")}
+                  {get(item, "machine_capacities.type", "N/A")}
                 </p>
                 {!relatedProduct ? (
                   <button
@@ -353,7 +353,7 @@ const Home = (props) => {
                           </div>
                         </div>
                         <div className="row">
-                          <div className="col-lg-6">
+                          <div className="col-lg-12">
                             <Field name="delivery_location">
                               {({ field }) => (
                                 <Input
@@ -371,7 +371,10 @@ const Home = (props) => {
                               )}
                             </Field>
                           </div>
+                        </div>
+                        <div className="row">
                           <div className="col-lg-6">
+                            <label>Work Start Date</label>
                             <Field name="work_start_date">
                               {({ field }) => (
                                 <Input
@@ -383,6 +386,25 @@ const Home = (props) => {
                                     formikBag.touched.work_start_date &&
                                     formikBag.errors.work_start_date
                                       ? formikBag.errors.work_start_date
+                                      : null
+                                  }
+                                />
+                              )}
+                            </Field>
+                          </div>
+                          <div className="col-lg-6">
+                            <label>Work Start Date</label>
+                            <Field name="work_end_date">
+                              {({ field }) => (
+                                <Input
+                                  {...field}
+                                  type="date"
+                                  className="form-control"
+                                  placeholder={"Work End Date"}
+                                  error={
+                                    formikBag.touched.work_end_date &&
+                                    formikBag.errors.work_end_date
+                                      ? formikBag.errors.work_end_date
                                       : null
                                   }
                                 />

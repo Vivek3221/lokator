@@ -199,7 +199,7 @@ export default function (state = initialState, action) {
 
       return {
         ...state,
-        capacity: { typeList: [action.payload, ...typeList] },
+        types: { typeList: [action.payload, ...typeList] },
       };
 
     case EDIT_TYPE:
