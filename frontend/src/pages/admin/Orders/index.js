@@ -14,6 +14,7 @@ const Orders = ({
   const query = new URLSearchParams(search);
   const [searchVal, setSearch] = useState(query.get("query"));
   const [status, setStatus] = useState(0);
+
   let bodyData = {
     role: localStorage.getItem("role_id"),
     page: 0,
@@ -97,6 +98,14 @@ const Orders = ({
                   <p>
                     <strong>Phone No:</strong>{" "}
                     {get(order, "user_detail.phone", "")}
+                  </p>
+                  <p>
+                    <strong>Work Start Date:</strong>{" "}
+                    {moment(order.work_start_date).format("MMMM Do YYYY ")}
+                  </p>
+                  <p>
+                    <strong>Work End Date :</strong>{" "}
+                    {moment(order.work_end_date).format("MMMM Do YYYY ")}
                   </p>
                 </div>
 

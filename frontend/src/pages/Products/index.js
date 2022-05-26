@@ -7,8 +7,11 @@ import {
   makeEnquiry,
   saveOrders,
 } from "../../store/actions/allapi";
+import DatePicker from "react-date-picker";
+
 import { get } from "lodash";
 import { Link } from "react-router-dom";
+
 import {
   NoData,
   Modal,
@@ -24,7 +27,7 @@ import Login from "../Login";
 import { orderValidator, inquiryValidator } from "../../utils/validation";
 
 const scrollToRef = (ref) => window.scrollTo(0, ref.current.offsetTop);
-const Home = (props) => {
+const Product = (props) => {
   const {
     getCategory,
     getMachines,
@@ -41,6 +44,8 @@ const Home = (props) => {
       ? JSON.parse(localStorage.getItem("cart_items"))
       : []
   );
+  const [startDate, onStartDateChange] = useState(new Date());
+  const [endDate, onEndDateChange] = useState(new Date());
   const [showModal, setShowModal] = useState(false);
   const [showLogin, setShowLogin] = useState(false);
   const [activeStep, setActiveStep] = useState(1);
@@ -86,10 +91,18 @@ const Home = (props) => {
   };
 
   const placeOrder = async (values) => {
-    setOrderInfo(values);
+    setOrderInfo({
+      ...values,
+      work_start_date: startDate,
+      work_end_date: endDate,
+    });
     setShowModal(false);
     setShowLogin(false);
-    let bodyData = { ...orderInfo };
+    let bodyData = {
+      ...values,
+      work_start_date: startDate,
+      work_end_date: endDate,
+    };
     bodyData.order_product = cartProducts.map((item) => {
       return {
         category_id: item.category_id,
@@ -97,7 +110,6 @@ const Home = (props) => {
         quantity: item.quantity,
       };
     });
-    console.log("bodyData", bodyData);
     if (localStorage.getItem("access_token")) {
       saveOrders(bodyData);
     } else {
@@ -310,7 +322,6 @@ const Home = (props) => {
                   enableReinitialize
                   initialValues={{
                     delivery_location: "",
-                    work_start_date: "",
                     comments_remarks: "",
                     order_scope: null,
                   }}
@@ -377,37 +388,27 @@ const Home = (props) => {
                             <label>Work Start Date</label>
                             <Field name="work_start_date">
                               {({ field }) => (
-                                <Input
-                                  {...field}
-                                  type="date"
-                                  className="form-control"
-                                  placeholder={"Work Start Date"}
-                                  error={
-                                    formikBag.touched.work_start_date &&
-                                    formikBag.errors.work_start_date
-                                      ? formikBag.errors.work_start_date
-                                      : null
-                                  }
-                                />
+                                <div>
+                                  <DatePicker
+                                    onChange={onStartDateChange}
+                                    value={startDate}
+                                    minDate={new Date()}
+                                  />
+                                </div>
                               )}
                             </Field>
                           </div>
                           <div className="col-lg-6">
-                            <label>Work Start Date</label>
+                            <label>Work End Date</label>
                             <Field name="work_end_date">
                               {({ field }) => (
-                                <Input
-                                  {...field}
-                                  type="date"
-                                  className="form-control"
-                                  placeholder={"Work End Date"}
-                                  error={
-                                    formikBag.touched.work_end_date &&
-                                    formikBag.errors.work_end_date
-                                      ? formikBag.errors.work_end_date
-                                      : null
-                                  }
-                                />
+                                <div>
+                                  <DatePicker
+                                    onChange={onEndDateChange}
+                                    value={endDate}
+                                    minDate={startDate}
+                                  />
+                                </div>
                               )}
                             </Field>
                           </div>
@@ -760,4 +761,4 @@ const mapActionsToProps = {
   makeEnquiry,
 };
 
-export default connect(mapStateToProps, mapActionsToProps)(Home);
+export default connect(mapStateToProps, mapActionsToProps)(Product);

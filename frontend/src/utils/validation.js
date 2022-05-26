@@ -248,12 +248,6 @@ export const orderValidator = (values) => {
   if (!values.order_scope) {
     errors.order_scope = REQUIRED;
   }
-  if (!values.work_start_date) {
-    errors.work_start_date = REQUIRED;
-  }
-  if (!values.work_end_date) {
-    errors.work_end_date = REQUIRED;
-  }
 
   return errors;
 };

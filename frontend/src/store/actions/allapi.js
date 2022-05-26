@@ -607,11 +607,10 @@ export const saveOrders = (values) => (dispatch) => {
       });
       localStorage.removeItem("cart_items");
       dispatch({ type: CLEAR_ERRORS });
-    });
-
-  document.location
-    .reload(true)
-
+      setTimeout(() => {
+        document.location.reload(true);
+      }, 1000);
+    })
     .catch((err) => {
       dispatch({
         type: SET_ERRORS,

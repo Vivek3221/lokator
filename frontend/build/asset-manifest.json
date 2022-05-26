@@ -1,19 +1,19 @@
 {
   "files": {
-    "main.css": "/static/css/main.2ea543d8.chunk.css",
-    "main.js": "/static/js/main.03fca85a.chunk.js",
-    "main.js.map": "/static/js/main.03fca85a.chunk.js.map",
-    "runtime-main.js": "/static/js/runtime-main.8c9dfcba.js",
-    "runtime-main.js.map": "/static/js/runtime-main.8c9dfcba.js.map",
-    "static/css/2.e178a209.chunk.css": "/static/css/2.e178a209.chunk.css",
-    "static/js/2.3e5dbbb0.chunk.js": "/static/js/2.3e5dbbb0.chunk.js",
-    "static/js/2.3e5dbbb0.chunk.js.map": "/static/js/2.3e5dbbb0.chunk.js.map",
-    "static/js/3.f0daadea.chunk.js": "/static/js/3.f0daadea.chunk.js",
-    "static/js/3.f0daadea.chunk.js.map": "/static/js/3.f0daadea.chunk.js.map",
+    "main.css": "/static/css/main.13ebdd35.chunk.css",
+    "main.js": "/static/js/main.53a677d9.chunk.js",
+    "main.js.map": "/static/js/main.53a677d9.chunk.js.map",
+    "runtime-main.js": "/static/js/runtime-main.d0353235.js",
+    "runtime-main.js.map": "/static/js/runtime-main.d0353235.js.map",
+    "static/css/2.8f914b25.chunk.css": "/static/css/2.8f914b25.chunk.css",
+    "static/js/2.41dac4be.chunk.js": "/static/js/2.41dac4be.chunk.js",
+    "static/js/2.41dac4be.chunk.js.map": "/static/js/2.41dac4be.chunk.js.map",
+    "static/js/3.0d58bbec.chunk.js": "/static/js/3.0d58bbec.chunk.js",
+    "static/js/3.0d58bbec.chunk.js.map": "/static/js/3.0d58bbec.chunk.js.map",
     "index.html": "/index.html",
-    "static/css/2.e178a209.chunk.css.map": "/static/css/2.e178a209.chunk.css.map",
-    "static/css/main.2ea543d8.chunk.css.map": "/static/css/main.2ea543d8.chunk.css.map",
-    "static/js/2.3e5dbbb0.chunk.js.LICENSE.txt": "/static/js/2.3e5dbbb0.chunk.js.LICENSE.txt",
+    "static/css/2.8f914b25.chunk.css.map": "/static/css/2.8f914b25.chunk.css.map",
+    "static/css/main.13ebdd35.chunk.css.map": "/static/css/main.13ebdd35.chunk.css.map",
+    "static/js/2.41dac4be.chunk.js.LICENSE.txt": "/static/js/2.41dac4be.chunk.js.LICENSE.txt",
     "static/media/Red-truck.6d6ee908.png": "/static/media/Red-truck.6d6ee908.png",
     "static/media/client1.6f1e107d.png": "/static/media/client1.6f1e107d.png",
     "static/media/client2.270c7b91.png": "/static/media/client2.270c7b91.png",
@@ -29,10 +29,10 @@
     "static/media/truck_image.47ca8427.png": "/static/media/truck_image.47ca8427.png"
   },
   "entrypoints": [
-    "static/js/runtime-main.8c9dfcba.js",
-    "static/css/2.e178a209.chunk.css",
-    "static/js/2.3e5dbbb0.chunk.js",
-    "static/css/main.2ea543d8.chunk.css",
-    "static/js/main.03fca85a.chunk.js"
+    "static/js/runtime-main.d0353235.js",
+    "static/css/2.8f914b25.chunk.css",
+    "static/js/2.41dac4be.chunk.js",
+    "static/css/main.13ebdd35.chunk.css",
+    "static/js/main.53a677d9.chunk.js"
   ]
 }
