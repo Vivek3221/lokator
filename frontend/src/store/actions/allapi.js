@@ -590,7 +590,7 @@ export const selectImage = (data) => async (dispatch) => {
   });
 };
 
-export const saveOrders = (values) => (dispatch) => {
+export const saveOrders = (values, setShow) => (dispatch) => {
   dispatch({ type: LOADING_UI });
   const token = localStorage.getItem("access_token");
   const headers = {
@@ -602,14 +602,9 @@ export const saveOrders = (values) => (dispatch) => {
       headers: headers,
     })
     .then((res) => {
-      toast.success(`${res.data.message}`, {
-        position: toast.POSITION.TOP_RIGHT,
-      });
       localStorage.removeItem("cart_items");
       dispatch({ type: CLEAR_ERRORS });
-      setTimeout(() => {
-        document.location.reload(true);
-      }, 1000);
+      setShow(true);
     })
     .catch((err) => {
       dispatch({

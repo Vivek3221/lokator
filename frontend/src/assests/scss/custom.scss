@@ -198,6 +198,15 @@ a.step-item {
 .react-date-picker {
   width: 100%;
 }
+.btn-group.center {
+  text-align: center;
+  align-items: center;
+  justify-content: center;
+}
+
+.confirm_box.sucess h3 {
+  margin: 0;
+}
 .cm-details {
   padding: 15px 15px 0;
   border-radius: 10px;

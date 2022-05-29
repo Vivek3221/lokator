@@ -37,12 +37,12 @@ const AdminLayout = ({
               data-toggle="tooltip"
               data-placement="right"
             >
-              {user?.role_id != 1 && (
+              {/* {user?.role_id != 1 && (
                 <NavLink className="nav-link" to="/dashboard">
                   <i className="fa fa-fw fa-dashboard" />
                   <span className="nav-link-text">Dashboard</span>
                 </NavLink>
-              )}
+              )} */}
               {user?.role_id != 1 && (
                 <>
                   <NavLink className="nav-link" to="/orders">

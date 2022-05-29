@@ -73,7 +73,7 @@ const Login = ({
                 to="/register?role_id=2"
                 className="btn btn-primary text-white btn-sm"
               >
-                Registe as Partner
+                Register as Partner
               </Link>{" "}
               &nbsp;&nbsp;
               <Link to="/" className="btn btn-primary text-white btn-sm">

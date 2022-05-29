@@ -17,10 +17,14 @@ export const loginUser =
     axios
       .post("/user/signIn", userData)
       .then((res) => {
-        setAuthorizationHeader({ ...res.data, role_id: res.data.role_id });
+        setAuthorizationHeader({ ...res.data, role_id: res.data.data.role_id });
 
         if (!isPopup) {
-          history.push("/dashboard");
+          if (res.data.data.role_id == "1") {
+            history.push("/customer-orders");
+          } else {
+            history.push("/orders");
+          }
         } else {
           handleClick();
         }

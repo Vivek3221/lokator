@@ -26,21 +26,22 @@ function Header({ user: { user }, logoutUser, history }) {
         <>
           <li>
             <Link
-              to="/login?role_id=1"
+              to="/register?role_id=1"
               target="_blank"
               className="btn btn-primary text-white"
             >
-              <i className="fa fa-user" aria-hidden="true"></i>
-              Login
+              <i className="fa fa-sign-in" aria-hidden="true"></i>
+              Register as Customer
             </Link>
           </li>
           <li>
             <Link
-              to="/register?role_id=1"
+              to="/register?role_id=2"
+              target="_blank"
               className="btn btn-primary text-white"
             >
               <i className="fa fa-sign-in" aria-hidden="true"></i>
-              Register
+              Register as Partner
             </Link>
           </li>
         </>

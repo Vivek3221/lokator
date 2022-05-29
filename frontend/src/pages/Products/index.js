@@ -19,6 +19,7 @@ import {
   Input,
   Select,
   Textarea,
+  SucesssModal,
 } from "../../components/.";
 import { scopes, priceType } from "../../utils/constants";
 import { Formik, Field, Form } from "formik";
@@ -50,6 +51,7 @@ const Product = (props) => {
   const [showLogin, setShowLogin] = useState(false);
   const [activeStep, setActiveStep] = useState(1);
   const [orderInfo, setOrderInfo] = useState("");
+  const [show, setShow] = useState(false);
   const [showEnquiry, setShowEnquiry] = useState(false);
   const myRef = useRef(null);
   const executeScroll = () => scrollToRef(myRef);
@@ -111,7 +113,7 @@ const Product = (props) => {
       };
     });
     if (localStorage.getItem("access_token")) {
-      saveOrders(bodyData);
+      saveOrders(bodyData, setShow);
     } else {
       setShowLogin(true);
     }
@@ -745,6 +747,17 @@ const Product = (props) => {
           </button>
         </div>
       )}
+      <SucesssModal
+        show={show}
+        content={
+          <>
+            Order placed Successfully .<br /> Admin will Approved your order .
+          </>
+        }
+        handleModal={() => {
+          setShow(false);
+        }}
+      />
     </div>
   );
 };

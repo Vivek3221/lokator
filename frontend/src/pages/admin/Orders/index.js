@@ -2,6 +2,7 @@ import React, { Component, useState, useEffect } from "react";
 import { getOrders, updateStatus } from "../../../store/actions/allapi";
 import { connect } from "react-redux";
 import moment from "moment";
+import { ConfirmModal } from "../../../components";
 
 import { get } from "lodash";
 const Orders = ({
@@ -14,7 +15,7 @@ const Orders = ({
   const query = new URLSearchParams(search);
   const [searchVal, setSearch] = useState(query.get("query"));
   const [status, setStatus] = useState(0);
-
+  const [selectedOrder, setSelectedOrder] = useState("");
   let bodyData = {
     role: localStorage.getItem("role_id"),
     page: 0,
@@ -118,7 +119,7 @@ const Orders = ({
                 </span>
                 <button
                   onClick={() => {
-                    updateStatus({
+                    setSelectedOrder({
                       status: order.status == 0 ? 1 : 0,
                       order_id: order.id,
                     });
@@ -174,6 +175,23 @@ const Orders = ({
           );
         })}
       </div>
+      <ConfirmModal
+        show={selectedOrder !== ""}
+        content={
+          <>
+            Are you sure!
+            <br /> you want to change the current status{" "}
+            {selectedOrder.status != 0 ? "Processing" : "Approved"} to{" "}
+            {selectedOrder.status == 0 ? "Processing" : "Approved"}
+          </>
+        }
+        handleClose={() => {
+          setSelectedOrder("");
+        }}
+        handleModal={() => {
+          updateStatus(selectedOrder);
+        }}
+      />
     </div>
   );
 };

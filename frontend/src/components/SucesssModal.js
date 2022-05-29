@@ -1,6 +1,6 @@
 import React from "react";
 import Modal from "./Modal";
-export default function ConfirmModal({
+export default function SucesssModal({
   content,
   show,
   handleModal,
@@ -10,16 +10,9 @@ export default function ConfirmModal({
     <Modal
       show={show}
       content={
-        <div className="confirm_box">
+        <div className="confirm_box sucess">
           <h3> {content}</h3>
-          <div className="btn-group">
-            <button
-              type="button"
-              onClick={() => handleClose()}
-              className="btn-transprent  btn text-white"
-            >
-              Cancel
-            </button>
+          <div className="btn-group center">
             <button
               type="button"
               onClick={() => handleModal()}

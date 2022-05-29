@@ -9,7 +9,8 @@ export { default as CustomerLayout } from "./CustomerLayout";
 export { default as Select } from "./Select";
 export { default as Textarea } from "./Textarea";
 export { default as LogoSlider } from "./Slider";
-export {default as Pagination } from './Pagination'
-export {default as Search } from './Search'
-export {default as NoData } from './NoData'
-export {default as ConfirmModal } from './ConfirmModal'
+export { default as Pagination } from "./Pagination";
+export { default as Search } from "./Search";
+export { default as NoData } from "./NoData";
+export { default as ConfirmModal } from "./ConfirmModal";
+export { default as SucesssModal } from "./SucesssModal";

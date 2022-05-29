@@ -58,6 +58,10 @@ const Orders = ({
                       {moment(order.order_date).format("MMMM Do YYYY ")}
                     </p>
                     <p>
+                      <strong>Work Start Date:</strong>{" "}
+                      {moment(order.work_start_date).format("MMMM Do YYYY ")}
+                    </p>
+                    <p>
                       <strong>Delivery Location</strong>:{" "}
                       {order.delivery_location}
                     </p>
@@ -65,6 +69,10 @@ const Orders = ({
                   <div className="col-lg-6">
                     <p>
                       <strong>Order ID</strong>: {order.order_id}
+                    </p>
+                    <p>
+                      <strong>Work End Date :</strong>{" "}
+                      {moment(order.work_end_date).format("MMMM Do YYYY ")}
                     </p>
                   </div>
                 </div>
