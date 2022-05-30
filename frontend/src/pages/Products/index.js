@@ -712,7 +712,7 @@ const Product = (props) => {
               isPopup
               {...props}
               handleClick={() => {
-                placeOrder();
+                placeOrder(orderInfo);
               }}
             />
           </>
@@ -756,6 +756,7 @@ const Product = (props) => {
         }
         handleModal={() => {
           setShow(false);
+          window.location.reload();
         }}
       />
     </div>
