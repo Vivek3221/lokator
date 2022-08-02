@@ -735,7 +735,9 @@ const Product = (props) => {
         </div>
       ) : (
         <div className="cart_box">
+          <span>
           Can't find the machine you're looking for?
+          </span>
           <button
             className="btn btn-primry"
             onClick={() => {

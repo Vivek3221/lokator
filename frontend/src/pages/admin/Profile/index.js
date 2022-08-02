@@ -48,15 +48,8 @@ const Profile = ({
   const [showSignup, setShowSignup] = useState(false);
   return (
     <div className="container-fluid profle-page">
-      <ol className="breadcrumb">
-        <li className="breadcrumb-item">
-          <Link to="/dashboard">Dashboard</Link>
-        </li>
-        <li className="breadcrumb-item active">
-          {changePassword ? "Chnage Password" : "My Profile"}
-        </li>
-      </ol>
-      <div className="col-md-6 offset-3">
+        
+      <div className="col-lg-6 offset-3 mt-5">
         {changePassword ? (
           <Formik
             enableReinitialize
@@ -214,7 +207,7 @@ const Profile = ({
                     </div>
                   </div>
                   <div className="row">
-                    <div className="col-md-6">
+                    <div className="col-lg-6">
                       <Field name="phone">
                         {({ field }) => (
                           <div>
@@ -230,7 +223,7 @@ const Profile = ({
                                   ? formikBag.errors.phone
                                   : null
                               }
-                              className="form-control"
+                              
                               placeholder="Phone Number"
                             />
                             {formikBag.errors.phone && (

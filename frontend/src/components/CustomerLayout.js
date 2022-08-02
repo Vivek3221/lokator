@@ -13,9 +13,9 @@ const CustomerLayout = ({
   getUser,
   user: { user },
 }) => {
-  const [showLogins, setLogins] = useState(false);
-  const [showSignup, setShowSignup] = useState(false);
-  const [toggleChild, setToogleChild] = useState(false);
+
+  const [show,setShow] = useState(false)
+  
 
   useEffect(() => {
     getUser();
@@ -28,9 +28,21 @@ const CustomerLayout = ({
         id="mainNav"
       >
         <Link to="/">
-          <img width="250" src={Logo} />
+          <img className="cs-logo" width="200" src={Logo} />
         </Link>
-        <div className="collapse navbar-collapse" id="navbarResponsive">
+        <div
+              className="d-inline-block d-xl-none ml-md-0 mr-auto py-3"
+              
+            >
+              <a
+                href="#"
+                onClick={() => setShow(!show)}
+                className="site-menu-toggle js-menu-toggle"
+              >
+                <span className="icon-menu h3" />
+              </a>
+            </div>
+        <div className={`collapse navbar-collapse ${show?"active":""}`} id="navbarResponsive">
           <ul className="navbar-nav navbar-sidenav" id="exampleAccordion">
             <li>
               <div className="logo_group"></div>

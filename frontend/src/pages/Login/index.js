@@ -211,7 +211,7 @@ const Login = ({
                           </div>
                         </div>
                         <div className="row">
-                          <div className="col-md-6">
+                          <div className="col-lg-6">
                             <Field name="phone">
                               {({ field }) => (
                                 <div>

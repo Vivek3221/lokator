@@ -4,6 +4,7 @@ import { withRouter } from "react-router";
 import { logoutUser, getUser } from "../store/actions/users";
 import { Link, NavLink } from "react-router-dom";
 import { connect } from "react-redux";
+import Logo from "../assests/images/logo.jpeg";
 import { get } from "lodash";
 const AdminLayout = ({
   children,
@@ -23,11 +24,11 @@ const AdminLayout = ({
     <div>
       {/* Navigation*/}
       <nav
-        className="navbar navbar-expand-lg navbar-dark bg-dark fixed-top"
+        className="navbar navbar-expand-lg navbar-dark bg-dark fixed-top no-padding"
         id="mainNav"
       >
         <Link className="navbar-brand" to="/">
-          Lokator
+        <img width="200" src={Logo} />
         </Link>
 
         <div className="collapse navbar-collapse" id="navbarResponsive">
