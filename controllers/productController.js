@@ -4,9 +4,11 @@ const ResponseHandler = require('../utils/responseHandler');
 const commonHelper = require(`../helper/commonHelper`);
 const { check, validationResult } = require('express-validator');
 const Constant = require('../utils/constant');
+const mailHandler = require('../utils/mailHandler');
 const _ = require('lodash');
 const { Op } = require('sequelize');
 const userServices = require('../services/userServices');
+const notificationServices = require('../services/notificationServices');
 const { isSet } = require('lodash');
 let userController = {
 	/**
@@ -18,9 +20,26 @@ let userController = {
 
   addProduct: async (req, res) => {
 		try {
-   console.log(req.body);
+			var userData    = req.userData;
 			var addProduct = await productServices.addProductService(req, res);
 			if (addProduct) {
+				// Seve data in notification tablse for notify to Admin------------
+				const users = await userServices.getUserIds(0);
+				if(users.length > 0){
+					let detail = `Added New Product ${req.body.machine_name}`;
+					for(let i = 0; i < users.length; i++){
+						if(userData.id != users[i].id){
+							let dataParm = {
+								notification_type:Constant.PRODUCT,
+								sender_id:userData.id,
+								receiver_id: users[i].id,
+								status:0,
+								details:detail
+							}
+						}
+						await notificationServices.createNotification(dataParm);
+					}
+				}				
 				return res.send(ResponseHandler.successResponse(addProduct, message.ADD_PRODUCT));
 			}
 		} catch (error) {
@@ -30,7 +49,6 @@ let userController = {
 
 	updateProduct: async (req, res) => {
 		try {
-   console.log(req.body);
 			var updateProduct = await productServices.updateProductService(req, res);
 			if (updateProduct) {
 				return res.send(ResponseHandler.successResponse(updateProduct, message.UPDATE_PRODUCT));
@@ -56,6 +74,8 @@ let userController = {
 	},
 	productLists: async (req, res) => {
 		try {
+
+			await mailHandler.sendTestEmail('vivekvsms@gmail.com');
 			if(req.query.role == 2){
 				if(typeof req.query.user_id == 'undefined'){
 					return res.send(ResponseHandler.errorAsBadRequest(res, 'user_id is required'));
@@ -246,6 +266,22 @@ let userController = {
 			let saveInquiry =  await productServices.saveProductInquiry(inquiryData);
 
 			if(saveInquiry){
+
+				// Seve data in notification tablse for notify to Admin------------
+				const users = await userServices.getUserIds(0);
+				if(users.length > 0){
+					let detail = `New inquiry by ${inquiryData.name}`;
+					for(let i = 0; i < users.length; i++){
+						let dataParm = {
+							notification_type:Constant.INQUIRIES,
+							sender_id:inquiryData.phone_no,
+							receiver_id: users[i].id,
+							status:0,
+							details:detail
+						}
+						await notificationServices.createNotification(dataParm);
+					}
+				}				
 				return res.send(ResponseHandler.successResponse(saveInquiry, message.DATA_SAVE));
 			}else{
 				return res.send(ResponseHandler.errorAsBadRequest(res, 'error'));

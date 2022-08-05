@@ -29,5 +29,6 @@ module.exports={
   UPDATE_PRODUCT:'Update product successfully.',
   PRODUCT_DETAILS:'Products details.',
   CHANGE_ORDER_STATUS:'Order status changed successfully.',
-  ORDER_PLASED: 'Order placed successfully'
+  ORDER_PLASED: 'Order placed successfully',
+  NOTIFICATION_LIST: 'Notification List'
 };

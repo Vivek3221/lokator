@@ -44,10 +44,12 @@ let userRouter = require("./routes/user");
 let countryRouter = require("./routes/country");
 let machineRouter = require("./routes/machine");
 let productRouter = require("./routes/products");
+let notificationRouter = require("./routes/notification");
 app.use("/api/user", userRouter);
 app.use("/api/country", countryRouter);
 app.use("/api/machine", machineRouter);
 app.use("/api/product", productRouter);
+app.use("/api/notification", notificationRouter);
 app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname + "/frontend/build/index.html"));
 });

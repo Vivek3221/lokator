@@ -20,7 +20,7 @@ let machineOrderServices = {
 	 * @param {*} req
 	 * @param {*} res  
      */
-     createData: async (data) => {
+    createData: async (data) => {
          
 		var machineOrderCreate = await machineOrder.create(data);
 		if (machineOrderCreate) {
@@ -236,17 +236,33 @@ let machineOrderServices = {
 	changeOrderStatus: async (req, res)=>{
 		try {
 			if (req) {
-				return await machineOrder.update(req,
+				return await machineOrder.update(
+					{
+						status:req.status
+					},
 					{
 						where: { 
 							id: req.order_id
-						},
-						status: req.status
+						}
 					}
 				);
 			}
 		} catch (error) {
             console.log(error);
+		}
+	},
+
+	getOrderUserId: async (orderId) =>{
+		try{
+			var orderData = await machineOrder.findOne({
+				where: { id: orderId },
+				attributes: ['user_id', 'order_id']
+			})
+			if (orderData) {
+				return orderData;
+			}
+		} catch (error) {
+			res.status(500).send({ message: error.message });
 		}
 	}
 

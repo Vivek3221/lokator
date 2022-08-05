@@ -1,5 +1,6 @@
 const message = require('../config/message');
 const userServices = require('../services/userServices');
+const notificationServices = require('../services/notificationServices');
 const ResponseHandler = require('../utils/responseHandler');
 const { check, validationResult } = require('express-validator');
 const Constant = require('../utils/constant');
@@ -17,6 +18,24 @@ let userController = {
 		try {
 			var userData = await userServices.userSignUp(req.body, res);
 			if (userData) {
+				// Seve data in notification tablse for notify to Admin------------
+				const users = await userServices.getUserIds(0);
+				if(users.length > 0){
+					let detail = `New user registered with ${userData.phone} number`;
+					for(let i = 0; i < users.length; i++){
+						if(users[i].id != userData.id){
+							let dataParm = {
+								notification_type:Constant.REGISTER,
+								sender_id:userData.id,
+								receiver_id: users[i].id,
+								status:0,
+								details:detail
+							}
+							await notificationServices.createNotification(dataParm);
+						}
+						
+					}
+				}
 				return res.send(ResponseHandler.successResponse(userData, message.SIGNUP));
 			}
 		} catch (error) {
