@@ -30,6 +30,14 @@ module.exports = {
     entityNotFound: (res, error) => {
         res.status(httpResponse.RESOURCE_DELETED)
             .send(module.exports.createResponseObject(httpResponse.BAD_REQUEST,'Error',[],error));
-    }  
+    },
+    
+    recordNotFound: (data, message) => {
+        return {
+            statusCode: httpResponse.OK,
+            message: message ?  message : 'Success',
+            data: data
+        };
+    } 
 } 
 

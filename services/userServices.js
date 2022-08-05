@@ -475,6 +475,20 @@ let userServices = {
 		}
 	},
 
+	getUserIds: async (userRoleId) => {
+		try {
+			var users = await Users.findAll({
+				where: {role_id: userRoleId },
+				attributes: ['id']
+			});
+			if (users) {
+				return users;
+			}
+		} catch (error) {
+			res.status(500).send({ message: error.message });
+		}
+	}
+
 };
 
 module.exports = userServices;

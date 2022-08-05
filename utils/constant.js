@@ -10,6 +10,11 @@ module.exports =  {
     DISPLAY_TEXT:'text',
     DISPLAY_RADIO:'radio',
     PAGINATION_LIMIT:10,
+    REGISTER: 'Register',
+    ORDER: 'Order',
+    PRODUCT: 'Product',
+    MACHINE: 'Machine',
+    INQUIRIES: 'Inquiries'
     
 }
 

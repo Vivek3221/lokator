@@ -1,9 +1,12 @@
 const message = require('../config/message');
 const machineOrderServices = require('../services/machineOrderServices');
 const machineOrderDetailServices = require('../services/machineOrderDetailServices');
+const productServices = require('../services/productServices');
 const ResponseHandler = require('../utils/responseHandler');
 const commonHelper = require(`../helper/commonHelper`);
 const _ = require('lodash');
+const Constant = require('../utils/constant');
+const notificationServices = require('../services/notificationServices');
 let machineOrderController = {
 
 
@@ -55,6 +58,23 @@ let machineOrderController = {
                     let saveOrder =  await machineOrderServices.createData(orderData);
 
                     if(saveOrder){
+                        // Send notification to owner of machine------------------------------
+                        for(let i=0; i < orderProduct.length; i++){
+                            const machineData = await productServices.getMachineProductUserId(orderProduct[i].machine_product_id);
+                            if(machineData){
+                                let detail = `${machineData.machine_name} order by ${userData.phone}`;
+                                let dataParm = {
+                                    notification_type:Constant.ORDER,
+                                    sender_id:userData.id,
+                                    receiver_id: machineData.user_id,
+                                    status:0,
+                                    details:detail
+                                }
+                                await notificationServices.createNotification(dataParm);
+                            }
+                            
+                        } 
+
                         return res.send(ResponseHandler.successResponse(saveOrder, message.ORDER_PLASED));
                     }else{
                         return res.send(ResponseHandler.errorAsBadRequest(res, 'error'));
@@ -104,7 +124,22 @@ let machineOrderController = {
         try {
             // get order req data from req body---------------
             var reqData     = req.body;
+            var userData    = req.userData;
             await machineOrderServices.changeOrderStatus(reqData, res);
+
+            // send notification when status changed--------------------------
+            let orderDetail = await machineOrderServices.getOrderUserId(reqData.order_id);
+            if(orderDetail){
+                let detail = `Your order id of ${orderDetail.order_id} status changed`;
+                let dataParm = {
+                    notification_type:Constant.ORDER,
+                    sender_id:userData.id,
+                    receiver_id: orderDetail.user_id,
+                    status:0,
+                    details:detail
+                }
+                await notificationServices.createNotification(dataParm);
+            }
             return res.send(ResponseHandler.successResponse({}, message.CHANGE_ORDER_STATUS));
         
         } catch (error) {
