@@ -48,7 +48,7 @@ let userServices = {
 					phone: userCreate.phone,
 					accessToken: token,
 				};
-				const transporter = nodemailer.createTransport(configEmail);
+				// const transporter = nodemailer.createTransport(configEmail);
 				const emailToken = jwt.sign(
 										{
 										user : userCreate.id
@@ -316,7 +316,7 @@ let userServices = {
 		const Password = 'test1234';
 		//await passwordGenrator.genratePassword(5);
 		console.log(Password);	
-		var transporter = nodemailer.createTransport(configEmail);
+		// var transporter = nodemailer.createTransport(configEmail);
 		const mailOptions = {
 			from: 'siddnizam87@gmail.com',
 			to: emailId,
