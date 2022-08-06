@@ -4,7 +4,7 @@ const config = require('../config/auth');
 const configEmail = require('../config/email');
 const passwordGenrator = require('../helper/password_genrator');
 const date = require('date-and-time');
-var nodemailer = require('nodemailer');
+// var nodemailer = require('nodemailer');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const _ = require('lodash');
@@ -261,26 +261,26 @@ let userServices = {
 		}
 	},
 
-	sendEmail: async () => {
-		var transporter = nodemailer.createTransport(configEmail);
+	// sendEmail: async () => {
+	// 	var transporter = nodemailer.createTransport(configEmail);
 
-		var mailOptions = {
-			from: 'siddnizam87@gmail.com',
-			to: 'nizammca786@gmail.com',
-			subject: 'Sending Email using Node.js',
-			text: `Hi Smartherd, thank you for your nice Node.js tutorials.
-          I will donate 50$ for this course. Please send me payment options.`,
-			// html: '<h1>Hi Smartherd</h1><p>Your Messsage</p>'
-		};
+	// 	var mailOptions = {
+	// 		from: 'siddnizam87@gmail.com',
+	// 		to: 'nizammca786@gmail.com',
+	// 		subject: 'Sending Email using Node.js',
+	// 		text: `Hi Smartherd, thank you for your nice Node.js tutorials.
+    //       I will donate 50$ for this course. Please send me payment options.`,
+	// 		// html: '<h1>Hi Smartherd</h1><p>Your Messsage</p>'
+	// 	};
 
-		transporter.sendMail(mailOptions, function (error, info) {
-			if (error) {
-				console.log(error);
-			} else {
-				console.log('Email sent: ' + info.response);
-			}
-		});
-	},
+	// 	transporter.sendMail(mailOptions, function (error, info) {
+	// 		if (error) {
+	// 			console.log(error);
+	// 		} else {
+	// 			console.log('Email sent: ' + info.response);
+	// 		}
+	// 	});
+	// },
 
 	confirmation: async (token) => {
 	try {
