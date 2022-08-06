@@ -75,7 +75,7 @@ let userController = {
 	productLists: async (req, res) => {
 		try {
 
-			await mailHandler.sendTestEmail('vivekvsms@gmail.com');
+			// await mailHandler.sendTestEmail('vivekvsms@gmail.com');
 			if(req.query.role == 2){
 				if(typeof req.query.user_id == 'undefined'){
 					return res.send(ResponseHandler.errorAsBadRequest(res, 'user_id is required'));
