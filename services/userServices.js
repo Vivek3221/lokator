@@ -49,32 +49,32 @@ let userServices = {
 					accessToken: token,
 				};
 				// const transporter = nodemailer.createTransport(configEmail);
-				const emailToken = jwt.sign(
-										{
-										user : userCreate.id
-									},
-									config.secret, 
-									{
-											expiresIn: 86400, // 24 hours
-										}
+				// const emailToken = jwt.sign(
+				// 						{
+				// 						user : userCreate.id
+				// 					},
+				// 					config.secret, 
+				// 					{
+				// 							expiresIn: 86400, // 24 hours
+				// 						}
 										
-				);
-				const url = `http://65.2.98.24:8080/api/user/confirmation/${emailToken}`;
-				//const url = `http://localhost:3000/confirmation/${emailToken}`;
-				//console.log(url);
-				const mailOptions = {
-					from: 'siddnizam87@gmail.com',
-					to: 'nizammca786@gmail.com',
-					subject: 'Email Verifications',
-					html: `Hi ${_.upperFirst(userCreate.first_name)}, thank you for register with us.,Please click on the link to verify your email address :<a href="${url}">${url}</a> `,
-				};
-				transporter.sendMail(mailOptions, function (error, info) {
-					if (error) {
-						console.log(error);
-					} else {
-						console.log('Email sent: ' + info.response);
-					}
-				});
+				// );
+				// const url = `http://65.2.98.24:8080/api/user/confirmation/${emailToken}`;
+				// //const url = `http://localhost:3000/confirmation/${emailToken}`;
+				// //console.log(url);
+				// const mailOptions = {
+				// 	from: 'siddnizam87@gmail.com',
+				// 	to: 'nizammca786@gmail.com',
+				// 	subject: 'Email Verifications',
+				// 	html: `Hi ${_.upperFirst(userCreate.first_name)}, thank you for register with us.,Please click on the link to verify your email address :<a href="${url}">${url}</a> `,
+				// };
+				// transporter.sendMail(mailOptions, function (error, info) {
+				// 	if (error) {
+				// 		console.log(error);
+				// 	} else {
+				// 		console.log('Email sent: ' + info.response);
+				// 	}
+				// });
 				return userData;
 			}
 		} catch (error) {
@@ -309,7 +309,13 @@ let userServices = {
 		
 	}	
 	},
-
+	
+   /**
+	* Need to implement SMTP then this function will work
+	* @param {*} emailId 
+	* @param {*} res 
+	* @returns 
+	*/
 	forgotPassword: async (emailId,res) => {
 		try {
 		console.log('test');
