@@ -24,6 +24,7 @@ import {
   GET_ORDERS,
   UPDATE_ORDERS_STATUS,
   GET_INQUIRY,
+  GET_NOTIFICATION
 } from "../types";
 
 import axios from "axios";
@@ -174,26 +175,6 @@ export const getContact =
       });
   };
 
-// export const sendNotification = (data, history) => (dispatch) => {
-//   dispatch({ type: LOADING_UI });
-
-//   axios
-//     .post("/admin/send-notification", data)
-//     .then((res) => {
-//       dispatch({ type: CLEAR_ERRORS });
-
-//       toast.info(`${res.data.message}`, {
-//         position: toast.POSITION.TOP_RIGHT,
-//       });
-//     })
-
-//     .catch((err) => {
-//       dispatch({
-//         type: SET_ERRORS,
-//         payload: err.response ? err.response.data : err.response,
-//       });
-//     });
-// };
 
 export const getUsers =
   (page = 0, search) =>
@@ -708,3 +689,67 @@ export const getInquiry = (values) => (dispatch) => {
       });
     });
 };
+
+
+export const getNotification =
+  () =>
+  (dispatch) => {
+    
+
+    axios
+      .get(
+        "/notification/notification-list"
+      )
+      .then((res) => {
+        dispatch({
+          type: GET_NOTIFICATION,
+          payload: res.data.data,
+        });
+
+        dispatch({ type: CLEAR_ERRORS });
+      })
+
+      .catch((err) => {
+        dispatch({
+          type: SET_ERRORS,
+          payload: err.response ? err.response.data : err.response,
+        });
+      });
+  };
+
+  export const updateNotification = (type,history) => (dispatch) => {
+    dispatch({ type: LOADING_UI });
+    const token = localStorage.getItem("access_token");
+    const headers = {
+      "Content-Type": "application/json",
+      "x-access-token": token,
+    };
+    axios
+      .put("/notification/update-notification-status", {
+        notification_type:type
+    }, {
+        headers: headers,
+      })
+      .then((res) => {
+        dispatch({ type: CLEAR_ERRORS });
+        if(type === 'Register'){
+          history.push('/users-list');
+        }
+        if(type === 'Order'){
+          history.push('/orders');
+        }
+        if(type === 'Register'){
+          history.push('/inquiries');
+        }
+        if(type === 'Machines'){
+          history.push('/machines');
+        }
+      })
+  
+      .catch((err) => {
+        dispatch({
+          type: SET_ERRORS,
+          payload: err.response ? err.response.data : err.response,
+        });
+      });
+  };

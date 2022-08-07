@@ -26,6 +26,7 @@ import {
   UPDATE_ORDERS_STATUS,
   EDIT_MACHINE,
   GET_INQUIRY,
+  GET_NOTIFICATION,
 } from "../types";
 
 const initialState = {
@@ -38,6 +39,7 @@ const initialState = {
   reports: [],
   selectedImage: "",
   inquiry: [],
+  notification: [],
 };
 
 // eslint-disable-next-line import/no-anonymous-default-export
@@ -273,6 +275,11 @@ export default function (state = initialState, action) {
       return {
         ...state,
         inquiry: action.payload,
+      };
+    case GET_NOTIFICATION:
+      return {
+        ...state,
+        notification: action.payload,
       };
     default:
       return state;
