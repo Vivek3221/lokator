@@ -190,6 +190,7 @@ const Orders = ({
         }}
         handleModal={() => {
           updateStatus(selectedOrder);
+          setSelectedOrder("");
         }}
       />
     </div>

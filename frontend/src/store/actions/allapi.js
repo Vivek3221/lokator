@@ -738,11 +738,11 @@ export const getNotification =
         if(type === 'Order'){
           history.push('/orders');
         }
-        if(type === 'Register'){
-          history.push('/inquiries');
-        }
         if(type === 'Machines'){
           history.push('/machines');
+        }
+        if(type === 'Enquiry'){
+          history.push('/inquiries');
         }
       })
   
