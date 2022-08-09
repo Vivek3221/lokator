@@ -514,15 +514,15 @@ const Product = (props) => {
                             </Field>
                           </div>
                           <div className="col-lg-6">
-                            <Field name="name">
+                            <Field name="company_name">
                               {({ field }) => (
                                 <Input
                                   {...field}
                                   type="text"
                                   error={
-                                    formikBag.touched.name &&
-                                    formikBag.errors.name
-                                      ? formikBag.errors.name
+                                    formikBag.touched.company_name &&
+                                    formikBag.errors.company_name
+                                      ? formikBag.errors.company_name
                                       : null
                                   }
                                   className="form-control"
