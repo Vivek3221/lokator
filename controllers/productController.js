@@ -282,7 +282,7 @@ let userController = {
 						await notificationServices.createNotification(dataParm);
 					}
 				}				
-				return res.send(ResponseHandler.successResponse(saveInquiry, message.DATA_SAVE));
+				return res.send(ResponseHandler.successResponse(saveInquiry, message.DATA_SAVE_INQUIRY));
 			}else{
 				return res.send(ResponseHandler.errorAsBadRequest(res, 'error'));
 			}
