@@ -10,6 +10,7 @@ module.exports={
   EMAIL_OR_PASSWORD_MISMATCH:'Email or password is incorrect. Please enter valid credentials.',
   USER_LOGOUT:'User logout successfully.', 
   DATA_SAVE:'Data saved successfully.',
+  DATA_SAVE_INQUIRY:'Thank you for filling out your information.',
   DATA_UPDATED: 'Data updated successfully.',
   DATA_LIST: 'Data list.',
   FORGOT_PASSWORD:'Forgot password send to you email id.',
