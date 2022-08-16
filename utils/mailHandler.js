@@ -1,32 +1,28 @@
-// var SibApiV3Sdk = require("sib-api-v3-sdk");
-// var defaultClient = SibApiV3Sdk.ApiClient.instance;
-// // Configure API key authorization: api-key
-// var apiKey = defaultClient.authentications["api-key"];
-// apiKey.apiKey = "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";
-// module.exports = {
+const nodemailer = require("nodemailer");
 
-//     sendTestEmail: async(address) => {
-//         var apiInstance = new SibApiV3Sdk.TransactionalEmailsApi();
-//         var sendSmtpEmail = new SibApiV3Sdk.SendSmtpEmail(); // SendSmtpEmail | Values to send a transactional email
-//         sendSmtpEmail = {
-//             sender: { email: "vivekvsms@gmail.com" },
-//             to: [
-//             {
-//                 email: "viveksmsji@gmail.com",
-//                 name: "Vivek Singh",
-//             },
-//             ],
-//             subject: "Test sender blue Email",
-//             textContent: "Test Email sender blue Content",
-//         };
-//         apiInstance.sendTransacEmail(sendSmtpEmail).then(
-//             function (data) {
-//             console.log("API called successfully. Returned data: " + data);
-//             },
-//             function (error) {
-//             console.error(error);
-//             }
-//         );
-//     }
-// } 
-
+module.exports = {
+    sendMailBySMTP:(to, subject, html) => {
+        let transporter = nodemailer.createTransport({
+            host: process.env.AWS_SES_HOST,
+            port: process.env.AWS_SES_PORT,
+            auth: {
+                user: process.env.AWS_SES_CLIENT_ID,
+                pass: process.env.AWS_SES_CLIENT_SECRET_KEY
+            }
+        });
+        let mailContent = {
+            from: 'Loketor Pvt Ltd <support@lokator360.com>',
+            to: to,
+            subject: subject,
+            html: html
+        };
+        transporter.sendMail(mailContent, function (err, data) {
+            if (err) {
+                console.log('Unable to send mail Err: ' + err.message);
+            } else {
+                console.log('Email send successfully');
+            }
+        });
+    }
+    
+}

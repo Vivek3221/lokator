@@ -10,6 +10,8 @@ const { Op } = require('sequelize');
 const userServices = require('../services/userServices');
 const notificationServices = require('../services/notificationServices');
 const { isSet } = require('lodash');
+const fs = require('fs');
+
 let userController = {
 	/**
 	 * Description : User signUp
@@ -74,8 +76,7 @@ let userController = {
 	},
 	productLists: async (req, res) => {
 		try {
-
-			// await mailHandler.sendTestEmail('vivekvsms@gmail.com');
+			//await mailHandler.sendMailBySMTP('vivekvsms@gmail.com', 'Locketor', 'test');
 			if(req.query.role == 2){
 				if(typeof req.query.user_id == 'undefined'){
 					return res.send(ResponseHandler.errorAsBadRequest(res, 'user_id is required'));
