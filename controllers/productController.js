@@ -4,7 +4,7 @@ const ResponseHandler = require('../utils/responseHandler');
 const commonHelper = require(`../helper/commonHelper`);
 const { check, validationResult } = require('express-validator');
 const Constant = require('../utils/constant');
-const mailHandler = require('../utils/mailHandler');
+const inquireMailHandler = require('../utils/mails/inquiryMailHandler');
 const _ = require('lodash');
 const { Op } = require('sequelize');
 const userServices = require('../services/userServices');
@@ -76,7 +76,7 @@ let userController = {
 	},
 	productLists: async (req, res) => {
 		try {
-			//await mailHandler.sendMailBySMTP('vivekvsms@gmail.com', 'Locketor', 'test');
+			
 			if(req.query.role == 2){
 				if(typeof req.query.user_id == 'undefined'){
 					return res.send(ResponseHandler.errorAsBadRequest(res, 'user_id is required'));
@@ -281,8 +281,14 @@ let userController = {
 							details:detail
 						}
 						await notificationServices.createNotification(dataParm);
+						// Send mail to admin---------------------------------------------
+						if(users[i].email != undefined && users[i].email != ''){
+							inquireMailHandler.sendInquiryMailBySMTP(users[i].email, 'Loketor Inquiry', inquiryData);
+						}
 					}
-				}				
+				}		
+				
+				
 				return res.send(ResponseHandler.successResponse(saveInquiry, message.DATA_SAVE_INQUIRY));
 			}else{
 				return res.send(ResponseHandler.errorAsBadRequest(res, 'error'));

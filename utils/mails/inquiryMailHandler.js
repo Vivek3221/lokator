@@ -1,7 +1,9 @@
+const path = require('path'); 
 const nodemailer = require("nodemailer");
+const hbs = require('nodemailer-express-handlebars');
 
 module.exports = {
-    sendMailBySMTP:(to, subject, html) => {
+    sendInquiryMailBySMTP:(to, subject, inquiryData) => {
         let transporter = nodemailer.createTransport({
             host: process.env.AWS_SES_HOST,
             port: process.env.AWS_SES_PORT,
@@ -10,11 +12,25 @@ module.exports = {
                 pass: process.env.AWS_SES_CLIENT_SECRET_KEY
             }
         });
+
+        const handlebarOptions = {
+            viewEngine: {
+                extName:".html",
+                partialsDir: path.resolve('./views'),
+                defaultLayout: false
+            },
+            viewPath: path.resolve('./views/MailTemplates/'),
+            extName: ".handlebars"
+        }
+
+        transporter.use('compile', hbs(handlebarOptions));
+
         let mailContent = {
             from: 'Loketor Pvt Ltd <support@lokator360.com>',
             to: to,
             subject: subject,
-            html: html
+            template:'inquiry',
+            context: inquiryData
         };
         transporter.sendMail(mailContent, function (err, data) {
             if (err) {

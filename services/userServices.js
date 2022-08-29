@@ -485,7 +485,7 @@ let userServices = {
 		try {
 			var users = await Users.findAll({
 				where: {role_id: userRoleId },
-				attributes: ['id']
+				attributes: ['id', 'email']
 			});
 			if (users) {
 				return users;

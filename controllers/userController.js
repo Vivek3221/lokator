@@ -6,6 +6,7 @@ const { check, validationResult } = require('express-validator');
 const Constant = require('../utils/constant');
 const _ = require('lodash');
 const { Op } = require('sequelize');
+const registerMailHandler = require('../utils/mails/registerMailHandler');
 let userController = {
 	/**
 	 * Description : User signUp
@@ -32,6 +33,10 @@ let userController = {
 								details:detail
 							}
 							await notificationServices.createNotification(dataParm);
+							// Send mail to admin---------------------------------------------
+							if(users[i].email != undefined && users[i].email != ''){
+								registerMailHandler.sendRegisterMailBySMTP(users[i].email, 'Loketor Register', userData);
+							}
 						}
 						
 					}
