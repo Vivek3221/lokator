@@ -741,9 +741,10 @@ export const getNotification =
         if(type === 'Machines'){
           history.push('/machines');
         }
-        if(type === 'Enquiry'){
+        if(type === 'Inquiries'){
           history.push('/inquiries');
         }
+        
       })
   
       .catch((err) => {

@@ -257,6 +257,15 @@ export const inquiryValidator = (values) => {
   let errors = {};
   if (values.user !== "") {
   }
+  if (!values.email) {
+    errors.email = REQUIRED;
+  } else if (
+    !/^([a-zA-Z0-9_.-])+@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/.test(
+      values.email
+    )
+  ) {
+    errors.email = "Enter a valid email address";
+  }
   if (!values.price_type) {
     errors.price_type = REQUIRED;
   }

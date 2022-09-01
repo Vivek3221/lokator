@@ -23,7 +23,7 @@ const CapacityManagement = ({ getInquiry, allapi: { inquiry } }) => {
         <li className="breadcrumb-item">
           <a href="#">Dashboard</a>
         </li>
-        <li className="breadcrumb-item active">Capacity</li>
+        <li className="breadcrumb-item active">Inquiries</li>
       </ol>
       <div className="header-with-search mb-20">
         <Search

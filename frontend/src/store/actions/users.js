@@ -17,7 +17,7 @@ export const loginUser =
     axios
       .post("/user/signIn", userData)
       .then((res) => {
-        setAuthorizationHeader({ ...res.data, role_id: res.data.data.role_id });
+        setAuthorizationHeader({ ...res.data, role_id: res.data.data.role_id || 1 });
 
         if (!isPopup) {
           if (res.data.data.role_id == "1") {
@@ -79,7 +79,7 @@ export const signinUser =
     axios
       .post("/user/signup", userData)
       .then((res) => {
-        setAuthorizationHeader({ ...res.data, role_id: userData.role_id });
+        setAuthorizationHeader({ ...res.data, role_id: userData.role_id || 1 });
         dispatch({
           type: SET_USERS,
           payload: res.data.data,
@@ -206,6 +206,6 @@ export const forgetPassword = (userData) => (dispatch) => {
 
 const setAuthorizationHeader = (data, role_id) => {
   localStorage.setItem("access_token", data.data.accessToken);
-  localStorage.setItem("role_id", data.data.role_id);
+  localStorage.setItem("role_id", data.data.role_id || 1);
   localStorage.setItem("user_data", JSON.stringify(data.data));
 };

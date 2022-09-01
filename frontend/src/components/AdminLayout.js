@@ -22,21 +22,24 @@ const AdminLayout = ({
   const [toggleChild, setToogleChild] = useState(false);
 
   const handleNotificationClick =  (type)=>{
-    
     updateNotification(type,history)
     setShowNote(false)
   }
 
   useEffect(() => {
     getUser();
-    getNotification()
-    setInterval(()=>{
+    if(localStorage.access_token){
       getNotification()
-    },3000)
+      setInterval(()=>{
+        getNotification()
+      },3000)
+      }
     
   }, []);
   return (
-    <div>
+    <div onClick={(e)=>{
+      setShowNote(false)
+    }}>
       {/* Navigation*/}
       <nav
         className="navbar navbar-expand-lg navbar-dark bg-dark fixed-top no-padding"
@@ -169,7 +172,9 @@ const AdminLayout = ({
           {Boolean(notification?.total_notification) && (
           <ul className="nav navbar-nav navbar-right">
         <li className="dropdown">
-          <a  className="nav-link notify" onClick={()=> setShowNote(!showNote)} data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i className="fa fa-bell" aria-hidden="true"></i>
+          <a  className="nav-link notify" onClick={(e)=> {
+             e.stopPropagation()
+            setShowNote(!showNote)}} data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i className="fa fa-bell" aria-hidden="true"></i>
  (<b>{notification?.total_notification}</b>)</a>
           {showNote && (
           <ul className="dropdown-menu notify-drop">

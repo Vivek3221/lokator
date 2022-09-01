@@ -70,10 +70,11 @@ const Login = ({
             </Link>
             <div>
               <Link
-                to="/register?role_id=2"
+                to={role_id == 1 ?"/register?role_id=2":"/register?role_id=1"}
                 className="btn btn-primary text-white btn-sm"
               >
-                Register as Partner
+                {role_id != 1 ? "Register as Partner":"Register as Customer"}
+                
               </Link>{" "}
               &nbsp;&nbsp;
               <Link to="/" className="btn btn-primary text-white btn-sm">
