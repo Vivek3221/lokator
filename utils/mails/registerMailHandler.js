@@ -26,7 +26,7 @@ module.exports = {
         transporter.use('compile', hbs(handlebarOptions));
 
         let mailContent = {
-            from: 'Loketor Pvt Ltd <support@lokator360.com>',
+            from: 'Lokator Pvt Ltd <info@lokator.com>',
             to: to,
             subject: subject,
             template:'register',

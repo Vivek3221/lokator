@@ -3,7 +3,7 @@ const nodemailer = require("nodemailer");
 const hbs = require('nodemailer-express-handlebars');
 
 module.exports = {
-    sendInquiryMailBySMTP:(to, subject, inquiryData) => {
+    updatedProductStatusMailBySMTP:(to, subject, productData) => {
         let transporter = nodemailer.createTransport({
             host: process.env.AWS_SES_HOST,
             port: process.env.AWS_SES_PORT,
@@ -29,8 +29,8 @@ module.exports = {
             from: 'Lokator Pvt Ltd <info@lokator.com>',
             to: to,
             subject: subject,
-            template:'inquiry',
-            context: inquiryData
+            template:'updated-product-status',
+            context: productData
         };
         transporter.sendMail(mailContent, function (err, data) {
             if (err) {

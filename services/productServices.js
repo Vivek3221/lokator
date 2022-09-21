@@ -84,7 +84,6 @@ let productServices = {
 				capacity_id: req.body.capacity_id,
 				description: req.body.description,
 				machine_number: req.body.machine_number,
-				user_id: requestUser.id,
 				status: req.body.status,
 				created_at: createdAt,
 			}
@@ -464,7 +463,39 @@ let productServices = {
 		} catch (error) {
 			res.status(500).send({ message: error.message });
 		}
-	}
+	},
+
+	getMachineDetail: async (machineId) => {
+		try {
+			let productsData = await MachineProducts.findOne({
+				where: {id:machineId},
+				include: [
+					{
+						model: MachineCategory,
+						required: true,
+						attributes: ['id', 'category_name'],
+					},
+					{
+						model: MachineType,
+						required: true,
+						attributes: ['id', 'type'],
+					},
+					{
+						model: MachineCapacities,
+						required: true,
+						attributes: ['id', 'capacity'],
+					},
+				]
+
+			});
+			if (productsData) {
+				
+				return productsData;
+			}
+		} catch (error) {
+			console.log(error);
+		}
+	},
 
 };
 

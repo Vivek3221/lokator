@@ -59,6 +59,20 @@ let LocationServices = {
 		}
 	},
 
+	getlocationDetail: async (locationId) => {
+		try {
+			var locationDetail = await location.findOne({
+				where: {id:locationId}
+            });
+            
+			if (locationDetail) {
+				return locationDetail;
+			}
+		} catch (error) {
+			res.status(500).send({ message: error.message });
+		}
+	},
+
 
 }
 

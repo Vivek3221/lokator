@@ -44,9 +44,13 @@ let userServices = {
 				});
 				const userData = {
 					id: userCreate.id,
+					first_name: userCreate.first_name,
+					last_name: userCreate.last_name,
 					email: userCreate.email,
 					phone: userCreate.phone,
+					company_name: userCreate.company_name,
 					accessToken: token,
+					locationId: userCreate.location_id
 				};
 				// const transporter = nodemailer.createTransport(configEmail);
 				// const emailToken = jwt.sign(
