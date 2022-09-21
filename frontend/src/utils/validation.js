@@ -25,7 +25,6 @@ export const addSubAdminValidator = (values) => {
   if (!values.name) {
     errors.name = REQUIRED;
   }
-  console.log(errors);
 
   return errors;
 };
@@ -156,7 +155,7 @@ export const signUPValidator = (values) => {
   } else if (values.password !== values.confirm_password) {
     errors.confirm_password = "Password does not match";
   }
-  console.log(errors);
+  
   return errors;
 };
 
@@ -173,7 +172,7 @@ export const changePasswordValidator = (values) => {
   } else if (values.password !== values.confirm_password) {
     errors.confirm_password = "Password does not match";
   }
-  console.log(errors);
+  
   return errors;
 };
 
@@ -218,7 +217,7 @@ export const profileValidator = (values) => {
     errors.company_name = REQUIRED;
   }
 
-  console.log(errors);
+  
   return errors;
 };
 
@@ -253,9 +252,15 @@ export const orderValidator = (values) => {
 };
 
 export const inquiryValidator = (values) => {
-  console.log(values);
+  
   let errors = {};
   if (values.user !== "") {
+  }
+  if (!values.name) {
+    errors.name = REQUIRED;
+  }
+  if (!values.company_name) {
+    errors.company_name = REQUIRED;
   }
   if (!values.email) {
     errors.email = REQUIRED;

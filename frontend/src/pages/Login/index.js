@@ -73,7 +73,7 @@ const Login = ({
                 to={role_id == 1 ?"/register?role_id=2":"/register?role_id=1"}
                 className="btn btn-primary text-white btn-sm"
               >
-                {role_id != 1 ? "Register as Partner":"Register as Customer"}
+                {role_id != 1 ? "Register as Customer":"Register as Partner"}
                 
               </Link>{" "}
               &nbsp;&nbsp;
