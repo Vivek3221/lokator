@@ -4,12 +4,16 @@ const ResponseHandler = require('../utils/responseHandler');
 const commonHelper = require(`../helper/commonHelper`);
 const { check, validationResult } = require('express-validator');
 const Constant = require('../utils/constant');
-const mailHandler = require('../utils/mailHandler');
+const inquireMailHandler = require('../utils/mails/inquiryMailHandler');
 const _ = require('lodash');
 const { Op } = require('sequelize');
 const userServices = require('../services/userServices');
 const notificationServices = require('../services/notificationServices');
+const addProductMailHandler = require('../utils/mails/addProductMailHandler');
+const updatedProductStatusMailHandler = require('../utils/mails/updatedProductStatusMailHandler');
 const { isSet } = require('lodash');
+const fs = require('fs');
+
 let userController = {
 	/**
 	 * Description : User signUp
@@ -36,8 +40,24 @@ let userController = {
 								status:0,
 								details:detail
 							}
+							await notificationServices.createNotification(dataParm);
+
+							// Send mail to admin----------------------------
+							let machineDetail = await productServices.getMachineDetail(addProduct.id);
+							let machineData = {
+								"machineName": addProduct.machine_name,
+								"description": addProduct.description,
+								"machineNnumber": addProduct.machine_number,
+								"capacity": machineDetail.machine_capacities.capacity,
+								"type" : machineDetail.machine_types.type,
+								"category": machineDetail.machine_categories.category_name
+
+							}
+
+							addProductMailHandler.sendAddProductMailBySMTP(users[i].email, 'Lokator New Machine', machineData);
+
 						}
-						await notificationServices.createNotification(dataParm);
+						
 					}
 				}				
 				return res.send(ResponseHandler.successResponse(addProduct, message.ADD_PRODUCT));
@@ -51,6 +71,26 @@ let userController = {
 		try {
 			var updateProduct = await productServices.updateProductService(req, res);
 			if (updateProduct) {
+
+				// Send mail to vendor who have crested product----------------------------
+				let machineDetail = await productServices.getMachineDetail(updateProduct.id);
+				const user = await userServices.userProfileById(machineDetail.user_id);
+				let status = 'InActive';
+				if(machineDetail.status == 1){
+					status = 'Active';
+				}
+				let machineData = {
+					"name": machineDetail.machine_name,
+					"number": machineDetail.machine_number,
+					"capacity": machineDetail.machine_capacities.capacity,
+					"type" : machineDetail.machine_types.type,
+					"category": machineDetail.machine_categories.category_name,
+					"status": status
+
+				}
+
+				updatedProductStatusMailHandler.updatedProductStatusMailBySMTP(user.email, 'Lokator Updated Machine Status', machineData);
+
 				return res.send(ResponseHandler.successResponse(updateProduct, message.UPDATE_PRODUCT));
 			}
 		} catch (error) {
@@ -74,8 +114,7 @@ let userController = {
 	},
 	productLists: async (req, res) => {
 		try {
-
-			// await mailHandler.sendTestEmail('vivekvsms@gmail.com');
+			
 			if(req.query.role == 2){
 				if(typeof req.query.user_id == 'undefined'){
 					return res.send(ResponseHandler.errorAsBadRequest(res, 'user_id is required'));
@@ -280,8 +319,14 @@ let userController = {
 							details:detail
 						}
 						await notificationServices.createNotification(dataParm);
+						// Send mail to admin---------------------------------------------
+						if(users[i].email != undefined && users[i].email != ''){
+							inquireMailHandler.sendInquiryMailBySMTP(users[i].email, 'Lokator Inquiry', inquiryData);
+						}
 					}
-				}				
+				}		
+				
+				
 				return res.send(ResponseHandler.successResponse(saveInquiry, message.DATA_SAVE_INQUIRY));
 			}else{
 				return res.send(ResponseHandler.errorAsBadRequest(res, 'error'));

@@ -1,11 +1,13 @@
 const message = require('../config/message');
 const userServices = require('../services/userServices');
 const notificationServices = require('../services/notificationServices');
+const locationServices = require('../services/LocationServices');
 const ResponseHandler = require('../utils/responseHandler');
 const { check, validationResult } = require('express-validator');
 const Constant = require('../utils/constant');
 const _ = require('lodash');
 const { Op } = require('sequelize');
+const registerMailHandler = require('../utils/mails/registerMailHandler');
 let userController = {
 	/**
 	 * Description : User signUp
@@ -32,6 +34,16 @@ let userController = {
 								details:detail
 							}
 							await notificationServices.createNotification(dataParm);
+							// Send mail to admin---------------------------------------------
+							if(users[i].email != undefined && users[i].email != ''){
+								let location = await locationServices.getlocationDetail(userData.locationId);
+								userData.location = '';
+								if(location != null){
+									userData.location = location.location_name;
+								}
+								
+								registerMailHandler.sendRegisterMailBySMTP(users[i].email, 'Lokator Register', userData);
+							}
 						}
 						
 					}
