@@ -104,6 +104,20 @@ let machineOrderServices = {
 				}
 			}	
 			extraWhereCondition = {...condition, ...condition2}
+
+			totalDatas = await machineOrder.findAll({
+				where: extraWhereCondition,
+				include: [
+					{
+						model: Users,
+						required: true,
+						attributes: ['id']
+					}
+				],
+				order : [['id', 'DESC']],
+				attributes: ['id']
+			});
+
 			orderData = await machineOrder.findAll({
 				where: extraWhereCondition,
 				offset: offset,
@@ -215,19 +229,15 @@ let machineOrderServices = {
 					}
 
 				}
-				let totalPage = Math.ceil(orderData.length / Constant.PAGINATION_LIMIT);
+				let totalPage = Math.ceil(totalDatas.length / Constant.PAGINATION_LIMIT);
 					return {
 					totalCount: orderData.length,
 					totalPage: totalPage,
 					orderData: mainOrderData,
 				};
 			}else{
-				let totalPage = Math.ceil(orderData.length / Constant.PAGINATION_LIMIT);
-					return {
-					totalCount: orderData.length,
-					totalPage: totalPage,
-					orderData: [],
-				};
+				// let totalPage = Math.ceil(totalDatas.length / Constant.PAGINATION_LIMIT);
+					return 0;
 			}	
 		} catch (error) {
 			res.status(500).send({ message: error.message });

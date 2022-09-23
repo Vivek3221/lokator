@@ -132,16 +132,16 @@ let machineCategoryController = {
             }
             const categoryList = await machineCategoryServices.getCategoryList(param , res , page ,searchloc);
             // console.log(categoryList);return false;
-            if(categoryList.length){
-                let totalPage = Math.ceil(categoryList.length / constant.PAGINATION_LIMIT);
+            if(categoryList.categoryList.length){
+                let totalPage = Math.ceil(categoryList.totalCategoryList.length / constant.PAGINATION_LIMIT);
                 var catReturn = {
-                    totalCount: categoryList.length,
+                    totalCount: categoryList.categoryList.length,
                     totalPage: totalPage,
-                    categoryList: categoryList
+                    categoryList: categoryList.categoryList
                 }
                 return res.send(ResponseHandler.successResponse(catReturn, message.CATEGORY_LIST));
             }else{
-                return res.send(ResponseHandler.entityNotFound(res, 'No Data'));
+                return res.send(ResponseHandler.recordNotFound('', 'No Data'));
             }
         
         }catch (error) {

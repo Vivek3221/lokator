@@ -123,8 +123,12 @@ let userController = {
 			}
 			
 			const productDetails = await productServices.productListsService(req, res);
-			if (productDetails) 
-			return res.send(ResponseHandler.successResponse(productDetails, message.PRODUCT_DETAILS));
+			if (productDetails) {
+				return res.send(ResponseHandler.successResponse(productDetails, message.PRODUCT_DETAILS));
+			}
+			else {
+				return res.send(ResponseHandler.recordNotFound('', 'No Data'));
+			}
 		} catch (error) {
 			console.log(error);
 			//res.status(500).send({ message: error.message });

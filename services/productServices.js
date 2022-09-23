@@ -167,6 +167,9 @@ let productServices = {
 		try {
 			var productsData = [];
 			var page = req.query.page;
+			if(!page){
+				page = 0;
+			}
 			var offset = parseInt(page) * Constant.PAGINATION_LIMIT;
 			const status = req.query.status;
 			var extraWhereCondition = {};
@@ -205,13 +208,34 @@ let productServices = {
 
 			extraWhereCondition = { ...condition, ...condition2 }
 
+			dataTotal = await MachineProducts.findAll({
+				where: extraWhereCondition,
+				order: [['id', 'DESC']],
+				include: [
+					{
+						model: MachineCategory,
+						required: true,
+						attributes: ['id', 'category_image', 'category_name'],
+					},
+					{
+						model: MachineType,
+						required: true,
+						attributes: ['id', 'type'],
+					},
+					{
+						model: MachineCapacities,
+						required: true,
+						attributes: ['id', 'capacity'],
+					},
+				]
 
-			if (!page) {
-				page = 0;
-			}
+			});
+
 			productsData = await MachineProducts.findAll({
 				where: extraWhereCondition,
 				order: [['id', 'DESC']],
+				limit: Constant.PAGINATION_LIMIT,
+				offset: offset,
 				include: [
 					{
 						model: MachineCategory,
@@ -265,18 +289,14 @@ let productServices = {
 
 					});
 				}
-				let totalPage = Math.ceil(productsData.length / Constant.PAGINATION_LIMIT);
+				let totalPage = Math.ceil(dataTotal.length / Constant.PAGINATION_LIMIT);
 				return {
 					totalCount: productsData.length,
 					totalPage: totalPage,
 					productsData: productArray,
 				};
 			} else {
-				return {
-					totalCount: productsData.length,
-					totalPage: 0,
-					productsData: productArray,
-				};
+				return 0;
 			}
 		} catch (error) {
 			console.log(error);
@@ -422,6 +442,11 @@ let productServices = {
 				}
 			}
 
+			totalInqDatas = await Inquiries.findAll({
+				where: extraWhereCondition,
+				order: [['id', 'DESC']],
+			});
+
 			inquiryData = await Inquiries.findAll({
 				where: extraWhereCondition,
 				offset: offset,
@@ -432,19 +457,14 @@ let productServices = {
 			//console.log(inquiryData); return false;
 			if (!_.isEmpty(inquiryData)) {
 
-				let totalPage = Math.ceil(inquiryData.length / Constant.PAGINATION_LIMIT);
+				let totalPage = Math.ceil(totalInqDatas.length / Constant.PAGINATION_LIMIT);
 				return {
 					totalCount: inquiryData.length,
 					totalPage: totalPage,
 					inquiryData: inquiryData,
 				};
 			} else {
-				let totalPage = Math.ceil(inquiryData.length / Constant.PAGINATION_LIMIT);
-				return {
-					totalCount: inquiryData.length,
-					totalPage: totalPage,
-					inquiryData: [],
-				};
+				return 0;
 			}
 		} catch (error) {
 			res.status(500).send({ message: error.message });
