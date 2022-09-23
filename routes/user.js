@@ -14,6 +14,6 @@ router.post('/logout',authJwt.verifyToken,userController.userLogout);
 router.post('/email',userController.sendEmail);
 router.get('/confirmation/:id',userController.confirmation);
 router.post('/contactUs',validationParam.contactUs,userController.contactUs);
-router.get('/contactUsLists',userController.contactUsLists);
-router.get('/usersLists',userController.getAllUsers);
+router.get('/contactUsLists',authJwt.verifyToken,userController.contactUsLists);
+router.get('/usersLists',authJwt.verifyToken,userController.getAllUsers);
 module.exports =router;

@@ -343,7 +343,12 @@ let userController = {
             // get order req data from req body---------------
             var reqData     = req.body;
 			const inquiryLists = await productServices.inquiryLists(reqData, res);
-			return res.send(ResponseHandler.successResponse(inquiryLists, message.INQUIRY_LISTS));
+			if(inquiryLists){
+				return res.send(ResponseHandler.successResponse(inquiryLists, message.INQUIRY_LISTS));
+			}else{
+				return res.send(ResponseHandler.recordNotFound(inquiryLists, 'No Data'));
+			}
+			
 			
         
         } catch (error) {

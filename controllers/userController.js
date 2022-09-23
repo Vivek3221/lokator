@@ -173,7 +173,12 @@ let userController = {
 	contactUsLists: async (req, res) => {
 		try {
 			const constactDataLists = await userServices.contactUsLists(req, res);
-			return res.send(ResponseHandler.successResponse(constactDataLists, message.CONTACTUS_LISTS));
+			if(constactDataLists){
+				return res.send(ResponseHandler.successResponse(constactDataLists, message.CONTACTUS_LISTS));
+			}else{
+				return res.send(ResponseHandler.recordNotFound(constactDataLists, 'No Data'));
+			}
+			
 		} catch (error) {
 			res.status(500).send({ message: error.message });
 		}
@@ -184,6 +189,8 @@ let userController = {
 			const userDataLists = await userServices.usersLists(req, res);
 			if (userDataLists) {
 				return res.send(ResponseHandler.successResponse(userDataLists, message.USER_LISTS));
+			}else{
+				return res.send(ResponseHandler.recordNotFound(userDataLists, 'No Data'));
 			}
 		} catch (error) {
 			res.status(500).send({ message: error.message });
