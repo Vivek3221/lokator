@@ -1,4 +1,4 @@
-caconst message = require('../config/message');
+const message = require('../config/message');
 const machineTypeServices = require('../services/machineTypeServices');
 const ResponseHandler = require('../utils/responseHandler');
 const { check, validationResult } = require('express-validator');
