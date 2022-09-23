@@ -259,6 +259,9 @@ export const inquiryValidator = (values) => {
   if (!values.name) {
     errors.name = REQUIRED;
   }
+  if (!values.phone_no) {
+    errors.phone_no = REQUIRED;
+  }
   if (!values.company_name) {
     errors.company_name = REQUIRED;
   }
