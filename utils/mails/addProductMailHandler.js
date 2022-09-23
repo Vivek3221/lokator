@@ -1,0 +1,44 @@
+const path = require('path'); 
+const nodemailer = require("nodemailer");
+const hbs = require('nodemailer-express-handlebars');
+
+module.exports = {
+    sendAddProductMailBySMTP:(to, subject, productData) => {
+        let transporter = nodemailer.createTransport({
+            host: process.env.AWS_SES_HOST,
+            port: process.env.AWS_SES_PORT,
+            auth: {
+                user: process.env.AWS_SES_CLIENT_ID,
+                pass: process.env.AWS_SES_CLIENT_SECRET_KEY
+            }
+        });
+
+        const handlebarOptions = {
+            viewEngine: {
+                extName:".html",
+                partialsDir: path.resolve('./views'),
+                defaultLayout: false
+            },
+            viewPath: path.resolve('./views/MailTemplates/'),
+            extName: ".handlebars"
+        }
+
+        transporter.use('compile', hbs(handlebarOptions));
+
+        let mailContent = {
+            from: 'Lokator Pvt Ltd <info@lokator.com>',
+            to: to,
+            subject: subject,
+            template:'product-detail',
+            context: productData
+        };
+        transporter.sendMail(mailContent, function (err, data) {
+            if (err) {
+                console.log('Unable to send mail Err: ' + err.message);
+            } else {
+                console.log('Email send successfully');
+            }
+        });
+    }
+    
+}
