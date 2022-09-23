@@ -553,15 +553,15 @@ const Product = (props) => {
                                       );
                                     }}
                                     error={
-                                      formikBag.touched.phone &&
-                                      formikBag.errors.phone
-                                        ? formikBag.errors.phone
+                                      formikBag.touched.phone_no &&
+                                      formikBag.errors.phone_no
+                                        ? formikBag.errors.phone_no
                                         : null
                                     }
                                     className="form-control"
                                     placeholder="Phone Number"
                                   />
-                                  {formikBag.errors.phone && (
+                                  {formikBag.errors.phone_no && (
                                     <p
                                       style={{
                                         paddingTop: 5,
@@ -569,7 +569,7 @@ const Product = (props) => {
                                         color: "red",
                                       }}
                                     >
-                                      {formikBag.errors.phone}
+                                      {formikBag.errors.phone_no}
                                     </p>
                                   )}
                                 </div>

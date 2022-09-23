@@ -206,6 +206,6 @@ export const forgetPassword = (userData) => (dispatch) => {
 
 const setAuthorizationHeader = (data, role_id) => {
   localStorage.setItem("access_token", data.data.accessToken);
-  localStorage.setItem("role_id", data.data.role_id || 0);
+  localStorage.setItem("role_id", data.data.role_id === 0 ? 0:data.data.role_id || 0 );
   localStorage.setItem("user_data", JSON.stringify(data.data));
 };
