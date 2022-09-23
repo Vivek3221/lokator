@@ -1,4 +1,4 @@
 module.exports = {
     TEST: 'TEST',
-    PAGINATION_LIMIT: 20
+    PAGINATION_LIMIT: 5
 }
