@@ -26,7 +26,7 @@ module.exports = {
         transporter.use('compile', hbs(handlebarOptions));
 
         let mailContent = {
-            from: 'Lokator Pvt Ltd <info@lokator.com>',
+            from: `Lokator Pvt Ltd ${process.env.AWS_SES_CLIENT_ID}`,
             to: to,
             subject: subject,
             template:'register',
