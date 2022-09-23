@@ -45,6 +45,13 @@ let machineCapacityServices = {
 		console.log(offset);
 		// return false;
 		try {
+			var totalCapacityList = await machineCapacities.findAll({
+                where: searchloc,
+                attributes: param,
+				order : [['id', 'DESC']],
+
+            });
+
 			var capacityList = await machineCapacities.findAll({
                 where: searchloc,
                 attributes: param,
@@ -55,7 +62,10 @@ let machineCapacityServices = {
             });
             
 			if (capacityList) {
-				return capacityList;
+				return {
+				capacityList: capacityList,
+				totalCapacityList: totalCapacityList,
+			}
 			}
 		} catch (error) {
 			console.log(error);

@@ -83,16 +83,16 @@ let machineCapacityController = {
             }
 
             const capacityList = await machineCapacityServices.getCapacityList(param , res , page ,searchloc);
-            if(capacityList.length){
-                let totalPage = Math.ceil(capacityList.length / constant.PAGINATION_LIMIT);
+            if(capacityList.capacityList.length){
+                let totalPage = Math.ceil(capacityList.totalCapacityList.length / constant.PAGINATION_LIMIT);
                 var capReturn = {
-                    totalCount: capacityList.length,
+                    totalCount: capacityList.capacityList.length,
                     totalPage: totalPage,
-                    capacityList: capacityList
+                    capacityList: capacityList.capacityList
                 }
                 return res.send(ResponseHandler.successResponse(capReturn, message.CAPACITY_LIST));
             }else{
-                return res.send(ResponseHandler.entityNotFound(res, 'No Data'));
+                return res.send(ResponseHandler.recordNotFound(capReturn, 'No Data'));
             }
            
 

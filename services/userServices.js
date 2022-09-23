@@ -405,6 +405,12 @@ let userServices = {
 				if(!page){
 					page = 0;
 				}		
+
+				const totalContactUsData = await ContactUs.findAll({
+					where:searchloc,
+					order : [['id', 'DESC']],
+				});	
+
 				const contactUsData = await ContactUs.findAll({
 					where:searchloc,
 					offset: offset,
@@ -412,12 +418,14 @@ let userServices = {
 					order : [['id', 'DESC']],
 				});		
 				if(!_.isEmpty(contactUsData)){
-					let totalPage = Math.ceil(contactUsData.length / Constant.PAGINATION_LIMIT);
+					let totalPage = Math.ceil(totalContactUsData.length / Constant.PAGINATION_LIMIT);
 						return {
 						totalCount: contactUsData.length,
 						totalPage: totalPage,
 						contactUsData: contactUsData,
 					};
+				}else{
+					return 0;
 				}	
 			} catch (error) {
 				res.status(500).send({ message: error.message });
@@ -443,6 +451,14 @@ let userServices = {
 			if(!page){
 				page = 0;
 			}	
+
+			const totalUsersData = await Users.findAll({
+				attributes: {
+					exclude: ['password'],
+				},
+			where:searchloc,
+			});	
+
 			const usersData = await Users.findAll({
 				attributes: {
 					exclude: ['password'],
@@ -453,12 +469,14 @@ let userServices = {
 			limit: Constant.PAGINATION_LIMIT,
 			});		
 			if(!_.isEmpty(usersData)){
-				let totalPage = Math.ceil(usersData.length / Constant.PAGINATION_LIMIT);
+				let totalPage = Math.ceil(totalUsersData.length / Constant.PAGINATION_LIMIT);
 					return {
 					totalCount: usersData.length,
 					totalPage: totalPage,
 					usersData: usersData,
 				};
+			}else{
+				return 0;
 			}	
 			} catch (error) {
 				res.status(500).send({ message: error.message });
