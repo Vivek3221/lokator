@@ -34,13 +34,18 @@ let userController = {
 								details:detail
 							}
 							await notificationServices.createNotification(dataParm);
+							console.log(users[i].email);
+							console.log('--------------------vivie-------')
 							// Send mail to admin---------------------------------------------
 							if(users[i].email != undefined && users[i].email != ''){
-								let location = await locationServices.getlocationDetail(userData.locationId);
-								userData.location = '';
-								if(location != null){
-									userData.location = location.location_name;
-								}
+								console.log('--------------------inside-------')
+								// let location = await locationServices.getlocationDetail(userData.locationId);
+								// userData.location = '';
+								// if(location != null){
+								// 	userData.location = location.location_name;
+								// }
+
+								userData.location = 'Delhi';
 								
 								registerMailHandler.sendRegisterMailBySMTP(users[i].email, 'Lokator Register', userData);
 							}
