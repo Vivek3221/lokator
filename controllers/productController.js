@@ -22,44 +22,50 @@ let userController = {
 	 * @returns
 	 */
 
-  addProduct: async (req, res) => {
+	addProduct: async (req, res) => {
 		try {
-			var userData    = req.userData;
+			var userData = req.userData;
+			const email = userData.email;
+			let logo = `${req.headers.host}/views/MailTemplates/images/logo.jpeg1`;
+			let hostName = `${req.headers.host}`;
 			var addProduct = await productServices.addProductService(req, res);
 			if (addProduct) {
+				let machineDetail = await productServices.getMachineDetail(addProduct.id);
+				let machineData = {
+					"machineName": addProduct.machine_name,
+					"description": addProduct.description,
+					"machineNnumber": addProduct.machine_number,
+					"capacity": machineDetail.machine_capacities.capacity,
+					"type": machineDetail.machine_types.type,
+					"category": machineDetail.machine_categories.category_name,
+					"hostname" : hostName,
+					"logo" : logo
+				}
 				// Seve data in notification tablse for notify to Admin------------
 				const users = await userServices.getUserIds(0);
-				if(users.length > 0){
+				if (users.length > 0) {
 					let detail = `Added New Product ${req.body.machine_name}`;
-					for(let i = 0; i < users.length; i++){
-						if(userData.id != users[i].id){
+					for (let i = 0; i < users.length; i++) {
+						if (userData.id != users[i].id) {
 							let dataParm = {
-								notification_type:Constant.PRODUCT,
-								sender_id:userData.id,
+								notification_type: Constant.PRODUCT,
+								sender_id: userData.id,
 								receiver_id: users[i].id,
-								status:0,
-								details:detail
+								status: 0,
+								details: detail
 							}
 							await notificationServices.createNotification(dataParm);
 
 							// Send mail to admin----------------------------
-							let machineDetail = await productServices.getMachineDetail(addProduct.id);
-							let machineData = {
-								"machineName": addProduct.machine_name,
-								"description": addProduct.description,
-								"machineNnumber": addProduct.machine_number,
-								"capacity": machineDetail.machine_capacities.capacity,
-								"type" : machineDetail.machine_types.type,
-								"category": machineDetail.machine_categories.category_name
-
-							}
-
 							addProductMailHandler.sendAddProductMailBySMTP(users[i].email, 'Lokator New Machine', machineData);
 
 						}
-						
+
 					}
-				}				
+				}
+				// Send mail to user who have add a new product------------------------------------ 
+				addProductMailHandler.sendAddProductMailBySMTP(email, 'Lokator New Machine', machineData);
+
 				return res.send(ResponseHandler.successResponse(addProduct, message.ADD_PRODUCT));
 			}
 		} catch (error) {
@@ -76,14 +82,14 @@ let userController = {
 				let machineDetail = await productServices.getMachineDetail(updateProduct.id);
 				const user = await userServices.userProfileById(machineDetail.user_id);
 				let status = 'InActive';
-				if(machineDetail.status == 1){
+				if (machineDetail.status == 1) {
 					status = 'Active';
 				}
 				let machineData = {
 					"name": machineDetail.machine_name,
 					"number": machineDetail.machine_number,
 					"capacity": machineDetail.machine_capacities.capacity,
-					"type" : machineDetail.machine_types.type,
+					"type": machineDetail.machine_types.type,
 					"category": machineDetail.machine_categories.category_name,
 					"status": status
 
@@ -105,23 +111,23 @@ let userController = {
 	editProduct: async (req, res) => {
 		try {
 			const productDetails = await productServices.editProductDetailService(req, res);
-			if (productDetails) 
-			return res.send(ResponseHandler.successResponse(productDetails, message.PRODUCT_DETAILS));
+			if (productDetails)
+				return res.send(ResponseHandler.successResponse(productDetails, message.PRODUCT_DETAILS));
 		} catch (error) {
 			console.log(error);
 			//res.status(500).send({ message: error.message });
-			}
+		}
 	},
 	productLists: async (req, res) => {
 		try {
-			
-			if(req.query.role == 2){
-				if(typeof req.query.user_id == 'undefined'){
+
+			if (req.query.role == 2) {
+				if (typeof req.query.user_id == 'undefined') {
 					return res.send(ResponseHandler.errorAsBadRequest(res, 'user_id is required'));
 				}
-				
+
 			}
-			
+
 			const productDetails = await productServices.productListsService(req, res);
 			if (productDetails) {
 				return res.send(ResponseHandler.successResponse(productDetails, message.PRODUCT_DETAILS));
@@ -134,7 +140,7 @@ let userController = {
 			//res.status(500).send({ message: error.message });
 		}
 	},
-	
+
 	/**
 	 * Description  : Update profile
 	 * @param {*} userRequest
@@ -242,123 +248,132 @@ let userController = {
 
 	saveProductInquiry: async (req, res) => {
 		try {
+			let logo = `${req.headers.host}/views/MailTemplates/images/logo.jpeg1`;
+			let hostName = `${req.headers.host}`;
 
-            // get order req data from req body---------------
-            var reqData     = req.body;
-            let currentDate = new Date().toISOString().
-                                replace(/T/, ' ').      // replace T with a space
-                                replace(/\..+/, '')     // delete the dot and everything after;
+			// get order req data from req body---------------
+			var reqData = req.body;
+			let currentDate = new Date().toISOString().
+				replace(/T/, ' ').      // replace T with a space
+				replace(/\..+/, '')     // delete the dot and everything after;
 
-            let inquiryId =  await commonHelper.genrateOrderId(16); 
+			let inquiryId = await commonHelper.genrateOrderId(16);
 			let inquiryData = {};
-			if(reqData.user_id != undefined && reqData.user_id != ''){
+			if (reqData.user_id != undefined && reqData.user_id != '') {
 
 				const userDetail = await userServices.userProfileById(reqData.user_id)
-				if(userDetail){
+				if (userDetail) {
 					inquiryData = {
-						inquiry_id : inquiryId,
-						user_id : userDetail.id,
-						name : `${userDetail.first_name} ${userDetail.last_name}`,
-						email : userDetail.email,
-						company_name : userDetail.company_name,
-						phone_no : userDetail.phone,
-						requirment : reqData.requirment,
-						price_type : reqData.price_type,
-						delivery_date : reqData.delivery_date,
-						location : reqData.location,
-						updated_at : currentDate,
-						created_at : currentDate
+						inquiry_id: inquiryId,
+						user_id: userDetail.id,
+						name: `${userDetail.first_name} ${userDetail.last_name}`,
+						email: userDetail.email,
+						company_name: userDetail.company_name,
+						phone_no: userDetail.phone,
+						requirment: reqData.requirment,
+						price_type: reqData.price_type,
+						delivery_date: reqData.delivery_date,
+						location: reqData.location,
+						updated_at: currentDate,
+						created_at: currentDate
 					}
-				}else{
+				} else {
 					return res.send(ResponseHandler.errorAsBadRequest(res, 'error'));
 				}
-				
-			}else{
-				if(reqData.name == undefined || reqData.name == ''){
+
+			} else {
+				if (reqData.name == undefined || reqData.name == '') {
 					return res.send(ResponseHandler.errorAsBadRequest(res, 'Name is required.'));
 				}
 
-				if(reqData.email == undefined || reqData.email == ''){
+				if (reqData.email == undefined || reqData.email == '') {
 					return res.send(ResponseHandler.errorAsBadRequest(res, 'Email is required.'));
 				}
 
-				if(reqData.company_name == undefined || reqData.company_name == ''){
+				if (reqData.company_name == undefined || reqData.company_name == '') {
 					return res.send(ResponseHandler.errorAsBadRequest(res, 'Company Name is required.'));
 				}
 
-				if(reqData.phone_no == undefined || reqData.phone_no == ''){
+				if (reqData.phone_no == undefined || reqData.phone_no == '') {
 					return res.send(ResponseHandler.errorAsBadRequest(res, 'Phone Number is required.'));
 				}
 
 				inquiryData = {
-					inquiry_id : inquiryId,
-					name : reqData.name,
-					email : reqData.email,
-					company_name : reqData.company_name,
-					phone_no : reqData.phone_no,
-					requirment : reqData.requirment,
-					price_type : reqData.price_type,
-					delivery_date : reqData.delivery_date,
-					location : reqData.location,
-					updated_at : currentDate,
-					created_at : currentDate
+					inquiry_id: inquiryId,
+					name: reqData.name,
+					email: reqData.email,
+					company_name: reqData.company_name,
+					phone_no: reqData.phone_no,
+					requirment: reqData.requirment,
+					price_type: reqData.price_type,
+					delivery_date: reqData.delivery_date,
+					location: reqData.location,
+					updated_at: currentDate,
+					created_at: currentDate
 				}
 			}
 
 			// save Inquiry detail data-------------------------
-			let saveInquiry =  await productServices.saveProductInquiry(inquiryData);
+			let saveInquiry = await productServices.saveProductInquiry(inquiryData);
 
-			if(saveInquiry){
+			if (saveInquiry) {
 
 				// Seve data in notification tablse for notify to Admin------------
 				const users = await userServices.getUserIds(0);
-				if(users.length > 0){
+				inquiryData.logo = logo;
+				inquiryData.hostname = hostName;
+				if (users.length > 0) {
 					let detail = `New inquiry by ${inquiryData.name}`;
-					for(let i = 0; i < users.length; i++){
+					for (let i = 0; i < users.length; i++) {
 						let dataParm = {
-							notification_type:Constant.INQUIRIES,
-							sender_id:inquiryData.phone_no,
+							notification_type: Constant.INQUIRIES,
+							sender_id: inquiryData.phone_no,
 							receiver_id: users[i].id,
-							status:0,
-							details:detail
+							status: 0,
+							details: detail
 						}
 						await notificationServices.createNotification(dataParm);
 						// Send mail to admin---------------------------------------------
-						if(users[i].email != undefined && users[i].email != ''){
+						if (users[i].email != undefined && users[i].email != '') {
 							inquireMailHandler.sendInquiryMailBySMTP(users[i].email, 'Lokator Inquiry', inquiryData);
 						}
 					}
-				}		
-				
-				
+
+				}
+				// Sent mail to inquiry user----------------------------
+				if (inquiryData.email != undefined && inquiryData.email != '') {
+					inquireMailHandler.sendInquiryMailBySMTP(inquiryData.email, 'Lokator Inquiry', inquiryData);
+				}
+
+
 				return res.send(ResponseHandler.successResponse(saveInquiry, message.DATA_SAVE_INQUIRY));
-			}else{
+			} else {
 				return res.send(ResponseHandler.errorAsBadRequest(res, 'error'));
 			}
-    
-        } catch (error) {
-            console.log(error);
-            return res.send(ResponseHandler.errorAsBadRequest(res, 'error'));
-        }
+
+		} catch (error) {
+			console.log(error);
+			return res.send(ResponseHandler.errorAsBadRequest(res, 'error'));
+		}
 	},
 
-	inquiryList : async(req, res)=>{
+	inquiryList: async (req, res) => {
 		try {
-            // get order req data from req body---------------
-            var reqData     = req.body;
+			// get order req data from req body---------------
+			var reqData = req.body;
 			const inquiryLists = await productServices.inquiryLists(reqData, res);
-			if(inquiryLists){
+			if (inquiryLists) {
 				return res.send(ResponseHandler.successResponse(inquiryLists, message.INQUIRY_LISTS));
-			}else{
+			} else {
 				return res.send(ResponseHandler.recordNotFound(inquiryLists, 'No Data'));
 			}
-			
-			
-        
-        } catch (error) {
-            console.log(error);
-            return res.send(ResponseHandler.errorAsBadRequest(res, 'error'));
-        }
+
+
+
+		} catch (error) {
+			console.log(error);
+			return res.send(ResponseHandler.errorAsBadRequest(res, 'error'));
+		}
 	}
 };
 

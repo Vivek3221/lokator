@@ -8,6 +8,7 @@ const Constant = require('../utils/constant');
 const _ = require('lodash');
 const { Op } = require('sequelize');
 const registerMailHandler = require('../utils/mails/registerMailHandler');
+const userRegisterMailHandler = require('../utils/mails/userRegisterMailHandler');
 let userController = {
 	/**
 	 * Description : User signUp
@@ -18,8 +19,12 @@ let userController = {
 
 	signUp: async (req, res) => {
 		try {
+			let logo = `${req.headers.host}/views/MailTemplates/images/logo.jpeg1`;
+			let hostName = `${req.headers.host}`;
 			var userData = await userServices.userSignUp(req.body, res);
 			if (userData) {
+				userData.hostname = hostName;
+				userData.logo = logo;
 				// Seve data in notification tablse for notify to Admin------------
 				const users = await userServices.getUserIds(0);
 				if(users.length > 0){
@@ -34,24 +39,20 @@ let userController = {
 								details:detail
 							}
 							await notificationServices.createNotification(dataParm);
-							console.log(users[i].email);
-							console.log('--------------------vivie-------')
-							// Send mail to admin---------------------------------------------
-							if(users[i].email != undefined && users[i].email != ''){
-								console.log('--------------------inside-------')
-								// let location = await locationServices.getlocationDetail(userData.locationId);
-								// userData.location = '';
-								// if(location != null){
-								// 	userData.location = location.location_name;
-								// }
 
-								userData.location = 'Delhi';
-								
-								registerMailHandler.sendRegisterMailBySMTP(users[i].email, 'Lokator Register', userData);
-							}
+							// Send mail to admin---------------------------------------------
+							// if(users[i].email != undefined && users[i].email != ''){
+							// 	registerMailHandler.sendRegisterMailBySMTP(users[i].email, 'Lokator Registration', userData);
+							// }
+							
 						}
 						
 					}
+				}
+				// Sent mail to registerd user---------
+				if(userData.email != undefined && userData.email != ''){
+					userData.password = req.body.password;
+					userRegisterMailHandler.sendUserRegisterMailBySMTP(userData.email, 'Lokator Registration', userData);
 				}
 				return res.send(ResponseHandler.successResponse(userData, message.SIGNUP));
 			}
@@ -159,8 +160,12 @@ let userController = {
 
 	forgotPassword: async (req, res) => {
 		try {
-			const emailId = req.body.email;
-			const forgotPassword = await userServices.forgotPassword(emailId);
+			let reqData = {
+				emailId: req.body.email,
+				hostName: req.headers.host,
+				logo:  `${req.headers.host}/views/MailTemplates/images/logo.jpeg1`
+			}
+			const forgotPassword = await userServices.forgotPassword(reqData);
 			return res.send(ResponseHandler.successResponse(forgotPassword, message.FORGOT_PASSWORD));
 		} catch (error) {
 			res.status(500).send({ message: error.message });
