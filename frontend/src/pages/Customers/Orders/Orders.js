@@ -2,6 +2,7 @@ import React, { Component, useState, useEffect } from "react";
 import { getOrders } from "../../../store/actions/allapi";
 import { connect } from "react-redux";
 import moment from "moment";
+import { Pagination } from "../../../components";
 
 import { get } from "lodash";
 const Orders = ({
@@ -11,17 +12,18 @@ const Orders = ({
   user: { user },
 }) => {
   const query = new URLSearchParams(search);
+  const [activePage, setActivePage] = useState(0);
   const [searchVal, setSearch] = useState(query.get("query"));
   let bodyData = {
     role: localStorage.getItem("role_id"),
-    page: 0,
+    page: activePage,
     search: searchVal,
     user_id: JSON.parse(localStorage.getItem("user_data")).id,
   };
 
   useEffect(() => {
     getOrders(bodyData);
-  }, [searchVal]);
+  }, [searchVal,activePage]);
 
   return (
     <div className="container-fluid">
@@ -132,6 +134,13 @@ const Orders = ({
           );
         })}
       </div>
+      <Pagination
+          totalPage={get(orders, "totalPage", 1)}
+          activePage={activePage}
+          updateActivePage={(pageNo) => {
+            setActivePage(pageNo);
+          }}
+        />
     </div>
   );
 };

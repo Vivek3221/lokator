@@ -3,6 +3,7 @@ import { getOrders, updateStatus } from "../../../store/actions/allapi";
 import { connect } from "react-redux";
 import moment from "moment";
 import { ConfirmModal } from "../../../components";
+import { Pagination } from "../../../components";
 
 import { get } from "lodash";
 const Orders = ({
@@ -15,17 +16,18 @@ const Orders = ({
   const query = new URLSearchParams(search);
   const [searchVal, setSearch] = useState(query.get("query"));
   const [status, setStatus] = useState(0);
+  const [activePage, setActivePage] = useState(0);
   const [selectedOrder, setSelectedOrder] = useState("");
   let bodyData = {
     role: localStorage.getItem("role_id"),
-    page: 0,
+    page: activePage,
     search: searchVal,
     user_id: JSON.parse(localStorage.getItem("user_data")).id,
     status: status,
   };
   useEffect(() => {
     getOrders(bodyData);
-  }, [searchVal, status]);
+  }, [searchVal, status,activePage]);
 
   return (
     <div className="container-fluid">
@@ -175,6 +177,13 @@ const Orders = ({
           );
         })}
       </div>
+      <Pagination
+          totalPage={get(orders, "totalPage", 1)}
+          activePage={activePage}
+          updateActivePage={(pageNo) => {
+            setActivePage(pageNo);
+          }}
+        />
       <ConfirmModal
         show={selectedOrder !== ""}
         content={
