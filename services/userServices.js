@@ -8,11 +8,13 @@ const date = require('date-and-time');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const _ = require('lodash');
-const Users      = Connection.Users;
-const Location   = Connection.Location;
-const Country    = Connection.Country;
-const ContactUs  = Connection.ContactUs;
+const Users = Connection.Users;
+const Location = Connection.Location;
+const Country = Connection.Country;
+const ContactUs = Connection.ContactUs;
 const { Op } = require('sequelize');
+const forgotPasswordMailHandler = require('../utils/mails/forgotPasswordMailHandler');
+
 let userServices = {
 	/**
 	 * Description : userSignUp
@@ -35,7 +37,7 @@ let userServices = {
 				phone: signUpRequest.phone,
 				status: 1,
 				is_login: 1,
-				role_id : signUpRequest.role_id,
+				role_id: signUpRequest.role_id,
 				created_at: createdAt,
 			});
 			if (userCreate) {
@@ -61,7 +63,7 @@ let userServices = {
 				// 					{
 				// 							expiresIn: 86400, // 24 hours
 				// 						}
-										
+
 				// );
 				// const url = `http://65.2.98.24:8080/api/user/confirmation/${emailToken}`;
 				// //const url = `http://localhost:3000/confirmation/${emailToken}`;
@@ -90,9 +92,10 @@ let userServices = {
 		try {
 			console.log(signInRequest);
 			var phone = signInRequest.phone;
-			var users = await Users.findOne({ where: {
-				[Op.or]: [{ phone: phone }, { email: phone }] 
-			} 
+			var users = await Users.findOne({
+				where: {
+					[Op.or]: [{ phone: phone }, { email: phone }]
+				}
 			});
 			if (users) {
 				var password = signInRequest.password;
@@ -135,22 +138,22 @@ let userServices = {
 			var email = userRequest.email;
 			var phone = userRequest.phone;
 
-			if(email){
+			if (email) {
 				var users = await Users.findOne({
-					where : {email: email},
+					where: { email: email },
 					attributes: {
 						exclude: ['password'],
 					},
 				});
-			}else {
+			} else {
 				var users = await Users.findOne({
-					where : {phone:phone},
+					where: { phone: phone },
 					attributes: {
 						exclude: ['password'],
 					},
 				});
 			}
-		
+
 			// return false;
 			// var users = await Users.findOne({
 			// 	where : {phone:phone},
@@ -273,7 +276,7 @@ let userServices = {
 	// 		to: 'nizammca786@gmail.com',
 	// 		subject: 'Sending Email using Node.js',
 	// 		text: `Hi Smartherd, thank you for your nice Node.js tutorials.
-    //       I will donate 50$ for this course. Please send me payment options.`,
+	//       I will donate 50$ for this course. Please send me payment options.`,
 	// 		// html: '<h1>Hi Smartherd</h1><p>Your Messsage</p>'
 	// 	};
 
@@ -287,201 +290,189 @@ let userServices = {
 	// },
 
 	confirmation: async (token) => {
-	try {
+		try {
 
-		jwt.verify(token, config.secret, async (err, decoded) => {
-			if (err) {
+			jwt.verify(token, config.secret, async (err, decoded) => {
+				if (err) {
 					return res.status(401).send({
-							message: "Unauthorized!"
+						message: "Unauthorized!"
 					});
-			}
-			const confirmationData = decoded;
-			var userId = confirmationData.user;
-			var updateUser = await Users.update({status:1}, {
+				}
+				const confirmationData = decoded;
+				var userId = confirmationData.user;
+				var updateUser = await Users.update({ status: 1 }, {
+					where: {
+						id: userId,
+					},
+					returning: true, // needed for affectedRows to be populated
+					plain: true,
+				});
+
+				return true;
+
+			});
+
+		} catch (error) {
+
+		}
+	},
+
+	/**
+	 * Need to implement SMTP then this function will work
+	 * @param {*} emailId 
+	 * @param {*} res 
+	 * @returns 
+	 */
+	forgotPassword: async (data, res) => {
+		try {
+			let emailId = data.emailId;
+			const Password = await passwordGenrator.genratePassword(8);
+			const newPassword = await bcrypt.hash(Password, 10);
+
+			var updateUser = await Users.update({ password: newPassword }, {
 				where: {
-					id: userId,
+					email: emailId,
 				},
 				returning: true, // needed for affectedRows to be populated
 				plain: true,
 			});
 
-			return true;
-
-		});
-
-	} catch (error) {
-		
-	}	
-	},
-	
-   /**
-	* Need to implement SMTP then this function will work
-	* @param {*} emailId 
-	* @param {*} res 
-	* @returns 
-	*/
-	forgotPassword: async (emailId,res) => {
-		try {
-		console.log('test');
-		const Password = 'test1234';
-		//await passwordGenrator.genratePassword(5);
-		console.log(Password);	
-		// var transporter = nodemailer.createTransport(configEmail);
-		const mailOptions = {
-			from: 'siddnizam87@gmail.com',
-			to: emailId,
-			//to: 'nizammca786@gmail.com',
-			subject: 'Forgot password',
-			text: `Hi Your new password is: ${Password}`,
-		};
-		transporter.sendMail(mailOptions, function (error, info) {
-			if (error) {
-				console.log(error);
-			} else {
-				console.log('Email sent: ' + info.response);
+			if (updateUser) {
+				// Send mail to User---------------------------------------------
+				let password = {
+					newPassword: Password,
+					hostname: data.hostname,
+					logo: data.logo
+				}
+				if (emailId != undefined && emailId != '') {
+					forgotPasswordMailHandler.sendNewPasswordMailBySMTP(emailId, 'Lokator Forgot Password', password);
+				}
 			}
-		});
 
-		const newPassword =await bcrypt.hash(Password, 10);
-		var updateUser    = await Users.update({password:newPassword}, {
-			where: {
-				email: emailId,
-			},
-			returning: true, // needed for affectedRows to be populated
-			plain: true,
-		});
+			return [];
 
-		transporter.sendMail(mailOptions, function (error, info) {
-			if (error) {
-				console.log(error);
-			} else {
-				console.log('Email sent: ' + info.response);
-			}
-		});
-		return [];
-	
 		} catch (error) {
 			res.status(500).send({ message: error.message });
-		}	
-		},
+		}
+	},
 
 
-		contactUs: async (contactus,res) => {
-			try {
+	contactUs: async (contactus, res) => {
+		try {
 			const now = new Date();
 			var createdAt = date.format(now, 'YYYY-MM-DD HH:mm:ss');
-			const cretateContactUs ={
+			const cretateContactUs = {
 				name: contactus.name,
 				email: contactus.email,
 				company_name: contactus.business_name,
 				phone: contactus.phone,
-				message:contactus.message,
+				message: contactus.message,
 				status: 1,
 				created_at: createdAt,
 			};
-			const contactUsData = await ContactUs.create(cretateContactUs);		
-			if(!_.isEmpty(contactUsData)){
+			const contactUsData = await ContactUs.create(cretateContactUs);
+			if (!_.isEmpty(contactUsData)) {
 				return contactUsData;
-			}	
-			} catch (error) {
-				//res.status(500).send({ message: error.message });
-			}	
-		},
+			}
+		} catch (error) {
+			//res.status(500).send({ message: error.message });
+		}
+	},
 
-		contactUsLists: async (req,res) => {
-			try {
-				var page = req.query.page;
-				var offset = parseInt(page) * Constant.PAGINATION_LIMIT;
-				if(req.query.search){
-					search = req.query.search.toString().replace(/"/g, '');
-                	var searchloc = {
-						[Op.or]: [
-							{'$contact_us.email$': { [Op.like]:  `%${search}%` }},
-							{'$contact_us.name$': { [Op.like]:  `%${search}%` }}
-						]						
-                	}
-              
+	contactUsLists: async (req, res) => {
+		try {
+			var page = req.query.page;
+			var offset = parseInt(page) * Constant.PAGINATION_LIMIT;
+			if (req.query.search) {
+				search = req.query.search.toString().replace(/"/g, '');
+				var searchloc = {
+					[Op.or]: [
+						{ '$contact_us.email$': { [Op.like]: `%${search}%` } },
+						{ '$contact_us.name$': { [Op.like]: `%${search}%` } }
+					]
 				}
-				if(!page){
-					page = 0;
-				}		
 
-				const totalContactUsData = await ContactUs.findAll({
-					where:searchloc,
-					order : [['id', 'DESC']],
-				});	
-
-				const contactUsData = await ContactUs.findAll({
-					where:searchloc,
-					offset: offset,
-					limit: Constant.PAGINATION_LIMIT,
-					order : [['id', 'DESC']],
-				});		
-				if(!_.isEmpty(contactUsData)){
-					let totalPage = Math.ceil(totalContactUsData.length / Constant.PAGINATION_LIMIT);
-						return {
-						totalCount: contactUsData.length,
-						totalPage: totalPage,
-						contactUsData: contactUsData,
-					};
-				}else{
-					return 0;
-				}	
-			} catch (error) {
-				res.status(500).send({ message: error.message });
-			}	
-		},
-
-		usersLists: async (req,res) => {
-			try {
-				var page = req.query.page;
-				var offset = parseInt(page) * Constant.PAGINATION_LIMIT;
-				const search = req.query.search;
-				if(search){
-					var searchloc = {
-						[Op.or]: [
-							{'$users.email$': { [Op.like]:  `%${search}%` }},
-							{'$users.first_name$': { [Op.like]:  `%${search}%` }},
-							{'$users.last_name$': { [Op.like]:  `%${search}%` }},
-							{'$users.phone$': { [Op.like]:  `%${search}%` }}
-						]	
-					}
-				
-				}
-			if(!page){
+			}
+			if (!page) {
 				page = 0;
-			}	
+			}
+
+			const totalContactUsData = await ContactUs.findAll({
+				where: searchloc,
+				order: [['id', 'DESC']],
+			});
+
+			const contactUsData = await ContactUs.findAll({
+				where: searchloc,
+				offset: offset,
+				limit: Constant.PAGINATION_LIMIT,
+				order: [['id', 'DESC']],
+			});
+			if (!_.isEmpty(contactUsData)) {
+				let totalPage = Math.ceil(totalContactUsData.length / Constant.PAGINATION_LIMIT);
+				return {
+					totalCount: contactUsData.length,
+					totalPage: totalPage,
+					contactUsData: contactUsData,
+				};
+			} else {
+				return 0;
+			}
+		} catch (error) {
+			res.status(500).send({ message: error.message });
+		}
+	},
+
+	usersLists: async (req, res) => {
+		try {
+			var page = req.query.page;
+			var offset = parseInt(page) * Constant.PAGINATION_LIMIT;
+			const search = req.query.search;
+			if (search) {
+				var searchloc = {
+					[Op.or]: [
+						{ '$users.email$': { [Op.like]: `%${search}%` } },
+						{ '$users.first_name$': { [Op.like]: `%${search}%` } },
+						{ '$users.last_name$': { [Op.like]: `%${search}%` } },
+						{ '$users.phone$': { [Op.like]: `%${search}%` } }
+					]
+				}
+
+			}
+			if (!page) {
+				page = 0;
+			}
 
 			const totalUsersData = await Users.findAll({
 				attributes: {
 					exclude: ['password'],
 				},
-			where:searchloc,
-			});	
+				where: searchloc,
+			});
 
 			const usersData = await Users.findAll({
 				attributes: {
 					exclude: ['password'],
 				},
-			where:searchloc,
-			offset: offset,
-			order : [['id', 'DESC']],	
-			limit: Constant.PAGINATION_LIMIT,
-			});		
-			if(!_.isEmpty(usersData)){
+				where: searchloc,
+				offset: offset,
+				order: [['id', 'DESC']],
+				limit: Constant.PAGINATION_LIMIT,
+			});
+			if (!_.isEmpty(usersData)) {
 				let totalPage = Math.ceil(totalUsersData.length / Constant.PAGINATION_LIMIT);
-					return {
+				return {
 					totalCount: usersData.length,
 					totalPage: totalPage,
 					usersData: usersData,
 				};
-			}else{
+			} else {
 				return 0;
-			}	
-			} catch (error) {
-				res.status(500).send({ message: error.message });
-			}	
-		},
+			}
+		} catch (error) {
+			res.status(500).send({ message: error.message });
+		}
+	},
 
 	/**
 	 * Description : User profile data.
@@ -490,7 +481,7 @@ let userServices = {
 	userProfileById: async (userId) => {
 		try {
 			var users = await Users.findOne({
-				where: {id: userId },
+				where: { id: userId },
 				attributes: {
 					exclude: ['password'],
 				}
@@ -506,7 +497,7 @@ let userServices = {
 	getUserIds: async (userRoleId) => {
 		try {
 			var users = await Users.findAll({
-				where: {role_id: userRoleId },
+				where: { role_id: userRoleId },
 				attributes: ['id', 'email']
 			});
 			if (users) {
