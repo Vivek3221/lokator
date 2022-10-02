@@ -9,7 +9,7 @@ module.exports =  {
     CONTRACT_NAME:'contract_name',
     DISPLAY_TEXT:'text',
     DISPLAY_RADIO:'radio',
-    PAGINATION_LIMIT:'10',
+    PAGINATION_LIMIT:10,
     REGISTER: 'Register',
     ORDER: 'Order',
     PRODUCT: 'Product',

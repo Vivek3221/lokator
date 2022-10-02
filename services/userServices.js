@@ -382,8 +382,7 @@ let userServices = {
 	contactUsLists: async (req, res) => {
 		try {
 			var page = req.query.page;
-			// var offset = parseInt(page) * Constant.PAGINATION_LIMIT;
-			var offset = parseInt(page) * 10;
+			var offset = parseInt(page) * Constant.PAGINATION_LIMIT;
 			if (req.query.search) {
 				search = req.query.search.toString().replace(/"/g, '');
 				var searchloc = {
