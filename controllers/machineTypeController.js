@@ -82,16 +82,16 @@ let machineTypeController = {
                 page = 0;
             }
             const typeList = await machineTypeServices.getTypeList(param , res , page ,searchloc);
-            if(typeList.length){
-                let totalPage = Math.ceil(typeList.length / constant.PAGINATION_LIMIT);
+            if(typeList.typeList.length){
+                let totalPage = Math.ceil(typeList.totlaTypeList.length / constant.PAGINATION_LIMIT);
                 var typeReturn = {
-                    totalCount: typeList.length,
+                    totalCount: typeList.typeList.length,
                     totalPage: totalPage,
-                    typeList: typeList
+                    typeList: typeList.typeList
                 }
                 return res.send(ResponseHandler.successResponse(typeReturn, message.TYPE_LIST));
             }else{
-                return res.send(ResponseHandler.entityNotFound(res, 'No Data'));
+                return res.send(ResponseHandler.recordNotFound('', 'No Data'));
             }
            
 

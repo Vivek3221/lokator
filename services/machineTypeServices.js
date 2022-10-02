@@ -44,6 +44,14 @@ let machineTypeServices = {
 		var offset = parseInt(page) * constant.PAGINATION_LIMIT;
 		
 		try {
+
+			var totlaTypeList = await machineTypes.findAll({
+                where: searchloc,
+                attributes: param,
+				order : [['id', 'DESC']],
+
+            });
+
 			var typeList = await machineTypes.findAll({
                 where: searchloc,
                 attributes: param,
@@ -54,6 +62,10 @@ let machineTypeServices = {
             });
             
 			if (typeList) {
+				return {
+					typeList :typeList,
+					totlaTypeList : totlaTypeList,
+				}
 				return typeList;
 			}
 		} catch (error) {

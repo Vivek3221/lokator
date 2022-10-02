@@ -45,6 +45,14 @@ let machineCategoryServices = {
 		console.log(offset);
 		// return false;
 		try {
+
+			var totalCategoryList = await machineCategory.findAll({
+                where: searchloc,
+                attributes: param,
+				order : [['id', 'DESC']],
+
+            });
+
 			var categoryList = await machineCategory.findAll({
                 where: searchloc,
                 attributes: param,
@@ -55,7 +63,12 @@ let machineCategoryServices = {
             });
             
 			if (categoryList) {
-				return categoryList;
+				
+				return {
+					categoryList : categoryList ,
+					totalCategoryList : totalCategoryList,
+				}
+				categoryList;
 			}
 		} catch (error) {
 			console.log(error);
