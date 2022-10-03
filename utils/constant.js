@@ -14,7 +14,9 @@ module.exports =  {
     ORDER: 'Order',
     PRODUCT: 'Product',
     MACHINE: 'Machine',
-    INQUIRIES: 'Inquiries'
+    INQUIRIES: 'Inquiries',
+    HOSTURL: 'http://3.212.76.159',
+    HOSTURLPORT: 'http://3.212.76.159:3000/',
     
 }
 

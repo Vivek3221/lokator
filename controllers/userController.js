@@ -19,8 +19,8 @@ let userController = {
 
 	signUp: async (req, res) => {
 		try {
-			let logo = `${req.host}/lokator/views/MailTemplates/images/logo.jpeg`;
-			let hostName = `${req.headers.host}`;
+			let logo = Constant.HOSTURL+`/lokator/views/MailTemplates/images/logo.jpeg`;
+			let hostName = Constant.HOSTURLPORT;
 			var userData = await userServices.userSignUp(req.body, res);
 			if (userData) {
 				userData.hostname = hostName;
@@ -162,8 +162,8 @@ let userController = {
 		try {
 			let reqData = {
 				emailId: req.body.email,
-				hostName: req.headers.host,
-				logo:`${req.host}/lokator/views/MailTemplates/images/logo.jpeg`
+				hostName: Constant.HOSTURLPORT,
+				logo:Constant.HOSTURL+`/lokator/views/MailTemplates/images/logo.jpeg`
 			}
 			const forgotPassword = await userServices.forgotPassword(reqData);
 			return res.send(ResponseHandler.successResponse(forgotPassword, message.FORGOT_PASSWORD));

@@ -26,8 +26,8 @@ let userController = {
 		try {
 			var userData = req.userData;
 			const email = userData.email;
-			let logo = `${req.host}/lokator/views/MailTemplates/images/logo.jpeg`;
-			let hostName = `${req.headers.host}`;
+			let logo = Constant.HOSTURL+`/lokator/views/MailTemplates/images/logo.jpeg`;
+			let hostName = Constant.HOSTURLPORT;
 			var addProduct = await productServices.addProductService(req, res);
 			if (addProduct) {
 				let machineDetail = await productServices.getMachineDetail(addProduct.id);
@@ -212,8 +212,8 @@ let userController = {
 		try {
 			let reqData = {
 				emailId: req.body.email,
-				hostName: req.headers.host,
-				logo:`${req.host}/lokator/views/MailTemplates/images/logo.jpeg`
+				hostName: Constant.HOSTURLPORT,
+				logo:Constant.HOSTURL+`/lokator/views/MailTemplates/images/logo.jpeg`
 			}
 			const forgotPassword = await userServices.forgotPassword(reqData);
 			return res.send(ResponseHandler.successResponse(forgotPassword, message.FORGOT_PASSWORD));
@@ -252,8 +252,8 @@ let userController = {
 
 	saveProductInquiry: async (req, res) => {
 		try {
-			let logo = `${req.host}/lokator/views/MailTemplates/images/logo.jpeg`;
-			let hostName = `${req.headers.host}`;
+			let logo = Constant.HOSTURL+`/lokator/views/MailTemplates/images/logo.jpeg`;
+			let hostName = Constant.HOSTURLPORT;
 
 			// get order req data from req body---------------
 			var reqData = req.body;
