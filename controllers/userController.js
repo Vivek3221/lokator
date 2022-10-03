@@ -20,6 +20,8 @@ let userController = {
 	signUp: async (req, res) => {
 		try {
 			let logo = `${req.headers.host}/views/MailTemplates/images/logo.jpeg`;
+			console.log(logo);
+			console.log('vvvvvvvvvvvvv');
 			let hostName = `${req.headers.host}`;
 			var userData = await userServices.userSignUp(req.body, res);
 			if (userData) {
