@@ -19,9 +19,7 @@ let userController = {
 
 	signUp: async (req, res) => {
 		try {
-			let logo = `${req.headers.host}/views/MailTemplates/images/logo.jpeg`;
-			console.log(logo);
-			console.log('vvvvvvvvvvvvv');
+			let logo = `${req.host}/lokator/views/MailTemplates/images/logo.jpeg`;
 			let hostName = `${req.headers.host}`;
 			var userData = await userServices.userSignUp(req.body, res);
 			if (userData) {
@@ -165,7 +163,7 @@ let userController = {
 			let reqData = {
 				emailId: req.body.email,
 				hostName: req.headers.host,
-				logo:  `${req.headers.host}/views/MailTemplates/images/logo.jpeg1`
+				logo:`${req.host}/lokator/views/MailTemplates/images/logo.jpeg`
 			}
 			const forgotPassword = await userServices.forgotPassword(reqData);
 			return res.send(ResponseHandler.successResponse(forgotPassword, message.FORGOT_PASSWORD));
