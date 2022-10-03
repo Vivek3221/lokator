@@ -22,7 +22,6 @@ let userController = {
 			let logo = `${req.headers.host}/views/MailTemplates/images/logo.jpeg`;
 			console.log(logo);
 			console.log('vvvvvvvvvvvvv');
-			return false;
 			let hostName = `${req.headers.host}`;
 			var userData = await userServices.userSignUp(req.body, res);
 			if (userData) {
