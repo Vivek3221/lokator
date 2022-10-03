@@ -26,7 +26,7 @@ let userController = {
 		try {
 			var userData = req.userData;
 			const email = userData.email;
-			let logo = Constant.HOSTURL+`/lokator/views/MailTemplates/images/logo.jpeg`;
+			let logo = Constant.HOSTURL+`/lokator/views/MailTemplates/images/logo.png`;
 			let hostName = Constant.HOSTURLPORT;
 			var addProduct = await productServices.addProductService(req, res);
 			if (addProduct) {
@@ -213,7 +213,7 @@ let userController = {
 			let reqData = {
 				emailId: req.body.email,
 				hostName: Constant.HOSTURLPORT,
-				logo:Constant.HOSTURL+`/lokator/views/MailTemplates/images/logo.jpeg`
+				logo:Constant.HOSTURL+`/lokator/views/MailTemplates/images/logo.png`
 			}
 			const forgotPassword = await userServices.forgotPassword(reqData);
 			return res.send(ResponseHandler.successResponse(forgotPassword, message.FORGOT_PASSWORD));
@@ -252,7 +252,7 @@ let userController = {
 
 	saveProductInquiry: async (req, res) => {
 		try {
-			let logo = Constant.HOSTURL+`/lokator/views/MailTemplates/images/logo.jpeg`;
+			let logo = Constant.HOSTURL+`/lokator/views/MailTemplates/images/logo.png`;
 			let hostName = Constant.HOSTURLPORT;
 
 			// get order req data from req body---------------

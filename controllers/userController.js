@@ -19,7 +19,7 @@ let userController = {
 
 	signUp: async (req, res) => {
 		try {
-			let logo = Constant.HOSTURL+`/lokator/views/MailTemplates/images/logo.jpeg`;
+			let logo = Constant.HOSTURL+`/lokator/views/MailTemplates/images/logo.png`;
 			let hostName = Constant.HOSTURLPORT;
 			var userData = await userServices.userSignUp(req.body, res);
 			if (userData) {
@@ -163,7 +163,7 @@ let userController = {
 			let reqData = {
 				emailId: req.body.email,
 				hostName: Constant.HOSTURLPORT,
-				logo:Constant.HOSTURL+`/lokator/views/MailTemplates/images/logo.jpeg`
+				logo:Constant.HOSTURL+`/lokator/views/MailTemplates/images/logo.png`
 			}
 			const forgotPassword = await userServices.forgotPassword(reqData);
 			return res.send(ResponseHandler.successResponse(forgotPassword, message.FORGOT_PASSWORD));
