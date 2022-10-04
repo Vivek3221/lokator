@@ -51,7 +51,14 @@ let userController = {
 				}
 				// Sent mail to registerd user---------
 				if(userData.email != undefined && userData.email != ''){
+					let userType = 'Customer';
+					if(req.body.role_id == 0){
+						userType = 'Admin'
+					}else if(req.body.role_id == 2){
+						userType = 'Partner'
+					}
 					userData.password = req.body.password;
+					userData.user_type = userType;
 					userRegisterMailHandler.sendUserRegisterMailBySMTP(userData.email, 'Lokator Registration', userData);
 				}
 				return res.send(ResponseHandler.successResponse(userData, message.SIGNUP));
