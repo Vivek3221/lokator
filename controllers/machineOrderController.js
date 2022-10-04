@@ -7,6 +7,8 @@ const commonHelper = require(`../helper/commonHelper`);
 const _ = require('lodash');
 const Constant = require('../utils/constant');
 const notificationServices = require('../services/notificationServices');
+const updatedOrderStatusMailHandler = require('../utils/mails/updatedOrderStatusMailHandler');
+const userServices = require('../services/userServices');
 let machineOrderController = {
 
 
@@ -129,6 +131,7 @@ let machineOrderController = {
 
             // send notification when status changed--------------------------
             let orderDetail = await machineOrderServices.getOrderUserId(reqData.order_id);
+            const user = await userServices.userProfileById(orderDetail.user_id);
             if(orderDetail){
                 let detail = `Your order id of ${orderDetail.order_id} status changed`;
                 let dataParm = {
@@ -140,6 +143,20 @@ let machineOrderController = {
                 }
                 await notificationServices.createNotification(dataParm);
             }
+
+            let status = 'Pending';
+            if(reqData.status == 1){
+                status = 'Approved'
+            }
+            let orderData = {
+                order_id: orderDetail.order_id,
+                user_name: `${user.first_name} ${user.last_name}`,
+                order_status: status,
+                hostName: Constant.HOSTURLPORT,
+				logo: Constant.HOSTURL+`/lokator/views/MailTemplates/images/logo.png`
+            };
+            updatedOrderStatusMailHandler.updatedOrderStatusMailBySMTP(user.email, 'Lokator Updated Order Status', orderData);
+
             return res.send(ResponseHandler.successResponse({}, message.CHANGE_ORDER_STATUS));
         
         } catch (error) {

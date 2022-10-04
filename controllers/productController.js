@@ -91,7 +91,9 @@ let userController = {
 					"capacity": machineDetail.machine_capacities.capacity,
 					"type": machineDetail.machine_types.type,
 					"category": machineDetail.machine_categories.category_name,
-					"status": status
+					"status": status,
+					"hostName": Constant.HOSTURLPORT,
+					"logo": Constant.HOSTURL+`/lokator/views/MailTemplates/images/logo.png`
 
 				}
 
