@@ -116,10 +116,10 @@
                                                                                                             width="33%"
                                                                                                             style="text-align:left;font-family:'sofia',Helvetica,Arial,sans-serif;color:#888888!important;font-size:14px;line-height:20px;font-weight:normal">
                                                                                                             <span
-                                                                                                                style="color:#242c44;text-transform:uppercase;font-size:14px;font-weight:bold">Inquiry
-                                                                                                                date</span>
+                                                                                                                style="color:#242c44;text-transform:uppercase;font-size:14px;font-weight:bold">
+                                                                                                                Order ID</span>
                                                                                                             <br>
-                                                                                                            <span>2022-02-06</span>
+                                                                                                            <span>{{orderId}}</span>
 
                                                                                                         </td>
                                                                                                         <td cellspacing="0"
@@ -127,10 +127,10 @@
                                                                                                             width="33%"
                                                                                                             style="text-align:right;font-family:'sofia',Helvetica,Arial,sans-serif;color:#888888!important;font-size:14px;line-height:20px;font-weight:normal">
                                                                                                             <span
-                                                                                                                style="color:#242c44;text-transform:uppercase;font-size:14px;font-weight:bold">Inquiry
-                                                                                                                No</span>
+                                                                                                                style="color:#242c44;text-transform:uppercase;font-size:14px;font-weight:bold">
+                                                                                                                Order Scope</span>
                                                                                                             <br>
-                                                                                                            <span>{{name}}</span>
+                                                                                                            <span>{{scope}}</span>
                                                                                                         </td>
                                                                                                     </tr>
                                                                                                 </tbody>
@@ -156,6 +156,7 @@
                 </tbody>
             </table>
 
+            {{#if userDetail}}
             <table border="0" cellpadding="0" cellspacing="0" width="100%">
                 <tbody>
                     <tr>
@@ -205,27 +206,18 @@
                                                                                                             style="text-align:left;font-family:'sofia',Helvetica,Arial,sans-serif;color:#888888!important;font-size:14px;line-height:20px;font-weight:normal;padding:0px 0px 20px 0px">
                                                                                                             <b>Full Name:
                                                                                                             </b> <span
-                                                                                                                class="il">vivek</span>
-                                                                                                            <br>
-                                                                                                            <b>Company: </b>
+                                                                                                                class="il">{{userFullName}}</span>
                                                                                                             <br>
                                                                                                             <b>Email: </b>
-                                                                                                            <a href="mailto:viveks3221@gmail.com"
-                                                                                                                target="_blank">viveks3221@gmail.com</a>
+                                                                                                            <a href="{{userEmail}}"
+                                                                                                                target="_blank">{{userEmail}}</a>
                                                                                                             <br>
                                                                                                             <b>Phone: </b>
-                                                                                                            918804268634
+                                                                                                            {{userPhone}}
                                                                                                             <br>
-                                                                                                            <b>Remarks: </b>
+                                                                                                            <b>Delivery Location:
+                                                                                                            </b> {{deliveryLocation}}
                                                                                                             <br>
-                                                                                                            <b>Project
-                                                                                                                Location:
-                                                                                                            </b> Dubai
-                                                                                                            <br>
-                                                                                                            <br>
-
-
-
 
                                                                                                         </td>
                                                                                                     </tr>
@@ -252,6 +244,7 @@
                     </tr>
                 </tbody>
             </table>
+            {{/if}}
 
             <table border="0" cellpadding="0" cellspacing="0" width="100%">
                 <tbody>
@@ -290,7 +283,7 @@
                                                                                                             cellpadding="0"
                                                                                                             colspan="4"
                                                                                                             style="font-family:'sofia',Helvetica,Arial,sans-serif;color:#242c44;font-size:18px;text-align:left;padding:0px 0px 10px 0px;text-transform:capitalize;font-weight:bold;text-decoration:underline">
-                                                                                                            Inquiry Details
+                                                                                                            Order Details
                                                                                                         </td>
                                                                                                     </tr>
                                                                                                     <tr cellspacing="0"
@@ -309,10 +302,6 @@
                                                                                                             cellpadding="0"
                                                                                                             colspan="4"
                                                                                                             style="text-align:center;font-family:'sofia',Helvetica,Arial,sans-serif;color:#888888!important;font-size:14px;line-height:20px;font-weight:normal;padding:0px 0px 0px 0px;border:2px solid #e2e2e2;border-bottom:1px solid #e2e2e2;border-radius:3px">
-
-
-
-
 
                                                                                                             <table
                                                                                                                 cellspacing="0"
@@ -337,91 +326,51 @@
                                                                                                                             border="0"
                                                                                                                             style="padding:5px 10px 5px 0;font-size:14px;text-align:right;border-bottom:1px solid #efefef;color:#fff">
                                                                                                                             Quantity
-                                                                                                                            Required
                                                                                                                         </td>
                                                                                                                         <td cellspacing="0"
                                                                                                                             bgcolor="#f89d13"
                                                                                                                             cellpadding="0"
                                                                                                                             border="0"
                                                                                                                             style="padding:5px 10px 5px 0;font-size:14px;text-align:right;border-bottom:1px solid #efefef;color:#fff">
-                                                                                                                            Start
-                                                                                                                            Date
+                                                                                                                            Order Start Date
                                                                                                                         </td>
                                                                                                                         <td cellspacing="0"
                                                                                                                             bgcolor="#f89d13"
                                                                                                                             cellpadding="0"
                                                                                                                             border="0"
                                                                                                                             style="padding:5px 10px 5px 0;font-size:14px;text-align:right;border-bottom:1px solid #efefef;color:#fff">
-                                                                                                                            Price
-                                                                                                                            Type
+                                                                                                                            Order End Date
                                                                                                                         </td>
 
                                                                                                                     </tr>
 
-
-
+                                                                                                                    {{#each product}}
                                                                                                                     <tr cellspacing="0"
                                                                                                                         cellpadding="0"
                                                                                                                         style="border-top:1px solid #e2e2e2;border-bottom:1px solid #e2e2e2;padding:0px 0px 10px 0px"
                                                                                                                         valign="top">
                                                                                                                         <td colspan="3"
                                                                                                                             style="font-family:'sofia',Helvetica,Arial,sans-serif;color:inherit;font-size:16px;font-weight:normal;text-align:left;padding-left:10px;padding-bottom:0px;padding-top:10px;border-bottom:1px solid #efefef">
-                                                                                                                            wheel
-                                                                                                                            loader
-                                                                                                                            shovel(Komatsu
-                                                                                                                            WA430)
-
+                                                                                                                            {{this.productName}}
 
                                                                                                                         </td>
                                                                                                                         <td
                                                                                                                             style="font-family:'sofia',Helvetica,Arial,sans-serif;color:#343434;font-size:16px;font-weight:normal;text-align:right;padding-right:10px;padding-top:10px;padding-bottom:10px;border-bottom:1px solid #efefef">
-                                                                                                                            1
+                                                                                                                            {{this.quantity}}
                                                                                                                         </td>
                                                                                                                         <td
                                                                                                                             style="font-family:'sofia',Helvetica,Arial,sans-serif;color:#343434;font-size:16px;font-weight:normal;text-align:right;padding-right:10px;padding-top:10px;padding-bottom:10px;border-bottom:1px solid #efefef">
-                                                                                                                            2022-02-07
+                                                                                                                            {{this.orderDate}}
                                                                                                                         </td>
                                                                                                                         <td
                                                                                                                             style="font-family:'sofia',Helvetica,Arial,sans-serif;color:#343434;font-size:16px;font-weight:normal;text-align:right;padding-right:10px;padding-top:10px;padding-bottom:10px;border-bottom:1px solid #efefef">
-                                                                                                                            monthly
+                                                                                                                            {{this.endDate}}
                                                                                                                         </td>
 
                                                                                                                     </tr>
-
-
-                                                                                                                    <tr cellspacing="0"
-                                                                                                                        cellpadding="0"
-                                                                                                                        style="border-top:1px solid #e2e2e2;border-bottom:1px solid #e2e2e2;padding:0px 0px 10px 0px"
-                                                                                                                        valign="top">
-                                                                                                                        <td colspan="3"
-                                                                                                                            style="font-family:'sofia',Helvetica,Arial,sans-serif;color:inherit;font-size:16px;font-weight:normal;text-align:left;padding-left:10px;padding-bottom:0px;padding-top:10px;border-bottom:1px solid #efefef">
-                                                                                                                            articulated
-                                                                                                                            dump
-                                                                                                                            truck(CAT
-                                                                                                                            740B)
-
-
-                                                                                                                        </td>
-                                                                                                                        <td
-                                                                                                                            style="font-family:'sofia',Helvetica,Arial,sans-serif;color:#343434;font-size:16px;font-weight:normal;text-align:right;padding-right:10px;padding-top:10px;padding-bottom:10px;border-bottom:1px solid #efefef">
-                                                                                                                            1
-                                                                                                                        </td>
-                                                                                                                        <td
-                                                                                                                            style="font-family:'sofia',Helvetica,Arial,sans-serif;color:#343434;font-size:16px;font-weight:normal;text-align:right;padding-right:10px;padding-top:10px;padding-bottom:10px;border-bottom:1px solid #efefef">
-                                                                                                                            2022-02-07
-                                                                                                                        </td>
-                                                                                                                        <td
-                                                                                                                            style="font-family:'sofia',Helvetica,Arial,sans-serif;color:#343434;font-size:16px;font-weight:normal;text-align:right;padding-right:10px;padding-top:10px;padding-bottom:10px;border-bottom:1px solid #efefef">
-                                                                                                                            monthly
-                                                                                                                        </td>
-
-                                                                                                                    </tr>
-
-
+                                                                                                                    {{/each}}
                                                                                                                 </tbody>
                                                                                                             </table>
-
-
 
                                                                                                         </td>
                                                                                                     </tr>

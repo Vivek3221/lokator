@@ -8,6 +8,8 @@ const _ = require('lodash');
 const Constant = require('../utils/constant');
 const notificationServices = require('../services/notificationServices');
 const updatedOrderStatusMailHandler = require('../utils/mails/updatedOrderStatusMailHandler');
+
+const orderMailHandler = require('../utils/mails/orderMailHandler');
 const userServices = require('../services/userServices');
 let machineOrderController = {
 
@@ -60,6 +62,7 @@ let machineOrderController = {
                     let saveOrder =  await machineOrderServices.createData(orderData);
 
                     if(saveOrder){
+                        let orders = [];
                         // Send notification to owner of machine------------------------------
                         for(let i=0; i < orderProduct.length; i++){
                             const machineData = await productServices.getMachineProductUserId(orderProduct[i].machine_product_id);
@@ -73,10 +76,48 @@ let machineOrderController = {
                                     details:detail
                                 }
                                 await notificationServices.createNotification(dataParm);
+
+                                let orderDeta = {
+                                    productName : machineData.machine_name,
+                                    quantity : orderProduct[i].quantity,
+                                    orderDate : reqData.work_start_date,
+                                    endDate : reqData.work_end_date
+                                }
+                                orders.push(orderDeta);
+
                             }
                             
                         } 
+                        //updatedOrderStatusMailHandler.updatedOrderStatusMailBySMTP(user.email, 'Lokator Updated Order Status', orderData);
+                        const userDetail = await userServices.userProfileById(userData.id)
+                        let orderDetail = {
+                            product: orders,
+                            userFullName: `${userDetail.first_name} ${userDetail.last_name}`,
+                            userEmail: userDetail.email,
+                            userPhone: userDetail.phone,
+                            deliveryLocation: reqData.delivery_location,
+                            logo : Constant.HOSTURL+`/lokator/views/MailTemplates/images/logo.png`,
+			                hostName : Constant.HOSTURLPORT,
+                            userDetail: true,
+                            orderId: orderId,
+                            scope: reqData.order_scope
 
+                        }
+                        // Get all Admin------------
+                        const users = await userServices.getUserIds(0);
+                        if (users.length > 0) {
+                            for (let i = 0; i < users.length; i++) {
+                                if (users[i].email != undefined && users[i].email != '') {
+                                    orderMailHandler.sendOrderMailBySMTP(userDetail.email, 'Lokator New Order', orderDetail);
+
+                                }
+                            }
+                        }
+
+                        let userOrderDetail = JSON.parse(JSON.stringify(orderDetail));
+                        userOrderDetail.userDetail = false;
+                        orderMailHandler.sendOrderMailBySMTP(userDetail.email, 'Lokator Order', userOrderDetail);
+                        
                         return res.send(ResponseHandler.successResponse(saveOrder, message.ORDER_PLASED));
                     }else{
                         return res.send(ResponseHandler.errorAsBadRequest(res, 'error'));
