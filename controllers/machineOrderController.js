@@ -8,7 +8,7 @@ const _ = require('lodash');
 const Constant = require('../utils/constant');
 const notificationServices = require('../services/notificationServices');
 const updatedOrderStatusMailHandler = require('../utils/mails/updatedOrderStatusMailHandler');
-
+const moment = require('moment');
 const orderMailHandler = require('../utils/mails/orderMailHandler');
 const userServices = require('../services/userServices');
 let machineOrderController = {
@@ -80,8 +80,8 @@ let machineOrderController = {
                                 let orderDeta = {
                                     productName : machineData.machine_name,
                                     quantity : orderProduct[i].quantity,
-                                    orderDate : reqData.work_start_date,
-                                    endDate : reqData.work_end_date
+                                    orderDate : moment(reqData.work_start_date).format('YYYY-MM-DD'),
+                                    endDate : moment(reqData.work_end_date).format('YYYY-MM-DD')
                                 }
                                 orders.push(orderDeta);
 
@@ -97,7 +97,7 @@ let machineOrderController = {
                             userPhone: userDetail.phone,
                             deliveryLocation: reqData.delivery_location,
                             logo : Constant.HOSTURL+`/lokator/views/MailTemplates/images/logo.png`,
-			                hostName : Constant.HOSTURLPORT,
+			                hostname : Constant.HOSTURLPORT,
                             userDetail: true,
                             orderId: orderId,
                             scope: reqData.order_scope
@@ -108,7 +108,7 @@ let machineOrderController = {
                         if (users.length > 0) {
                             for (let i = 0; i < users.length; i++) {
                                 if (users[i].email != undefined && users[i].email != '') {
-                                    orderMailHandler.sendOrderMailBySMTP(userDetail.email, 'Lokator New Order', orderDetail);
+                                    orderMailHandler.sendOrderMailBySMTP(users[i].email, 'Lokator New Order', orderDetail);
 
                                 }
                             }
