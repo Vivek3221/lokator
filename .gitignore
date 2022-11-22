@@ -1,4 +1,4 @@
 node_modules
 config/db.config
-public/files/*
+# public/files/*
 .env
